@@ -15,9 +15,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -36,6 +38,10 @@ import javax.swing.ToolTipManager;
 
 import misc.GU;
 import misc.ImagesMap;
+import misc.file.CompareByLastModified;
+import misc.file.CompareByName;
+import misc.file.CompareBySize;
+import misc.file.CompareByType;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.FileTableModel;
@@ -153,12 +159,11 @@ public class FSeeker {
             comboPaths.setSelectedItem(ROOT);
             // Ca sent le ComboBoxModel (favoris rajouté à la main, pan)
 
-            /*comboPaths.addActionListener(new ActionListener() {
+            comboPaths.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    fstm.setCurrentDirectory((File) comboPaths
-                            .getSelectedItem());
+                    fsm.setURI((File) comboPaths.getSelectedItem());
                 }
-            });*/
+            });
 
             left.add(comboPaths, BorderLayout.NORTH);
 
@@ -466,8 +471,48 @@ public class FSeeker {
         });
         menu.add(menuItem);
         mb.add(menu);
+        
+        
+        menu = new JMenu("Affichage");
+        menuItem = new JCheckBoxMenuItem("Afficher les fichiers cachés", fsm.showHidden());
+        menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fsm.showHidden(!fsm.showHidden());
+			}        
+        });
+        menu.add(menuItem);
+        menu.addSeparator();
+        menuItem = new JMenuItem("Trier par nom", KeyEvent.VK_N);
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fsm.setComparator(CompareByName.get());
+            }
+        });
+        menu.add(menuItem);
+        menuItem = new JMenuItem("Trier par type", KeyEvent.VK_P);
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fsm.setComparator(CompareByType.get());
+            }
+        });
+        menu.add(menuItem);
+        menuItem = new JMenuItem("Trier par taille", KeyEvent.VK_T);
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fsm.setComparator(CompareBySize.get());
+            }
+        });
+        menu.add(menuItem);
+        menuItem = new JMenuItem("Trier par date de dernière modification", KeyEvent.VK_M);
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fsm.setComparator(CompareByLastModified.get());
+            }
+        });
+        menu.add(menuItem);
+        mb.add(menu);
+        
         mb.add(Box.createHorizontalGlue());
-
         menu = new JMenu("Aide");
         menuItem = new JMenuItem("Sommaire", KeyEvent.VK_S);
         menuItem.addActionListener(new ActionListener() {
