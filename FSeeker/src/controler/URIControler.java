@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import misc.file.FileUtilities;
 import model.URIModel;
 
 /**
@@ -45,8 +46,14 @@ public class URIControler implements ActionListener, URIChangedListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		URIGUI ugui = (URIGUI) e.getSource();
-		String f = ugui.getText();
-		m.getModel().setURI(new File(f));
+		String s = ugui.getText();
+		File f = new File(s);
+		if (f.isFile()) {
+			m.getModel().setURI(f.getParentFile());
+			FileUtilities.openFile(f);
+		}
+		else
+			m.getModel().setURI(f);
 	}
 
 	/**
