@@ -62,6 +62,7 @@ public class FSeekerModel extends Observable {
 	 */
 	public FSeekerModel(File uri) {
 		this.uri = uri;
+		this.selection = uri;
 	}
 
 	/**

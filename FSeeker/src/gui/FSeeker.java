@@ -19,6 +19,7 @@ import javax.swing.Icon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -71,6 +72,8 @@ public class FSeeker extends JFrame {
 
 	private SearchGUI searchgui = null;
 
+	private JList bookmarksgui = null;
+	
 	private JTabbedPane tabs = null;
 
 	/** Construit la fenêtre par défaut de FSeeker */
@@ -152,7 +155,9 @@ public class FSeeker extends JFrame {
 			p.add(fstgui);
 		} else if ("Recherche".equals(cb.getSelectedItem())) {
 			searchgui.setSearchPath(fsm.getURI());
-			p = searchgui;
+			p = searchgui; // c'est déjà un panel
+		} else if ("Favoris".equals(cb.getSelectedItem())) {
+			p.add(bookmarksgui);
 		}
 
 		return p;
@@ -165,6 +170,9 @@ public class FSeeker extends JFrame {
 
 		// Recherche
 		searchgui = new SearchGUI(this);
+		
+		// Bookmarks
+		bookmarksgui = new BookmarksGUI();
 	}
 
 	public JPanel getDefaultView() {

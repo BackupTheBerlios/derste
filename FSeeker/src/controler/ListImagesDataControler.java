@@ -194,10 +194,14 @@ public class ListImagesDataControler extends MouseAdapter implements
 	 *            l'événement associé
 	 */
 	public void valueChanged(ListSelectionEvent e) {
-		JList source = (JList) e.getSource();
-		Object o = source.getSelectedValue();
-		if (o instanceof File)
-			m.getModel().setSelection((File) o, source);
+		if (!e.getValueIsAdjusting()) {
+			JList source = (JList) e.getSource();
+			Object o = source.getSelectedValue();
+			if (o instanceof File) {
+				if (!m.getModel().getSelection().equals(o))
+					m.getModel().setSelection((File) o, source);
+			}
+		}
 	}
 
 	public void intervalAdded(ListDataEvent e) {
