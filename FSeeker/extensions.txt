@@ -21,7 +21,7 @@ asf Fichier au format Active Streaming (Microsoft Advanced Streaming Format)
 asp Fichier de langage serveur Microsoft (pour Microsoft server-processed script)
 att Fichier de pièce jointe à E-mail (données de formulaire), image Bitmap
 au Fichier son pour le système d'exploitation Unix
-avi Fichier Video for Windows
+avi Fichier Vidéo
 avs Digital Vidéo/Animation
 awd Document de l'afficheur de télécopies du logiciel Imaging for Windows de Kodak
 bak Fichier de sauvegarde "backup"
@@ -306,7 +306,7 @@ ws Format des documents Wordstar
 x3d Fichier pour Maison 3D
 xar COREL XARA Drawing
 xbm Image Internet (X11bitmap), x-xbitmap (MIME)
-xcf Image GIMP (équivalent de photoshop en freeware Linux)
+xcf Image GIMP
 xfm Fichier pour CoolEdit
 xfx Fichiers de Jetfax
 xif Document image d'Imaging for Windows de Kodak
@@ -323,3 +323,13 @@ zip Archive
 zoo Archive
 $$$ Fichier temporaire
 ??~ Fichier temporaire
+conf Fichier de configuration
+wmv Fichier vidéo
+mp3 Fichier audio MP3
+jar Archive Java
+so Librairie UNIX
+bz2 Archive
+sh Exécutable Shell
+properties Fichier contenant les propriétés d'une application
+bin Fichier binaire
+xpi Extension pour Mozilla Fire*
