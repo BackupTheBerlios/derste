@@ -12,8 +12,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -58,7 +56,7 @@ public class ListImagesDataControler extends MouseAdapter implements
             if (f.canRead())
                 m.getModel().setURI(f, e.getSource());
             else
-                GU.message("Vous n'avez pas accès à ce dossier.");
+                GU.info("Vous n'avez pas accès à ce dossier.");
         }
     }
 

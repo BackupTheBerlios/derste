@@ -12,19 +12,48 @@ import java.io.File;
 import model.URIModel;
 
 /**
+ * Le contrôleur qui agit sur un modèle et une vue d'URI.
+ * 
  * @author sted
  */
-public class URIControler implements ActionListener {
-    protected URIModel m = null;
-    
-    public URIControler(URIModel m) {
-        this.m = m;
-    }
-    
-    public void actionPerformed(ActionEvent e) {
-        URIGUI ugui = (URIGUI) e.getSource();
-        String f = ugui.getText();
-        m.getModel().setURI(new File(f));
-    }
+public class URIControler implements ActionListener, URIChangedListener {
+
+	/** Le modèle associé */
+	protected URIModel m = null;
+
+	/** La vue associée */
+	protected URIGUI gui = null;
+
+	/**
+	 * Construit un contrôleur à partir d'un modèle et d'une vue.
+	 * 
+	 * @param m
+	 *            un modèle d'URI
+	 * @param gui
+	 *            une vue d'URI
+	 */
+	public URIControler(URIModel m, URIGUI gui) {
+		this.m = m;
+		this.gui = gui;
+	}
+
+	/**
+	 * Appelé quand l'utilisateur validera une saisie dans la vue.
+	 * 
+	 * @param e
+	 *            l'événement associé
+	 */
+	public void actionPerformed(ActionEvent e) {
+		URIGUI ugui = (URIGUI) e.getSource();
+		String f = ugui.getText();
+		m.getModel().setURI(new File(f));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public void URIChanged(URIChangedEvent e) {
+		gui.setText(e.getURI().getAbsolutePath());
+	}
 
 }

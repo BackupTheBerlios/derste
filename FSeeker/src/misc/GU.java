@@ -6,31 +6,21 @@ package misc;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.File;
 
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 
 /**
- * Classe utilitaire ne contenant que des méthodes statiques.
+ * Classe utilitaire ('Graphical Utilities' ho yeah) ne contenant que des
+ * méthodes statiques.
  * 
- * @author derosias & Ait elhaj brahim
+ * @author Sted
+ * @author brahim
  */
 public class GU {
-
-	/** Le séparateur de path du système */
-	public static final char SEP = File.separatorChar;
-
-	/** Là où sont stockées toutes les images */
-	private static final String IMAGES = "images" + SEP;
 
 	/**
 	 * Centre une JFrame sur l'écran.
@@ -47,71 +37,51 @@ public class GU {
 	}
 
 	/**
-	 * Attribue une image à un JLabel. (setIcon..)
+	 * Affiche une information.
 	 * 
-	 * @param label
-	 *            le JLabel auquel affecté une image
-	 * @param image
-	 *            l'image en question à associer
+	 * @param s
+	 *            information
 	 */
-	/* TODO: Faire un type global pour les JButtons, JLabel etc. */
-	public static void setIcon(JLabel label, String image) {
-		label.setIcon(getImage(image));
+	public static void info(String s) {
+		JOptionPane.showMessageDialog(null, s, "Information",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
-	 * @param location
-	 *            adresse du fichier sur le systéme
-	 * @return
-	 */
-	public static Icon getImage(String location) {
-		// TODO ne pas oublier quand ça sera prêt de faire le lien avec la
-		// classe dédiées aux images
-		return new ImageIcon(IMAGES + location);
-	}
-
-	/**
-	 * Affiche tout simplement une boite de dialogue de type JOptionPane
-	 * signalant un message
+	 * Affiche un avertissement.
 	 * 
-	 * @param mess
-	 *            Message à afficher dans la boite de dialogue
+	 * @param s
+	 *            avertissement
 	 */
-	public static void message(String mess) {
-		JOptionPane.showMessageDialog(null, mess, "Avertissement",
-				JOptionPane.INFORMATION_MESSAGE, ImagesMap.get("ask.png"));
+	public static void warn(String s) {
+		JOptionPane.showMessageDialog(null, s, "Avertissement",
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	/**
-	 * Affiche un panneau de confirmation qui et renvoie en meme temps la
-	 * reponse fourni
+	 * Demande la confirmation d'une chôôse.
 	 * 
-	 * @param titre
-	 *            Le titre souhaité pour la boite de dialogue
-	 * @param mess
-	 *            Le message pour lequel on attend confirmation ou infirmation
-	 * @return Renvoie la valeur JOptionPane.YES_OPTION ou JOptionPane.NO_OPTION
-	 *         selon le choix
+	 * @param s
+	 *            le message pour lequel on attend confirmation ou infirmation
+	 * @return JOptionPane.YES_OPTION ou JOptionPane.NO_OPTION selon le choix
 	 */
-	public static int confirm(String titre, String mess) {
-		return JOptionPane.showConfirmDialog(null, mess, titre,
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				getImage("ask.png"));
+	public static int confirm(String s) {
+		return JOptionPane.showConfirmDialog(null, s, "Confirmation",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 	}
 
 	/**
-	 * Cree une bordure avec titre et l'applique à un JComponent
+	 * Cree une bordure avec titre et l'applique à un JComponent.
 	 * 
 	 * @param title
 	 *            titre de la bordure
-	 * @param toPutOn
+	 * @param c
 	 *            Le composant sur lequel on va fixer la bordure
 	 */
-	public static void putBorder(Border b, String title, JComponent toPutOn,
+	public static void putBorder(Border b, String title, JComponent c,
 			int alignementX, int alignementY, Font f) {
-		toPutOn.setBorder(BorderFactory.createTitledBorder(b, title,
-				alignementX, alignementY, f));
-
+		c.setBorder(BorderFactory.createTitledBorder(b, title, alignementX,
+				alignementY, f));
 	}
 
 	public static void createGUI(String title, JComponent comp) {
@@ -121,6 +91,5 @@ public class GU {
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 	}
-
 
 }

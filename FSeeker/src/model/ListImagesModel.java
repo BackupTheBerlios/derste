@@ -73,7 +73,7 @@ public class ListImagesModel extends AbstractListModel implements Observer {
     public void update(Observable o, Object caller) {
         int lastSize = getSize();
     	filesList = getModel().getFilesList();
-        fireContentsChanged(this, 0, (lastSize > 0 ? lastSize - 1 : 0));
+        fireContentsChanged(this, 0, getSize() - 1);
     }
 
 }

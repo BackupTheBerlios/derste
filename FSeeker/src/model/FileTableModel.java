@@ -89,7 +89,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	 * Cette méthode est appelé uniquement quand le MODE vaut
 	 * FileTableModel.SIMPLE_MODE.
 	 */
-	public void setDataForSimpleView() {
+	protected void setDataForSimpleView() {
 		File[] files = fsm.getFilesList();
 		if (files == null) {
 			setDataVector(null, colNames);
@@ -105,7 +105,6 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 		for (int rows = 0; rows < nbRows; rows++) {
 
 			rowData = new Vector(nbColumns);
-
 			FileDetails fd = new FileDetails(files[rows]);
 
 			for (int cols = 0; cols < nbColumns; cols++) {

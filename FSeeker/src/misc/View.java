@@ -2,12 +2,13 @@ package misc;
 
 
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 
-import java.net.URL;
-import java.io.IOException;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  * @author brahim
@@ -50,7 +51,7 @@ public class View extends JFrame implements HyperlinkListener {
 	}
 
 	private void loadPage(String urlText) {
-		try {
+		/*try {
 			URL file = View.class.getResource(".." + GU.SEP + "resources"
 					+ GU.SEP + urlText);
 			if (DEBUG)
@@ -58,8 +59,8 @@ public class View extends JFrame implements HyperlinkListener {
 			viewer.setPage(file);
 
 		} catch (IOException ex) {
-			GU.message("Accés impossible à " + urlText);
-		}
+			GU.info("Accés impossible à " + urlText);
+		}*/
 	}
 
 	/**

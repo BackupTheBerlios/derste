@@ -1,45 +1,34 @@
 package gui;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.swing.JTextField;
 
 import model.URIModel;
 import controler.URIControler;
 
 /**
- * Représente l'URI graphiquement.
+ * Une vue d'URIModel.
  * 
- * @author derosias
+ * @author Sted
  */
-public class URIGUI extends JTextField implements Observer {
+public class URIGUI extends JTextField {
 
-    /** Le modèle que le gui affiche */
-    private URIModel m = null;
+	/** Le modèle que la vue affiche */
+	protected URIModel m = null;
 
-    /**
-     * Construit un gui d'uri avec un modèle par défaut.
-     * 
-     * @param m
-     *            un modèle d'uri avec lequelle associer le gui
-     */
-    public URIGUI(URIModel m) {
-        this.m = m;
-        m.addObserver(this);
-        addActionListener(new URIControler(m));
-        setColumns(20);
-        update(m, null);
-    }
+	/**
+	 * Construit une vue d'uri à partir d'un modèle.
+	 * 
+	 * @param m
+	 *            un modèle d'uri avec lequelle associer la vue
+	 */
+	public URIGUI(URIModel m) {
+		super(m.getModel().getURI().getAbsolutePath());
+		this.m = m;
+		
+		URIControler uc = new URIControler(m, this);
+		addActionListener(uc);
+		setColumns(20);
+		m.addURIChangedListener(uc);
+	}
 
-    public URIModel getModel() {
-        return m;
-    }
-
-    /**
-     * Met à jour l'affichage graphique (l'uri affichée) quand le modèle change.
-     */
-    public void update(Observable o, Object arg) {
-        setText(m.getModel().getURI().getAbsolutePath());
-    }
 }

@@ -34,7 +34,7 @@ public class ToolBarControler implements ActionListener {
 
        if (e.getActionCommand().equals("PREVIOUS")) {
        
-           GU.message("Précédent !");
+           GU.info("Précédent !");
            
        } else if (e.getActionCommand().equals("PARENT")) { 	 
      	 

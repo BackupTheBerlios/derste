@@ -63,7 +63,7 @@ import controler.ToolBarControler;
 public class FSeeker {
 
 	/** La version du software */
-	public final static String VERSION = "0.3a";
+	public final static String VERSION = "0.1b";
 
 	private final static File ROOT = ((System.getProperty("os.name"))
 			.indexOf("dows") >= 0 ? File.listRoots()[1] : File.listRoots()[0]);

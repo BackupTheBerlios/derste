@@ -20,7 +20,7 @@ import model.*;
  *  
  */
 public class TableModelControler extends MouseAdapter {
-    private FileTableModel m = null;;
+    protected FileTableModel m = null;
 
     public TableModelControler(FileTableModel m) {
         this.m = m;
@@ -33,7 +33,7 @@ public class TableModelControler extends MouseAdapter {
      
     }
     
-    public void setURI(InputEvent e){
+    protected void setURI(InputEvent e){
         File f = null;
         JTable source = (JTable) e.getSource();
         Object value = source.getValueAt(source.getSelectedRow(), source
@@ -53,7 +53,7 @@ public class TableModelControler extends MouseAdapter {
     			if (f.canRead())
     				m.getModel().setURI(f, e.getSource());
     			else
-    				GU.message("Vous n'avez pas accès à ce dossier.");
+    				GU.warn("Vous n'avez pas accès à ce dossier.");
     		}
         }
     }

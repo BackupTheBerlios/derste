@@ -19,7 +19,7 @@ import controler.ListImagesDataControler;
  * @author Sted
  * @author brahim
  */
-public class ListImagesGUI extends JList /*implements Observer*/ {
+public class ListImagesGUI extends JList {
 
     /** Le modèle de liste à utiliser */
     protected ListImagesModel m = null;

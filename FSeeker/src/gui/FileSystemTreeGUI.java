@@ -6,11 +6,10 @@ package gui;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
+import javax.swing.tree.TreePath;
 
 import misc.FileSystemTree;
 import misc.file.FileUtilities;
@@ -19,17 +18,27 @@ import renderer.FileSystemTreeCellRenderer;
 import controler.FileSystemTreeControler;
 
 /**
+ * Représente une vue sous forme d'arbre d'un système de fichiers.
+ * 
  * @author Sted
  * @author brahim
  */
-public class FileSystemTreeGUI extends JTree implements Observer {
+public class FileSystemTreeGUI extends JTree {
+
+	/** Le modèle associé à cette vue */
 	protected FileSystemTreeModel m = null;
 
+	/**
+	 * Construit une vue de système de fichiers en arbre, à partir d'un modèle.
+	 * 
+	 * @param m
+	 *            le modèle en question
+	 */
 	public FileSystemTreeGUI(FileSystemTreeModel m) {
 		this.m = m;
-		m.addObserver(this);
 
 		setModel(m);
+		setDirectory(m.getModel().getURI());
 		setEditable(true);
 		setCellRenderer(new FileSystemTreeCellRenderer());
 
@@ -39,22 +48,29 @@ public class FileSystemTreeGUI extends JTree implements Observer {
 		FileSystemTreeControler fstc = new FileSystemTreeControler(m, this);
 		addTreeSelectionListener(fstc);
 		addKeyListener(fstc);
-		m.addTreeModelListener(fstc);
+		m.addURIChangedListener(fstc);
 	}
 
-	public void update(Observable o, Object caller) {
-		// Si c'est lui même qui a provoqué l'événement, pas besoin de lui dire
-		if (caller != this)
-			setDirectory(m.getModel().getURI());
-	}
-
+	/**
+	 * Positionne la sélection dans l'arbre sur le fichier <code>dir</code>.
+	 * 
+	 * @param dir
+	 *            le fichier à sélectionner dans l'arbre
+	 */
 	public void setDirectory(File dir) {
-		setSelectionPath(FileSystemTree.getTreePath(dir));
+		TreePath tp = getSelectionPath();
+		// Pas besoin de setter si on y est déjà ! (si on a provoqué l'événement
+		// quoi)
+		if (tp == null || !tp.equals(FileSystemTree.getTreePath(dir)))
+			setSelectionPath(FileSystemTree.getTreePath(dir));
 	}
 
 	/**
 	 * Affiche le tooltip évalué dynamiquement. Appelée automatiquement par
 	 * Swing.
+	 * 
+	 * @param event
+	 *            l'événement de souris associé
 	 */
 	public String getToolTipText(MouseEvent event) {
 		Point clic = event.getPoint();
@@ -63,6 +79,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
 					.getLastPathComponent();
 			return FileUtilities.getToolTip(f);
 		}
+
 		return null;
 	}
 
