@@ -109,6 +109,7 @@ public class FSeeker {
         
         f = new JFrame("FSeeker v" + VERSION);
         Container cp = f.getContentPane();
+        
         ToolTipManager.sharedInstance().setInitialDelay(1500);
         ToolTipManager.sharedInstance().setReshowDelay(1000);
         

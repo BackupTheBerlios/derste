@@ -1,12 +1,15 @@
 package gui;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JList;
-import javax.swing.JScrollPane;
 
+import misc.file.FileUtilities;
 import model.ListImagesModel;
 import renderer.ListImagesCellRenderer;
 import controler.ListImagesDataControler;
@@ -18,14 +21,20 @@ import controler.ListImagesDataControler;
  * @author Sted
  * @author brahim
  */
-public class ListImagesGUI extends JList implements Observer {
+public class ListImagesGUI implements Observer {
 
 	/** Le modèle de liste à utiliser */
 	protected ListImagesModel m = null;
 
+	protected JList gui = null;
+	
 	// TODO le truc du false / true sera à virer quand le jdesktoppane sera ok
 	public ListImagesGUI(ListImagesModel m) {
 		this(m, false);
+	}
+	
+	public JList getGUI() {
+		return gui;
 	}
 
 	/**
@@ -40,34 +49,43 @@ public class ListImagesGUI extends JList implements Observer {
 		this.m = m;
 		m.addObserver(this);
 
-		setModel(m);
-		setVisibleRowCount(0);
-		setDragEnabled(true);
+		gui = new JList(m) {
+			public String getToolTipText(MouseEvent event) {
+			    Point clic = event.getPoint();
+			    int index = locationToIndex(clic);
+				Rectangle r = ListImagesGUI.this.gui.getCellBounds(index, index);
+				if (r.contains(clic)) {
+				    File f = (File) ListImagesGUI.this.m.getElementAt(index);
+				    return FileUtilities.getDetails(f);
+				}
+				return null;
+			}
+		};
+		gui.setVisibleRowCount(0);
+		gui.setDragEnabled(true);
 		
 		// Le prototypage accélère la vitesse d'affichage (pas de calcul à
 		// faire) et uniformise l'affichage
-		setPrototypeCellValue(new File("FICHIERPROTO.CONFIG"));
+		// gui.setPrototypeCellValue(new File("FICHIERPROTO.CONFIG"));
 		
 		// En liste simple, on affiche de haut en bas, gauche vers droite
 		// en pas simple, on affiche de gauche vers droite, haut en bas
 		if (simple)
-			setLayoutOrientation(JList.VERTICAL_WRAP);
+			gui.setLayoutOrientation(JList.VERTICAL_WRAP);
 		else
-			setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			gui.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 
-		setCellRenderer(new ListImagesCellRenderer(simple));
+		gui.setCellRenderer(new ListImagesCellRenderer(simple));
 		ListImagesDataControler controler = new ListImagesDataControler(m);
-		addMouseListener(controler);
-		addKeyListener(controler);
+		gui.addMouseListener(controler);
+		gui.addKeyListener(controler);
 	}
 
 	public void update(Observable o, Object caller) {
-		revalidate();
-		repaint();
+		gui.revalidate();
+		gui.repaint();
 	}
-	
 
-	
 
 }
 
