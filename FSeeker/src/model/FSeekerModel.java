@@ -326,7 +326,6 @@ public class FSeekerModel extends Observable {
 
 			this.uri = uri;
 			uris.add(uri);
-			System.out.println(uris);
 			setChanged(URI, src);
 
 			// Si on change l'URI, forcément, la sélection change.. !
