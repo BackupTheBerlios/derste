@@ -4,7 +4,7 @@
 
 package model;
 
-import gui.*;
+import gui.SwingWorker;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -19,9 +19,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
 import misc.GU;
-import gui.StatusBar;
+import misc.ImagesMap;
 
 /**
  * @author derosias
@@ -112,9 +113,10 @@ public class SearchGUI extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
 
-		StatusBar sbt = new StatusBar();
-		JLabel l = sbt.addLabel("Favoris");
-		//GU.setImage(l, "dot.gif");
+		JToolBar sbt = new JToolBar();
+		JLabel l = new JLabel("Favoris");
+		sbt.add(l);
+		l.setIcon(ImagesMap.get("dot.gif"));
 		c.add(sbt, BorderLayout.NORTH);
 
 		JPanel p = new JPanel();
@@ -130,8 +132,9 @@ public class SearchGUI extends JFrame {
 		p.add(new JScrollPane(lresults), BorderLayout.SOUTH);
 		c.add(p, BorderLayout.CENTER);
 
-		StatusBar sbb = new StatusBar();
-		searchPath = sbb.addLabel("");
+		JToolBar sbb = new JToolBar();
+		l = new JLabel();
+		sbb.add(l);
 		c.add(sbb, BorderLayout.SOUTH);
 
 		pack();
