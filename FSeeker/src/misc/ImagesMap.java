@@ -5,7 +5,6 @@ package misc;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -70,14 +69,14 @@ public class ImagesMap {
 		if (file.isDirectory())
 			return get("directory.png");
 
-		// On a un fichier, on regarde son extension		
+		// On a un fichier, on regarde son extension
 		String s = file.getName();
-		int rindex = s.lastIndexOf('.');		
+		int rindex = s.lastIndexOf('.');
 
 		// Y'a pas de '.' ou bien on a un fichier genre : "truc."
 		if (rindex == -1 || rindex + 1 >= s.length())
 			return getDefault();
-		
+
 		String ext = s.substring(rindex + 1);
 		return get(EXTENSIONS + SEP + ext + ".png");
 	}
