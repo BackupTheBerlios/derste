@@ -23,45 +23,46 @@ import controler.FileSystemTreeControler;
  * @author brahim
  */
 public class FileSystemTreeGUI extends JTree implements Observer {
-    protected FileSystemTreeModel m = null;
+	protected FileSystemTreeModel m = null;
 
-    public FileSystemTreeGUI(FileSystemTreeModel m) {
-        this.m = m;
-        m.addObserver(this);
+	public FileSystemTreeGUI(FileSystemTreeModel m) {
+		this.m = m;
+		m.addObserver(this);
 
-        setModel(m);
-        setEditable(true);
-        setCellRenderer(new FileSystemTreeCellRenderer());
-        
-        // Par défaut, le JTree ne s'enregistre pas
-        ToolTipManager.sharedInstance().registerComponent(this);
+		setModel(m);
+		setEditable(true);
+		setCellRenderer(new FileSystemTreeCellRenderer());
 
-        FileSystemTreeControler fstc = new FileSystemTreeControler(m);
-        addTreeSelectionListener(fstc);
-        addKeyListener(fstc);
-    }
+		// Par défaut, le JTree ne s'enregistre pas
+		ToolTipManager.sharedInstance().registerComponent(this);
 
-    public void update(Observable o, Object caller) {
-        if (caller != this)
-            setDirectory(m.getModel().getURI());
-    }
+		FileSystemTreeControler fstc = new FileSystemTreeControler(m, this);
+		addTreeSelectionListener(fstc);
+		addKeyListener(fstc);
+		m.addTreeModelListener(fstc);
+	}
 
-    public void setDirectory(File dir) {
-        setSelectionPath(FileSystemTree.getTreePath(dir));
-    }
+	public void update(Observable o, Object caller) {
+		if (caller != this)
+			setDirectory(m.getModel().getURI());
+	}
 
-    /**
-     * Affiche le tooltip évalué dynamiquement. Appelée automatiquement par
-     * Swing.
-     */
-    public String getToolTipText(MouseEvent event) {
-        Point clic = event.getPoint();
-        if (getRowForLocation(clic.x, clic.y) != -1) {
-            File f = (File) getPathForLocation(clic.x, clic.y)
-                    .getLastPathComponent();
-            return FileUtilities.getDetails(f);
-        }
-        return null;
-    }
+	public void setDirectory(File dir) {
+		setSelectionPath(FileSystemTree.getTreePath(dir));
+	}
+
+	/**
+	 * Affiche le tooltip évalué dynamiquement. Appelée automatiquement par
+	 * Swing.
+	 */
+	public String getToolTipText(MouseEvent event) {
+		Point clic = event.getPoint();
+		if (getRowForLocation(clic.x, clic.y) != -1) {
+			File f = (File) getPathForLocation(clic.x, clic.y)
+					.getLastPathComponent();
+			return FileUtilities.getDetails(f);
+		}
+		return null;
+	}
 
 }
