@@ -70,7 +70,7 @@ public class FSeeker {
     private JFrame f = null;
 
     private FSeekerModel fsm = null;
-    
+
     private FileSystemTreeModel fstm = null;
 
     private ListImagesModel lim = null;
@@ -98,7 +98,7 @@ public class FSeeker {
     private JPanel macosView = null;
 
     /** Le contrôleur de la barre d'outils */
-    private final ToolBarControler toolBarControler = new ToolBarControler(this);
+    private ToolBarControler toolBarControler = null;
 
     /** Le panel central, principal, destinées à accueillir les différentes vues */
     private JPanel main = null;
@@ -106,13 +106,15 @@ public class FSeeker {
     /** Construit la fenêtre par défaut de FSeeker */
     public FSeeker(FSeekerModel fsm) {
         this.fsm = fsm;
-        
+
         f = new JFrame("FSeeker v" + VERSION);
         Container cp = f.getContentPane();
-        
+
+        toolBarControler = new ToolBarControler(this, fsm);
+
         ToolTipManager.sharedInstance().setInitialDelay(1500);
         ToolTipManager.sharedInstance().setReshowDelay(1000);
-        
+
         // GU.changeLF();
         f.setJMenuBar(getDefaultMenuBar());
 
@@ -172,7 +174,7 @@ public class FSeeker {
             // L'arbre
             fstm = new FileSystemTreeModel(fsm);
             fstgui = new FileSystemTreeGUI(fstm);
-            
+
             left.add(new JScrollPane(fstgui), BorderLayout.CENTER);
 
             ///////////////////////////////////////////////
@@ -186,32 +188,26 @@ public class FSeeker {
             ftmodel = new FileTableModel(fsm);
             ftgui = new FileTableGUI(ftmodel);
 
-            /*JDesktopPane desktop = new JDesktopPane();
-            JLabel l = new JLabel("pwet");
-            l.setIcon(ImagesMap.getDefault());
-            l.setSize(100, 100);
-            l.setLocation(70, 70);
-            desktop.add(l);
-            l.setVisible(true);
-
-            MJInternalFrame in = new MJInternalFrame("test", false, false,
-                    false, false);
-            MJInternalFrame in2 = new MJInternalFrame("test", false, false,
-                    false, false);
-            MJInternalFrame in3 = new MJInternalFrame("test", false, false,
-                    false, false);
-            
-            desktop.add(in);
-            desktop.add(in2);
-            desktop.add(in3);
-            desktop.setVisible(true);*/
+            /*
+             * JDesktopPane desktop = new JDesktopPane(); JLabel l = new
+             * JLabel("pwet"); l.setIcon(ImagesMap.getDefault()); l.setSize(100,
+             * 100); l.setLocation(70, 70); desktop.add(l); l.setVisible(true);
+             * 
+             * MJInternalFrame in = new MJInternalFrame("test", false, false,
+             * false, false); MJInternalFrame in2 = new MJInternalFrame("test",
+             * false, false, false, false); MJInternalFrame in3 = new
+             * MJInternalFrame("test", false, false, false, false);
+             * 
+             * desktop.add(in); desktop.add(in2); desktop.add(in3);
+             * desktop.setVisible(true);
+             */
 
             JTabbedPane tabs = new JTabbedPane();
-            
-            JScrollPane viewIcon = new JScrollPane(ligui.getGUI(),
+
+            JScrollPane viewIcon = new JScrollPane(ligui,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            JScrollPane viewList = new JScrollPane(lgui.getGUI(),
+            JScrollPane viewList = new JScrollPane(lgui,
                     JScrollPane.VERTICAL_SCROLLBAR_NEVER,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             JScrollPane viewTable = new JScrollPane(ftgui,
@@ -261,13 +257,11 @@ public class FSeeker {
         public void paintComponents(Graphics g) {
             return;
         }
-        
 
         public Dimension getPreferredSize() {
             return new Dimension(image.getIconWidth(),
                     image.getIconHeight() + 20);
         }
-
 
     }
 
@@ -277,10 +271,10 @@ public class FSeeker {
      * 
      * @param uri
      */
-    /*TODO public FSeeker(FSeekerModel fsm, String start) {
-        this.fsm = fsm;
-        fsm.setURI(new File(start));
-    }*/
+    /*
+     * TODO public FSeeker(FSeekerModel fsm, String start) { this.fsm = fsm;
+     * fsm.setURI(new File(start)); }
+     */
 
     /**
      * Renvoie le JPanel central.
@@ -317,14 +311,14 @@ public class FSeeker {
     private JToolBar getDefaultToolBar() {
         JToolBar tb = new JToolBar(JToolBar.HORIZONTAL);
         LayoutManager layout = new BorderLayout();
-        
+
         tb.setLayout(layout);
         tb.setFloatable(false);
         tb.setRollover(true);
 
-		JPanel p = null;
+        JPanel p = null;
         JButton b = null;
-        
+
         p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         b = new JButton();
         b.setActionCommand("PREVIOUS");
@@ -337,7 +331,7 @@ public class FSeeker {
         b = new JButton();
         b.setActionCommand("NEXT");
         b.addActionListener(toolBarControler);
-		b.setBorder(null);
+        b.setBorder(null);
         b.setIcon(ImagesMap.get("next.gif"));
         b.setToolTipText("Suivant");
         p.add(b);
@@ -345,16 +339,15 @@ public class FSeeker {
         b = new JButton();
         b.setActionCommand("PARENT");
         b.addActionListener(toolBarControler);
-		b.setBorder(null);
+        b.setBorder(null);
         b.setIcon(ImagesMap.get("parent.gif"));
         b.setToolTipText("Répertoire parent");
         p.add(b);
 
-
         b = new JButton("Rechercher");
         b.setActionCommand("SEARCHVIEW");
         b.addActionListener(toolBarControler);
-		b.setBorder(null);
+        b.setBorder(null);
         b.setIcon(ImagesMap.getDefault());
         b.setToolTipText("Rechercher un fichier ou un répertoire");
         p.add(b);
@@ -362,7 +355,7 @@ public class FSeeker {
         b = new JButton();
         b.setActionCommand("TREEVIEW");
         b.addActionListener(toolBarControler);
-		b.setBorder(null);
+        b.setBorder(null);
         b.setIcon(ImagesMap.getDefault());
         b.setToolTipText("Affichage avec l'arborescence sous forme d'arbre");
         p.add(b);
@@ -370,15 +363,15 @@ public class FSeeker {
         b = new JButton();
         b.setActionCommand("MACOSVIEW");
         b.addActionListener(toolBarControler);
-		b.setBorder(null);
+        b.setBorder(null);
         b.setIcon(ImagesMap.getDefault());
         b.setToolTipText("Affichage par thème à la MacOS");
         p.add(b);
-		tb.add(p, BorderLayout.NORTH);
+        tb.add(p, BorderLayout.NORTH);
 
         uriModel = new URIModel(fsm);
         ugui = new URIGUI(uriModel);
-		tb.add(ugui, BorderLayout.SOUTH);
+        tb.add(ugui, BorderLayout.SOUTH);
 
         fstm.addObserver(ugui);
         uriModel.addObserver(fstgui);
@@ -475,20 +468,21 @@ public class FSeeker {
         });
         menu.add(menuItem);
         mb.add(menu);
-        
-        
+
         menu = new JMenu("Affichage");
-        menuItem = new JCheckBoxMenuItem("Afficher les fichiers cachés", fsm.showHidden());
+        menuItem = new JCheckBoxMenuItem("Afficher les fichiers cachés", fsm
+                .showHidden());
         menuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fsm.showHidden(!fsm.showHidden());
-			}        
+            public void actionPerformed(ActionEvent e) {
+                fsm.showHidden(!fsm.showHidden());
+            }
         });
         menu.add(menuItem);
         menu.addSeparator();
-        
+
         ButtonGroup bg = new ButtonGroup();
-        menuItem = new JRadioButtonMenuItem("Trier par nom", fsm.getComparator() == CompareByName.get());
+        menuItem = new JRadioButtonMenuItem("Trier par nom", fsm
+                .getComparator() == CompareByName.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareByName.get());
@@ -496,7 +490,8 @@ public class FSeeker {
         });
         menu.add(menuItem);
         bg.add(menuItem);
-        menuItem = new JRadioButtonMenuItem("Trier par type", fsm.getComparator() == CompareByType.get());
+        menuItem = new JRadioButtonMenuItem("Trier par type", fsm
+                .getComparator() == CompareByType.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareByType.get());
@@ -504,7 +499,8 @@ public class FSeeker {
         });
         menu.add(menuItem);
         bg.add(menuItem);
-        menuItem = new JRadioButtonMenuItem("Trier par taille", fsm.getComparator() == CompareBySize.get());
+        menuItem = new JRadioButtonMenuItem("Trier par taille", fsm
+                .getComparator() == CompareBySize.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareBySize.get());
@@ -512,7 +508,9 @@ public class FSeeker {
         });
         menu.add(menuItem);
         bg.add(menuItem);
-        menuItem = new JRadioButtonMenuItem("Trier par date de dernière modification", fsm.getComparator() == CompareByLastModified.get());
+        menuItem = new JRadioButtonMenuItem(
+                "Trier par date de dernière modification",
+                fsm.getComparator() == CompareByLastModified.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareByLastModified.get());
@@ -520,8 +518,19 @@ public class FSeeker {
         });
         menu.add(menuItem);
         bg.add(menuItem);
+
+        menu.addSeparator();
+        menuItem = new JCheckBoxMenuItem("Activer les tooltips", ToolTipManager
+                .sharedInstance().isEnabled());
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ToolTipManager.sharedInstance().setEnabled(
+                        !ToolTipManager.sharedInstance().isEnabled());
+            }
+        });
+        menu.add(menuItem);
         mb.add(menu);
-        
+
         mb.add(Box.createHorizontalGlue());
         menu = new JMenu("Aide");
         menuItem = new JMenuItem("Sommaire", KeyEvent.VK_S);
