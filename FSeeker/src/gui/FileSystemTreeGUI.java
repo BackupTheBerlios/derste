@@ -31,7 +31,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
 
 		setModel(m);
 		setEditable(true);
-		setCellRenderer(new FileSystemTreeCellRenderer(m.getRoot()));
+		setCellRenderer(new FileSystemTreeCellRenderer());
 
 		// Par défaut, le JTree ne s'enregistre pas
 		ToolTipManager.sharedInstance().registerComponent(this);
