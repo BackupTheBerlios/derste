@@ -147,6 +147,9 @@ public class FSeeker {
 			// Barre de split
 			JSplitPane splitpane = new JSplitPane();
 			splitpane.setDividerLocation(200);
+			
+			// Des look 'n feels balance une NullPointerException avec ça. :D
+			// ie: Tonic
 			splitpane.setOneTouchExpandable(true);
 
 			///////////////////////////////////////

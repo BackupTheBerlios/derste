@@ -53,8 +53,8 @@ public class ListImagesGUI extends JList /*implements Observer*/ {
         
         // Le prototypage accélère la vitesse d'affichage (pas de calcul à
         // faire) et uniformise l'affichage
-        // gui.setPrototypeCellValue(new File("FICHIERPROTO.CONFIG"));
-
+        setPrototypeCellValue(new File("FICHIERPROTO.CONFIG"));
+        
         // En liste simple, on affiche de haut en bas, gauche vers droite
         // en pas simple, on affiche de gauche vers droite, haut en bas
         if (simple)
