@@ -20,7 +20,7 @@ public class FileUtilities {
         sb.append("<html>");
 
         // Une jolie image pour faire staïlle
-        sb.append("<center><img src=\"images/dot.gif\"></center><br>");
+        sb.append("<center><img src=\"/images/dot.gif\"></center><br>");
 
         // Le type et le nom (pour les aveugles)
         sb.append("<b>" + (f.isDirectory() ? "Doss" : "Fich") + "ier</b> : "
@@ -33,7 +33,7 @@ public class FileUtilities {
         else {
             File[] foo = f.listFiles();
             if (foo != null && foo.length > 0)
-                sb.append("<b>Contient</b> : " + foo.length + " fichiers<br>");
+                sb.append("<b>Contient</b> : " + foo.length + " fichier" + (foo.length > 1 ? "s" : "") + "<br>");
         }
 
         // La date de dernière modification
