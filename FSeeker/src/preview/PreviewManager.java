@@ -1,135 +1,122 @@
 /*
  * Created on 7 nov. 2004
- *
- *
  */
 package preview;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import misc.file.FileUtilities;
 import model.FSeekerModel;
 
 /**
+ * Gère le changement de la preview.
+ * 
  * @author brahim
- *  
+ * @author Sted
  */
 public class PreviewManager extends JPanel implements Observer {
 
-    /** Le supra-modèle */
-    protected FSeekerModel fsm = null;
+	/** Le supra-modèle */
+	protected FSeekerModel fsm = null;
 
-    /** Largeur des images à previsualiser */
-    private int width = 120;
+	/** Largeur des images à prévisualiser */
+	private int width = 120;
 
-    /** Hauteur des images à prévisualiser */
-    private int height = 90;
-    
-    /** Couleur d'arriére plan pour la preview */
-    Color BACKG = Color.WHITE;
+	/** Hauteur des images à prévisualiser */
+	private int height = 90;
 
-    /**
-     * Constructeur
-     * 
-     * @param fsm
-     *            Le supra-modéle
-     *  
-     */
-    public PreviewManager(FSeekerModel fsm) {
-        this.fsm = fsm;
-        fsm.addObserver(this);
-        // Layout
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        
-    }
+	/** Couleur d'arrière plan pour la preview */
+	private Color BACKG = Color.WHITE;
 
-    /**
-     * Méthode appellée quand le modéle change
-     */
-    public void update(Observable o, Object arg) {
+	/**
+	 * Construit l'objet à partir d'un supra-modèle.
+	 * 
+	 * @param fsm
+	 *            Le supra-modèle
+	 */
+	public PreviewManager(FSeekerModel fsm) {
+		this.fsm = fsm;
+		fsm.addObserver(this);
+		setLayout(new BorderLayout());
+		setBackground(BACKG);
+	}
 
-        // Selon le fichier on met à jour la preview nécessaire
-        File selection = fsm.getSelection();
+	/**
+	 * Méthode appelée quand la sélection dans le supra-modèle change.
+	 */
+	public void update(Observable o, Object arg) {
 
-        // On sort si la séléction est null
-        if (selection == null)
-            return;
-        removeAll();//Sécurité
-        
-        Preview p = null;
-        JPanel preview = null;
-        String mime = "";
-        String ext = "";
+		if (fsm.isChanged(FSeekerModel.SELECTION)) {
 
-        if (selection.canRead()) {
-            mime = FileUtilities.getMIMEType(selection);
+			// Selon le fichier on met à jour la preview nécessaire
+			File selection = fsm.getSelection();
 
-            //On récupére l'extension
-            String s = selection.getName();
-            int index = s.lastIndexOf('.');
-            // On vérifie la valeur de l(index recupéré
-            if (!(index == -1 || index + 1 >= s.length()))
-                ext = s.substring(index + 1);
-        }
+			// On sort si la sélection est null
+			if (selection == null)
+				return;
+			removeAll(); // Sécurité
 
-        if (selection.isDirectory()) {
-            //Répértoire
-            p = new SimpleImagePreview(selection);
-        } else if (mime.startsWith("image/")) {
-            // Image
-            p = new ImagePreview(selection, width, height);
-        } else if (mime.equals("text/plain")) {
-            // Fichier texte
-            p = new TextPreview(selection);
-        } else if (ext.equals("mp3") || ext.equals("wav")) {
-            // Fichier mp3 ou wav                  
-            p = new SoundPreview(selection);
-        } else {
-            // Fichier par défaut
-            p = new SimpleImagePreview(selection);
-        }
+			Preview p = null;
+			JPanel preview = null;
+			String mime = "";
+			String ext = "";
 
-             
-        
-        // On lance la preview
-        p.preview();
-        preview = (JPanel) p;
-        preview.setOpaque(true);
-        preview.setBackground(BACKG);
-        add(preview);
-       
-        // Maitenant on s'occupe de mettre les infos
-        JPanel info = new FileInfo(selection);
-        info.setOpaque(true);
-        info.setBackground(BACKG);
-        add(info);        
-       
-        //On met à jour l'affichage
-        repaint();
-        revalidate();
-    }
+			if (selection.canRead()) {
+				mime = FileUtilities.getMIMEType(selection);
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+				// On récupère l'extension
+				String s = selection.getName();
+				int index = s.lastIndexOf('.');
+				// On vérifie la valeur de l'index récupéré
+				if (!(index == -1 || index + 1 >= s.length()))
+					ext = s.substring(index + 1);
+			}
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
+			if (selection.isDirectory())
+				p = new SimpleImagePreview(selection);
+			else if (mime.startsWith("image/"))
+				p = new ImagePreview(selection, width, height);
+			else if (mime.equals("text/plain"))
+				p = new TextPreview(selection);
+			else if (ext.equals("mp3") || ext.equals("wav"))
+				p = new SoundPreview(selection);
+			else
+				p = new SimpleImagePreview(selection);
 
-    /**
-     * méthode de test pour la classe PreviewManager
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-    }
+			// On lance la preview
+			p.preview();
+			preview = (JPanel) p;
+			preview.setOpaque(true);
+			preview.setBackground(BACKG);
+			JPanel tmp = new JPanel(new BorderLayout());
+			tmp.setBackground(BACKG);
+			tmp.add(preview, BorderLayout.WEST);
+			add(tmp, BorderLayout.NORTH);
+
+			// Maintenant on s'occupe de mettre les infos
+			JPanel info = new FileInfo(selection);
+			info.setOpaque(true);
+			info.setBackground(BACKG);
+			add(info, BorderLayout.SOUTH);
+
+			// On met à jour l'affichage
+			repaint();
+			revalidate();
+		}
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
 }
