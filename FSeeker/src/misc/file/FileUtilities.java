@@ -184,7 +184,10 @@ public class FileUtilities {
      * @return un tableau de Strings ne contenant que les noms des fichiers
      */
     public static String[] toStrings(File[] files) {
-        int num = files.length;
+        if (files == null)
+        	return null;
+        
+    	int num = files.length;
         String[] dirs = new String[num];
         for (int i = 0; i < num; i++)
             dirs[i] = files[i].getName();
