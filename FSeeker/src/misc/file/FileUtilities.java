@@ -139,14 +139,15 @@ public class FileUtilities {
             } else
                 sb.append("<b>Taille</b> : " + getSize() + "<br>");
 
-            sb.append("<b>Dernière modification</b> : " + getLastModified()
+            sb.append("<b>Dernière modification</b> : " + "<br>"+ getLastModified()
                     + "<br>");
 
             return sb.append("</html>").toString();
         }
 
     }
-
+    
+    
     /**
      * Retourne un texte descriptif d'un fichier.
      * 
