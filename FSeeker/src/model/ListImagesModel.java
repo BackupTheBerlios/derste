@@ -44,6 +44,8 @@ public class ListImagesModel extends AbstractListModel implements Observer {
      * @return l'objet à l'index désiré
      */
     public Object getElementAt(int index) {
+    	if (filesList == null)
+    		return null;
         return filesList[index];
     }
 
@@ -62,15 +64,16 @@ public class ListImagesModel extends AbstractListModel implements Observer {
      * @return nombre de fichiers dans le dossier courant
      */
     public int getSize() {
-        return filesList.length;
+        return (filesList == null ? 0 : filesList.length);
     }
 
     /**
      * Met à jour la liste des fichiers, et prévient les vues du changement.
      */
     public void update(Observable o, Object caller) {
-        filesList = getModel().getFilesList();
-        fireContentsChanged(this, 0, getSize() - 1);
+        int lastSize = getSize();
+    	filesList = getModel().getFilesList();
+        fireContentsChanged(this, 0, (lastSize > 0 ? lastSize - 1 : 0));
     }
 
 }

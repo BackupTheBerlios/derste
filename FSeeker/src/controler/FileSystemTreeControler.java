@@ -34,7 +34,7 @@ public class FileSystemTreeControler implements TreeSelectionListener,
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
-		File f = (File) e.getNewLeadSelectionPath().getLastPathComponent();
+		File f = (File) e.getPath().getLastPathComponent();
 		m.getModel().setURI(f, e.getSource());
 	}
 

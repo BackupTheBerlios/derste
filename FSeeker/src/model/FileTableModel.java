@@ -91,7 +91,11 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	 */
 	public void setDataForSimpleView() {
 		File[] files = fsm.getFilesList();
-
+		if (files == null) {
+			setDataVector(null, colNames);
+			return;
+		}
+		
 		int nbColumns = colNames.size();
 		int nbRows = files.length;
 
