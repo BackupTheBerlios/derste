@@ -26,9 +26,6 @@ public class FileUtilities {
      * @return le texte descriptif
      */
     public static String getDetails(File f) {
-    	if (f == null)
-    		return null;
-    	
         StringBuffer sb = new StringBuffer(50);
         sb.append("<html>");
 
@@ -37,7 +34,7 @@ public class FileUtilities {
 
         // Le type et le nom (pour les aveugles)
         sb.append("<b>" + (f.isDirectory() ? "Doss" : "Fich") + "ier</b> : "
-                + f.getName() + (f.isDirectory() ? File.separator : "") + "<br>");
+                + f.getName() + "<br>");
 
         // On affiche la taille pour un fichier, le nombre d'élement contenu
         // pour un dossier
