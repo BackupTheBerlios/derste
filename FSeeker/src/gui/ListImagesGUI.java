@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.FlowLayout;
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -26,22 +26,23 @@ public class ListImagesGUI extends JList implements Observer {
     public ListImagesGUI(ListImagesModel m, boolean simple) {
         this.m = m;
         m.addObserver(this);
-		
+
         setModel(m);
         setVisibleRowCount(0);
         setDragEnabled(true);
-		setDoubleBuffered(true);
-		setLayoutOrientation(JList.HORIZONTAL_WRAP);        
-        setCellRenderer(new ListImagesCellRenderer(m, simple));
+        setDoubleBuffered(true);
+        setPrototypeCellValue(new File("FICHIERFICHIER.FICHIER"));
+        setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        setCellRenderer(new ListImagesCellRenderer(simple));
         addMouseListener(new ListImagesDataControler(m));
     }
 
     public void update(Observable o, Object caller) {
-    	//if (caller != this) {
-				revalidate();
-				repaint();	
-        //}
+        if (caller != this) {
+            revalidate();
+            repaint();
+        }
     }
-    
+
 }
 

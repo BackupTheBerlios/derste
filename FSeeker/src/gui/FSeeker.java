@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.ToolTipManager;
 
 import misc.GU;
 import misc.ImagesMap;
@@ -102,7 +103,8 @@ public class FSeeker {
         
         f = new JFrame("FSeeker v" + VERSION);
         Container cp = f.getContentPane();
-
+        ToolTipManager.sharedInstance().setInitialDelay(1500);
+        
         // GU.changeLF();
         f.setJMenuBar(getDefaultMenuBar());
 

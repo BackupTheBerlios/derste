@@ -13,8 +13,8 @@ import javax.swing.Icon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import misc.FileUtilities;
 import misc.ImagesMap;
+import misc.file.FileUtilities;
 
 /**
  * 

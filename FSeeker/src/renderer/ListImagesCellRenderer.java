@@ -7,9 +7,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
-import misc.FileUtilities;
 import misc.ImagesMap;
-import model.ListImagesModel;
+import misc.file.FileUtilities;
 
 /**
  * @author sted
@@ -19,14 +18,7 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
 
     protected boolean simple = false;
 
-    protected ListImagesModel m = null;
-
-    public ListImagesCellRenderer(ListImagesModel m) {
-        this(m, false);
-    }
-
-    public ListImagesCellRenderer(ListImagesModel m, boolean simple) {
-        this.m = m;
+    public ListImagesCellRenderer(boolean simple) {
         this.simple = simple;
     }
 
@@ -37,14 +29,9 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
 
         File file = (File) value;
 
-        // Si on doit afficher le parent, alors on affiche ".."
-        if (file.equals(m.getParent()))
-            setText("..");
-        else
-            setText(file.getName() + (file.isDirectory() ? "/" : ""));
-
+        setText(file.getName() + (file.isDirectory() ? "/" : ""));
         setToolTipText(FileUtilities.getDetails(file));
-        
+
         if (!simple) {
             setVerticalTextPosition(SwingConstants.BOTTOM);
             setHorizontalTextPosition(SwingConstants.CENTER);
