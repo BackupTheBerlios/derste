@@ -71,13 +71,14 @@ public class ListImagesDataControler extends MouseAdapter implements
         // TODO System.out.println(e.getButton());
         if (e.getButton() == MouseEvent.BUTTON2_DOWN_MASK) {
             JList list = (JList) e.getSource();
-            JPopupMenu popup = list.getComponentPopupMenu();
+            //TOUT LE MONDE n'a pas la 1.5
+            //JPopupMenu popup = list.getComponentPopupMenu();
             
             Point clic = e.getPoint();
             int index = list.locationToIndex(clic);
             Rectangle r = list.getCellBounds(index, index);
             if (r.contains(clic)) {
-                popup.add(new JMenuItem("salut"));
+                //popup.add(new JMenuItem("salut"));
                 
             }
         }
