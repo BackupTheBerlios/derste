@@ -8,26 +8,35 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-import misc.GU;
 import misc.ImagesMap;
 import model.URIModel;
 
 /**
- * @author sted
+ * La toolbar.
+ * 
+ * @author Sted
  */
 public class ToolBarGUI extends JToolBar {
 
+	/** L'application FSeeker où mettre la toolbar */
 	protected FSeeker fs = null;
-	
+
+	/**
+	 * Construit une toolbar.
+	 * 
+	 * @param fs
+	 *            la classe principale
+	 */
 	public ToolBarGUI(final FSeeker fs) {
 		super(JToolBar.HORIZONTAL);
 		this.fs = fs;
-		
+
 		setLayout(new BorderLayout());
 		setFloatable(false);
 
@@ -35,6 +44,9 @@ public class ToolBarGUI extends JToolBar {
 		add(getAddress(), BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Retourne la partie contenant l'addresse.
+	 */
 	protected JPanel getAddress() {
 		URIModel uriModel = new URIModel(fs.getModel());
 		JPanel p = new JPanel(new BorderLayout());
@@ -44,68 +56,91 @@ public class ToolBarGUI extends JToolBar {
 		return p;
 	}
 
+	/**
+	 * Retourne la partie contenant les icônes.
+	 */
 	protected JPanel getIcons() {
 		// La barre d'icônes
 		JPanel p = null;
-		JButton b = null;
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		b = new JButton();
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				GU.info("Précédent !");
-			}
-		});
-		b.setBorder(null);
-		b.setIcon(ImagesMap.get("previous.gif"));
-		b.setToolTipText("Précédent");
-		p.add(b);
 
-		b = new JButton();
-		b.addActionListener(new ActionListener() {
+		createButton(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GU.info("Précédent !");
+				fs.getModel().gotoPrevious();
 			}
-		});
-		b.setBorder(null);
-		b.setIcon(ImagesMap.get("next.gif"));
-		b.setToolTipText("Suivant");
-		p.add(b);
+		}, ImagesMap.get("previous.png"), "Précédent", p);
 
-		b = new JButton();
-		b.addActionListener(new ActionListener() {
+		createButton(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fs.getModel().gotoNext();
+			}
+		}, ImagesMap.get("next.png"), "Suivant", p);
+
+		createButton(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fs.getModel().gotoParent();
 			}
-		});
-		b.setBorder(null);
-		b.setIcon(ImagesMap.get("parent.gif"));
-		b.setToolTipText("Répertoire parent");
-		p.add(b);
+		}, ImagesMap.get("parent.png"), "Répertoire parent", p);
 
-		b = new JButton("Rechercher");
-		b.addActionListener(new ActionListener() {
+		createButton(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GU.info("Précédent !");
+				fs.getCB().setSelectedItem("Arborescence");
 			}
-		});
-		b.setBorder(null);
-		b.setIcon(ImagesMap.getDefault());
-		b.setToolTipText("Rechercher un fichier ou un répertoire");
-		p.add(b);
+		}, ImagesMap.get("arborescence.png"),
+				"Afficher l'arborescence sous forme d'arbre", p);
 
-		b = new JButton();
-		b.addActionListener(new ActionListener() {
+		createButton(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fs.setMain(fs.getDefaultView());
+				fs.getCB().setSelectedItem("Recherche");
 			}
-		});
-		b.setBorder(null);
-		b.setIcon(ImagesMap.getDefault());
-		b.setToolTipText("Affichage avec l'arborescence sous forme d'arbre");
-		p.add(b);
+		}, ImagesMap.get("search.png"),
+				"Rechercher un fichier ou un répertoire", p);
+
+		createButton(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fs.getCB().setSelectedItem("Favoris");
+			}
+		}, ImagesMap.get("bookmarks.png"), "Afficher les favoris", p);
+
+		createButton(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fs.getBookmarksGUI().addBookmark(fs.getModel().getURI());
+			}
+		}, ImagesMap.get("addbookmark.png"),
+				"Ajouter le répertoire courant dans les favoris", p);
+
+		createButton(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fs.getCB().setSelectedItem("Information");
+			}
+		}, ImagesMap.get("information.png"),
+				"Afficher les informations de la sélection", p);
 
 		return p;
+	}
+
+	/**
+	 * Ajoute un bouton à un panel. Méthode pour ne pas recopier toujours le
+	 * même code.
+	 * 
+	 * @param al
+	 *            l'action du bouton
+	 * @param icon
+	 *            son icône
+	 * @param tooltip
+	 *            son tooltip
+	 * @param p
+	 *            le panel où ajouter
+	 */
+	private static void createButton(ActionListener al, Icon icon,
+			String tooltip, JPanel p) {
+		JButton b = new JButton();
+		b.addActionListener(al);
+		b.setBorder(null);
+		b.setIcon(icon);
+		b.setToolTipText(tooltip);
+		p.add(b);
 	}
 
 }

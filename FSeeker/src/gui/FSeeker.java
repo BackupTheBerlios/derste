@@ -20,7 +20,6 @@ import javax.swing.Icon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -30,6 +29,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
 import misc.GU;
+import misc.ImagesMap;
 import misc.PopupManager;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
@@ -82,13 +82,13 @@ public class FSeeker extends JFrame {
 	private PreviewManager preview = null;
 
 	/** Le panel de bookmark dans le subleft */
-	private JList bookmarksgui = null;
+	private BookmarksGUI bookmarksgui = null;
 
 	/** Les tabulations dans la vue de droite */
 	private JTabbedPane tabs = null;
 
 	protected static Preferences pref = Preferences.userRoot();
-	
+
 	/** Construit la fenêtre par défaut de FSeeker */
 	public FSeeker(FSeekerModel fsm) {
 		super("FSeeker v" + VERSION);
@@ -97,7 +97,8 @@ public class FSeeker extends JFrame {
 		Container cp = getContentPane();
 
 		// Préférences
-		ToolTipManager.sharedInstance().setEnabled(pref.getBoolean("tooltips", true));
+		ToolTipManager.sharedInstance().setEnabled(
+				pref.getBoolean("tooltips", true));
 		ToolTipManager.sharedInstance().setInitialDelay(1500);
 		ToolTipManager.sharedInstance().setReshowDelay(1500);
 
@@ -129,6 +130,10 @@ public class FSeeker extends JFrame {
 		return fsm;
 	}
 
+	public JComboBox getCB() {
+		return cb;
+	}
+
 	/**
 	 * Ajoute une tabulation.
 	 * 
@@ -144,6 +149,15 @@ public class FSeeker extends JFrame {
 	public void addTab(String title, Icon icon, Component component, String tip) {
 		tabs.addTab(title, icon, component, tip);
 		tabs.setSelectedComponent(component);
+	}
+
+	/**
+	 * Retourne le gui des bookmarks.
+	 * 
+	 * @return le gui des bookmarks.
+	 */
+	public BookmarksGUI getBookmarksGUI() {
+		return bookmarksgui;
 	}
 
 	/**
@@ -217,9 +231,10 @@ public class FSeeker extends JFrame {
 	 * @return le sous-panel à gauche
 	 */
 	private JPanel getSubLeftPanel() {
-		JPanel p = new JPanel(new BorderLayout());
+		JPanel p = null;
 
 		if ("Arborescence".equals(cb.getSelectedItem())) {
+			p = new JPanel(new BorderLayout());
 			p.add(fstgui);
 		} else if ("Recherche".equals(cb.getSelectedItem())) {
 			searchgui.setSearchPath(fsm.getURI());
@@ -227,6 +242,7 @@ public class FSeeker extends JFrame {
 		} else if ("Information".equals(cb.getSelectedItem())) {
 			p = preview;
 		} else if ("Favoris".equals(cb.getSelectedItem())) {
+			p = new JPanel(new BorderLayout());
 			p.add(bookmarksgui);
 		}
 
@@ -294,14 +310,15 @@ public class FSeeker extends JFrame {
 		JScrollPane viewTable = new JScrollPane(ftgui);
 		JScrollPane viewTableSpecial = new JScrollPane(ftguiSpecial);
 
-		tabs.addTab("Icônes", null/* ImagesMap.get("view_icon.png") */,
-				viewIcon, "Vue avec les icônes");
-		tabs.addTab("Liste", null/* ImagesMap.get("view_list.png") */,
-				viewList, "Vue en liste");
-		tabs.addTab("Détails", null/* ImagesMap.get("view_details.png") */,
+		tabs.addTab("Icônes", ImagesMap.get16x16("view_icon.png"), viewIcon,
+				"Vue avec les icônes");
+		tabs.addTab("Liste", ImagesMap.get16x16("view_list.png"), viewList,
+				"Vue en liste");
+		tabs.addTab("Détails", ImagesMap.get16x16("view_details.png"),
 				viewTable, "Vue de détails");
-		tabs.addTab("Détails", null /* ImagesMap.get("view_details.png") */,
-				viewTableSpecial, "Vue Spéciale");
+		tabs.addTab("Développement", ImagesMap
+				.get16x16("view_developpement.png"), viewTableSpecial,
+				"Vue en développement");
 
 		// Assemblage et Pan !
 		splitpane.setTopComponent(getLeftPanel());

@@ -84,6 +84,19 @@ public class BookmarksGUI extends JList {
 	}
 
 	/**
+	 * Ajoute un bookmark pointant sur f.
+	 * 
+	 * @param f
+	 *            un fichier a bookmarké
+	 */
+	public void addBookmark(File f) {
+		String title;
+		while ((title = GU.input("Titre du bookmark :")).equals(""))
+			;
+		addBookmark(title, f);
+	}
+
+	/**
 	 * Écrit les bookmarks dans le fichier dédié.
 	 */
 	public void writeBookmarks() {
@@ -94,7 +107,7 @@ public class BookmarksGUI extends JList {
 			Bookmark b = null;
 			file = new PrintWriter(new BufferedWriter(new FileWriter(
 					BOOKMARKS_FILE)));
-			
+
 			for (int i = 0; i < m.getSize(); i++) {
 				b = (Bookmark) m.get(i);
 				file.println(b.getTitle() + BOOKMARK_DELIMITER + b.getFile());
@@ -229,12 +242,7 @@ public class BookmarksGUI extends JList {
 
 						file = st.nextToken();
 						File f = new File(file);
-						String title;
-						while ((title = GU.input("Titre du bookmark :"))
-								.equals(""))
-							;
-
-						addBookmark(title, f);
+						addBookmark(f);
 						writeBookmarks();
 						dtde.dropComplete(true);
 
