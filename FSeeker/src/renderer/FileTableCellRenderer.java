@@ -13,7 +13,7 @@ import javax.swing.Icon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import misc.FileDetails;
+import misc.FileUtilities;
 import misc.ImagesMap;
 
 /**
@@ -63,7 +63,7 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 			//lab.setIcon(fileIcon);
 			setIcon(fileIcon);
 			super.setValue(file.getName() + (file.isDirectory() ? "/" : ""));
-			setToolTipText(FileDetails.getDetails(file));
+			setToolTipText(FileUtilities.getDetails(file));
 			//super.setValue( file.getName() ) ;
 		}
 	}

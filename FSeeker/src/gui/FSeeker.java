@@ -51,7 +51,7 @@ import controler.ToolBarControler;
 public class FSeeker {
 
 	/** La version du software */
-	public final static String VERSION = "0.1a";
+	public final static String VERSION = "0.2a";
 
 	private final static File ROOT = (System.getProperty("os.name").contains(
 			"Linux") ? File.listRoots()[0] : File.listRoots()[1]);
@@ -118,8 +118,11 @@ public class FSeeker {
 	}
 
 	public JPanel getDefaultView() {
+		
+		// Singleton
 		if (defaultView == null) {
-			// Coupage en deux
+			
+			// Coupure en deux
 			defaultView = new JPanel(new GridLayout(1, 2));
 
 			// Barre de split
@@ -136,7 +139,20 @@ public class FSeeker {
 			paths.add(new File(System.getProperty("user.home")));
 			for (int i = 0; i < File.listRoots().length; i++)
 				paths.add(File.listRoots()[i]);
-			left.add(new JComboBox(paths), BorderLayout.NORTH);
+			
+			final JComboBox comboPaths = new JComboBox(paths);
+			comboPaths.setEditable(false);
+			comboPaths.setSelectedItem(ROOT);
+			// Ca sent le ComboBoxModel (favoris rajouté à la main, pan)
+			
+			comboPaths.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					fstm.setCurrentDirectory((File) comboPaths.getSelectedItem());
+				}
+			});
+			
+			
+			left.add(comboPaths, BorderLayout.NORTH);
 
 			// L'arbre
 			fstm = new FileSystemTreeModel(ROOT);

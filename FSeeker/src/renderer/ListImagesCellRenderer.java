@@ -7,7 +7,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
-import misc.FileDetails;
+import misc.FileUtilities;
 import misc.ImagesMap;
 
 /**
@@ -38,7 +38,7 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
 		setText(file.getName() + (file.isDirectory() ? "/" : ""));
 
 		setIcon(ImagesMap.getImage(file));
-		setToolTipText(FileDetails.getDetails(file));
+		setToolTipText(FileUtilities.getDetails(file));
 
 		if (!simple) {
 			setVerticalTextPosition(SwingConstants.BOTTOM);

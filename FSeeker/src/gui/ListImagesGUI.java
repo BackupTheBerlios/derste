@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.FlowLayout;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JList;
 
@@ -13,7 +15,7 @@ import controler.ListImagesMouseListener;
  * @author brahim
  * @author Sted
  */
-public class ListImagesGUI extends JList {
+public class ListImagesGUI extends JList implements Observer {
 
     private ListImagesModel m = null;
 
@@ -23,6 +25,8 @@ public class ListImagesGUI extends JList {
     
     public ListImagesGUI(ListImagesModel m, boolean simple) {
     	this.m = m;
+    	m.addObserver(this);
+    	
         setModel(m);
         setDragEnabled(true);
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -32,5 +36,9 @@ public class ListImagesGUI extends JList {
         new ListImagesDataControler(m, this);
         addMouseListener(new ListImagesMouseListener());
     }
+    
+	public void update(Observable o, Object arg) {
+		System.out.println("ListImagesGUI.update()");
+	}
 }
 

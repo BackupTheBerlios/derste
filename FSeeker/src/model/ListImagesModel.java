@@ -6,6 +6,7 @@ package model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Observable;
 
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
@@ -15,7 +16,7 @@ import javax.swing.event.ListDataListener;
  * @author brahim
  * @author Sted
  */
-public class ListImagesModel implements ListModel {
+public class ListImagesModel extends Observable implements ListModel {
 
 	private File dir = null;
 
@@ -59,6 +60,8 @@ public class ListImagesModel implements ListModel {
 		this.dir = dir;
 		fire(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0,
 				getSize() - 1));
+		setChanged();
+		notifyObservers();
 	}
 
 	//	Indique à tous les écouteurs, qu'il y a eut un changement
