@@ -3,14 +3,31 @@
  */
 package misc;
 
+import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.Toolkit;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+
 import javax.swing.JOptionPane;
+
+//import javax.swing.UIManager;
+//import javax.swing.UnsupportedLookAndFeelException;
+
 import javax.swing.border.Border;
 
 /**
@@ -91,5 +108,19 @@ public class GU {
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 	}
+	
+	public static Image captureComponent(JComponent comp) throws AWTException {
+	    
+	    Robot robot = new Robot();
+	    Point p = new Point(0, 0);
+		SwingUtilities.convertPointToScreen(p, comp);
+		Rectangle area = comp.getBounds();
+		area.x = p.x;
+		area.y = p.y;
+		BufferedImage image = new Robot().createScreenCapture( area );
+	    
+	    return image;
+	}
+	
 
 }
