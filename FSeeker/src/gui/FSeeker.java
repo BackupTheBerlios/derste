@@ -12,8 +12,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -30,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.tree.TreePath;
 
 import misc.GU;
 import misc.ImagesMap;
@@ -116,6 +120,30 @@ public class FSeeker {
         if (fstgui == null) {
             fstgui = new FileSystemTreeGUI(fstm);
             fstgui.addMouseListener(popupListener);
+            
+            LinkedList ll = new LinkedList();
+            File home = new File(System.getProperty("user.home"));
+            
+            while (true) {
+            	ll.addLast(home);
+            	home = home.getParentFile();
+				if (home == null)  {
+					break;
+				}
+            }
+
+            TreePath pathToHome = new TreePath(ll.removeLast());
+            
+            while (true) {
+            	try {
+            		pathToHome = pathToHome.pathByAddingChild(ll.removeLast());
+            	} catch (NoSuchElementException e) {
+            		break;
+            	}
+            }
+            
+            fstgui.setSelectionPath(pathToHome);
+            //fstgui.expandPath(pathToHome);
         }
 
         if (lim == null)
@@ -136,7 +164,14 @@ public class FSeeker {
         sp.setOneTouchExpandable(true);
 
         JPanel tree = new JPanel(new BorderLayout());
-        tree.add(new JComboBox(File.listRoots()), BorderLayout.NORTH);
+                
+        Vector paths = new Vector();
+        paths.add(new File(System.getProperty("user.home")));
+        for (int i = 0; i < File.listRoots().length; i++)
+        	paths.add(File.listRoots()[i]);
+		
+        tree.add(new JComboBox(paths), BorderLayout.NORTH);
+                
         tree.add(new JScrollPane(fstgui), BorderLayout.CENTER);
 
         sp.setTopComponent(tree);

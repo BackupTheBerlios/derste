@@ -17,6 +17,7 @@ import controler.FileSystemTreeControler;
 
 /**
  * @author brahim
+ * @author Sted
  */
 public class FileSystemTreeGUI extends JTree implements Observer {
     protected FileSystemTreeModel m = null;
