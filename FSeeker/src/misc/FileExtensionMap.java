@@ -65,7 +65,7 @@ public class FileExtensionMap extends HashMap {
 
 	}
 
-	protected ImageIcon img(String path) {
+	protected Icon img(String path) {
 		return GU.getImage(path);
 	}
 
@@ -82,8 +82,8 @@ public class FileExtensionMap extends HashMap {
 	 *         images
 	 */
 	// Tout reprendre à 0, c'est n'imp, c'est le boxon, + lire TODO
-	public ImageIcon getIcon(String dir) {
-		ImageIcon fileIcon = null;
+	public Icon getIcon(String dir) {
+		Icon fileIcon = null;
 		String fileStr = null;
 		if (file != null)
 			fileStr = file.toString();
