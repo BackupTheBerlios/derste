@@ -74,8 +74,7 @@ public class ImagesMap {
                 fileIcon = get(ext + ".png");
             if (fileIcon == null)
                 fileIcon = getDefault();
-
-            System.out.println("Icon : " + fileIcon);
+            
         }
         return fileIcon;
     }
