@@ -48,7 +48,7 @@ public class FSeeker extends JFrame {
 		
 		cp.add(getStatusBar(), BorderLayout.SOUTH);
 
-		setPreferredSize(new Dimension(640, 480));
+		setSize(new Dimension(640, 480));
 		pack();
 		GU.center(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
