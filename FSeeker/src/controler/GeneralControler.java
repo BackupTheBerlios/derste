@@ -21,15 +21,19 @@ public class GeneralControler {
 	/**
 	 * Quand une touche est pressé, on gère. !
 	 * 
-	 * @param e l'événement associé
-	 * @param f le fichier en sélection
-	 * @param fsm le supra-modèle
+	 * @param e
+	 *            l'événement associé
+	 * @param f
+	 *            le fichier en sélection
+	 * @param fsm
+	 *            le supra-modèle
 	 */
 	public static void keyPressed(KeyEvent e, File f, FSeekerModel fsm) {
 
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_ENTER:
-			fsm.setURI(f);
+			if (f.isDirectory())
+				fsm.setURI(f);
 			break;
 		case KeyEvent.VK_BACK_SPACE:
 			fsm.gotoParent();
@@ -50,11 +54,14 @@ public class GeneralControler {
 	/**
 	 * Quand l'utilisateur a simple cliqué quelque part, on gère. !
 	 * 
-	 * @param f le fichier en sélection (sous le click)
-	 * @param fsm le supra-modèle
+	 * @param f
+	 *            le fichier en sélection (sous le click)
+	 * @param fsm
+	 *            le supra-modèle
 	 */
 	public static void mouseSimpleClick(File f, FSeekerModel fsm) {
-		fsm.setURI(f);
+		if (f.isDirectory())
+			fsm.setURI(f);
 	}
 
 }
