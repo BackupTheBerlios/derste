@@ -19,10 +19,10 @@ import model.*;
  * @author brahim
  *  
  */
-public class TableModelControler extends MouseAdapter {
+public class FileTableControler extends MouseAdapter {
     protected FileTableModel m = null;
 
-    public TableModelControler(FileTableModel m) {
+    public FileTableControler(FileTableModel m) {
         this.m = m;
     }
 
