@@ -11,37 +11,75 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
+ * Représente un système de fichier, en ne prenant en compte que les répertoires.
+ * 
  * @author brahim
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author Sted
  */
 public class FileSystemModel implements TreeModel {
 
+	/**
+	 * Représente un fichier. Utilisé pour que le toString ne renvoie que le nom
+	 * de fichier.
+	 * 
+	 * @author sted
+	 */
 	public class MyFile extends File {
+		
+		/**
+		 * Construit un MyFile à partir d'une String représentant le nom du fichier.
+		 * 
+		 * @param f nom du fichier
+		 */
 		public MyFile(String f) {
 			super(f);
 		}
 
+		/**
+		 * Construit un MyFile à partir d'une String, représentant le nom du fichier, et un File, représentant le père de ce fichier. 
+		 * 
+		 * @param parent le parent du child
+		 * @param child le fichier
+		 */
 		public MyFile(File parent, String child) {
 			super(parent, child);
 		}
 
+		/**
+		 * Retourne le nom du fichier.
+		 */
 		public String toString() {
 			return getName();
 		}
 	}
 
+	/** Racine de l'arbre */
 	protected File root = null;
 
+	/** Liste des listeners associés à l'évènement TreeModelEvent */ 
 	protected ArrayList listeners = new ArrayList();
 
-	protected FileFilter filter = new DirFilter();
+	/** Permet de ne sélectionner que les répertoires */
+	protected FileFilter filter = new FileFilter() {
+		public boolean accept(File pathname) {
+			return (pathname.isDirectory());
+		}
+	};
 
+	/**
+	 * Construit un FileSystemModel avec le fichier représenté par <code>s</code> comme racine.
+	 * 
+	 * @param s racine
+	 */
 	public FileSystemModel(String s) {
 		this(new File(s));
 	}
-
+	
+	/**
+	 * Construit un FileSystemModel avec <code>root</code> comme racine.
+	 * 
+	 * @param root racine
+	 */
 	public FileSystemModel(File root) {
 		this.root = root;
 	}
@@ -52,8 +90,7 @@ public class FileSystemModel implements TreeModel {
 
 	public Object getChild(Object parent, int index) {
 		File file = (File) parent;
-		String[] children = getStrFiles(file.listFiles(filter));//Utilisation
-		// du filtre
+		String[] children = getStrFiles(file.listFiles(filter));
 
 		if (children == null || index < 0 || index >= children.length)
 			return null;
@@ -64,25 +101,27 @@ public class FileSystemModel implements TreeModel {
 	public int getChildCount(Object parent) {
 		File f = (File) parent;
 
-		if (parent == null || f.isFile())
+		if (parent == null/* || f.isFile() Forcément un rép */)
 			return 0;
 
-		File[] files = (f.listFiles(filter)); //Utilisation du filtre
+		File[] files = (f.listFiles(filter));
 		return (files != null ? files.length : 0);
 	}
 
 	public boolean isLeaf(Object node) {
-		//return ((File) node).isFile();
+		// return ((File) node).isFile();
 		return false;
 	}
 
 	public int getIndexOfChild(Object parent, Object child) {
 		File f = (File) parent;
 
-		if (f.isFile())
-			return -1;
+		//if (f.isFile()) C'est forcément un rép dans le cas présent
+		//return -1;
 
-		File[] files = f.listFiles(); //Utilisation du filtre
+		// TODO ça fait pareil avec sous sans filtre non ? Vérifier. Je pense
+		// qu'il vaudrait mieux le mettre. :|
+		File[] files = f.listFiles();
 		for (int i = 0; i < files.length; i++)
 			if (files[i].equals(child))
 				return i;
@@ -119,13 +158,14 @@ public class FileSystemModel implements TreeModel {
 				children);
 		Iterator it = listeners.iterator();
 		while (it.hasNext())
-			//On gére qiue les dossiers
 			((TreeModelListener) it.next()).treeNodesChanged(ev);
 	}
 
 	/**
-	 * On renvoie touts les fichiers du tableau files sous formes de chaine de
-	 * characteres *
+	 * Renvoie un tableau contenant les noms des fichiers d'un tableau de File.
+	 * 
+	 * @param files tableau de Files dont retournés les noms
+	 * @return un tableau de String ne contenant que les noms des fichiers
 	 */
 	public static String[] getStrFiles(File[] files) {
 		int num = files.length;
@@ -134,14 +174,7 @@ public class FileSystemModel implements TreeModel {
 			dirs[i] = files[i].getName();
 
 		return dirs;
-
 	}
 
-}
-
-class DirFilter implements FileFilter {
-	public boolean accept(File pathname) {
-		return (pathname.isDirectory());
-	}
 }
 
