@@ -3,13 +3,8 @@
  */
 package gui;
 
-import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,29 +14,16 @@ import javax.swing.JOptionPane;
  * Boîte de dialogue "A propos".
  * @author sted
  */
-public class About extends JDialog {
-
-	private JButton close = new JButton("Fermer");
-	{
-		
-	}
+public class About extends JOptionPane {
+	
 	public About(Frame owner) {
-		super(owner, "A propos", true);
-		setLayout(new FlowLayout());
-		getContentPane().add(close);
-		
-		/*JOptionPane.showMessageDialog(frame,
-	    	"Eggs aren't supposed to be green.");*/
-		
-		final JOptionPane optionPane = new JOptionPane(
-                "FSeeker v" + FSeeker.VERSION + " par Stéphane D. tout seul.");
-		setContentPane(optionPane);
-		pack();
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		super();
+		JDialog d = createDialog(owner, "Pwet");
+		d.setVisible(true);
+	    //super(owner, "A propos");
 				
-			}
-		});
+		/*final JOptionPane optionPane = new JOptionPane(
+                "FSeeker v" + FSeeker.VERSION + " par Stéphane D. tout seul.");*/
 	}
 	
 	public static void main(String[] args) {

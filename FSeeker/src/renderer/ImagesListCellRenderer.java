@@ -1,15 +1,10 @@
 package renderer;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Rectangle;
 import java.io.File;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 
 import misc.ImagesMap;
@@ -23,7 +18,6 @@ public class ImagesListCellRenderer extends DefaultListCellRenderer {
 		File file = (File) value;
 		String s = file.getName();
 		
-				
 		Icon fileIcon = null;
 		String fileStr = file.toString();
 		
@@ -48,7 +42,7 @@ public class ImagesListCellRenderer extends DefaultListCellRenderer {
 		}	
 		
 		setIcon(fileIcon);
-		//html pour gérer le passage à la ligne ..
+
 		setToolTipText("<html>Nom : " + file + "<br>Taille : " + file.length() + " octets</html>");
 		
 		setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -58,3 +52,4 @@ public class ImagesListCellRenderer extends DefaultListCellRenderer {
 		return this;
 	}
 }
+

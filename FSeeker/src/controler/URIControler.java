@@ -15,10 +15,15 @@ import model.URIModel;
  * @author sted
  */
 public class URIControler implements ActionListener {
+    protected URIModel m = null;
+    
+    public URIControler(URIModel m) {
+        this.m = m;
+    }
+    
     public void actionPerformed(ActionEvent e) {
         URIGUI ugui = (URIGUI) e.getSource();
         String f = ugui.getText();
-        URIModel m = ugui.getModel();
         m.setURI(new File(f));
     }
 

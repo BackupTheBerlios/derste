@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -9,17 +8,23 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -65,6 +70,8 @@ public class FSeeker {
 
     private URIGUI ugui = null;
 
+    private JPopupMenu popup = null;
+
     /** Le contrôleur de la barre d'outils */
     private final ToolBarControler toolBarControler = new ToolBarControler(this);
 
@@ -101,11 +108,21 @@ public class FSeeker {
         JPanel main = new JPanel();
         main.setLayout(new GridLayout(1, 2));
 
-        fstm = new FileSystemTreeModel(start);
-        fstgui = new FileSystemTreeGUI(fstm);
+        // Trouver un bon système qui garde en mémoire les trucs, voir le panel
+        // entier
 
-        lim = new ListImagesModel((File) fstm.getRoot());
-        ligui = new ListImagesGUI(lim);
+        if (fstm == null)
+            fstm = new FileSystemTreeModel(start);
+        if (fstgui == null) {
+            fstgui = new FileSystemTreeGUI(fstm);
+            fstgui.addMouseListener(popupListener);
+        }
+
+        if (lim == null)
+            lim = new ListImagesModel((File) fstm.getRoot());
+        
+        if (ligui == null)
+            ligui = new ListImagesGUI(lim);
 
         JTabbedPane tp = new JTabbedPane();
         tp.addTab("Icônes", ImagesMap.getDefault(), new JScrollPane(ligui),
@@ -117,7 +134,12 @@ public class FSeeker {
         JSplitPane sp = new JSplitPane();
         sp.setDividerLocation(200);
         sp.setOneTouchExpandable(true);
-        sp.setTopComponent(new JScrollPane(fstgui));
+
+        JPanel tree = new JPanel(new BorderLayout());
+        tree.add(new JComboBox(File.listRoots()), BorderLayout.NORTH);
+        tree.add(new JScrollPane(fstgui), BorderLayout.CENTER);
+
+        sp.setTopComponent(tree);
         sp.setBottomComponent(tp);
         main.add(sp);
 
@@ -151,8 +173,33 @@ public class FSeeker {
      *            le nouveau panel central
      */
 
+    class PopupListener extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+    }
+
+    MouseListener popupListener = new PopupListener();
+
     public void setView(JPanel main) {
+        if (this.main != null)
+            f.remove(this.main);
+
+        f.getContentPane().add(main, BorderLayout.CENTER);
         this.main = main;
+
+        f.repaint();
+        main.revalidate();
         // TODO revalidate et tout le bord ne font rien, que faire..!
     }
 
@@ -316,6 +363,7 @@ public class FSeeker {
         });
         menu.add(menuItem);
         mb.add(menu);
+        mb.add(Box.createHorizontalGlue());
 
         menu = new JMenu("Aide");
         menuItem = new JMenuItem("Sommaire", KeyEvent.VK_S);
@@ -334,6 +382,9 @@ public class FSeeker {
         });
         menu.add(menuItem);
         mb.add(menu);
+
+        popup = new JPopupMenu("Popup");
+        popup.add(menu);
 
         return mb;
     }

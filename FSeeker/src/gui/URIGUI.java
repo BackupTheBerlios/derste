@@ -28,11 +28,11 @@ public class URIGUI extends JTextField implements Observer {
     public URIGUI(URIModel m) {
         this.m = m;
         m.addObserver(this);
-        addActionListener(new URIControler());
+        addActionListener(new URIControler(m));
         setColumns(20);
         update(m, null);
     }
-    
+
     public URIModel getModel() {
         return m;
     }
