@@ -52,9 +52,10 @@ public class FileTableGUI extends JTable {
 
         setDragEnabled(true);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        addMouseListener(new FileTableControler(m));
-
+        
+        FileTableControler ftc = new FileTableControler(m);
+        addMouseListener(ftc);
+        addKeyListener(ftc);
     }
 
    
