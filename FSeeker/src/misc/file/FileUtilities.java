@@ -40,9 +40,9 @@ public class FileUtilities {
 
 		protected String name = null;
 
-		public Font dirFont = new Font("Serif", Font.BOLD, 12);
+		public Font dirFont = new Font("Dialog", Font.BOLD, 12);
 
-		public Font fileFont = new Font("Serif", Font.PLAIN, 12);
+		public Font fileFont = new Font("Dialog", Font.PLAIN, 12);
 
 		public String getType() {
 			if (type == null)
@@ -78,7 +78,7 @@ public class FileUtilities {
 					// Répertoire
 					File[] foo = f.listFiles();
 					if (foo != null && foo.length > 0)
-						size = foo.length + " fichier"
+						size = foo.length + " élément"
 								+ (foo.length > 1 ? "s" : "");
 					else
 						size = "";
@@ -117,13 +117,13 @@ public class FileUtilities {
 			sb.append("<html>");
 
 			// Une jolie image pour faire staïlle
-			sb.append("<center><img src=\"/images/dot.gif\"></center><br>");
+			sb.append("<center><img src=\"../../images/dot.gif\"></center><br>");
 
 			// Le type et le nom (pour les aveugles)
 			sb.append("<b>" + getType() + "</b> : " + getName() + "<br>");
 
 			if (f.isDirectory()) {
-				if (getSize() != null)
+				if (!"".equals(getSize()))
 					sb.append("<b>Contient</b> : " + getSize() + "<br>");
 			} else
 				sb.append("<b>Taille</b> : " + getSize() + "<br>");
