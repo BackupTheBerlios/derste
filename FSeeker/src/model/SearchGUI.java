@@ -26,7 +26,7 @@ import misc.ImagesMap;
 
 /**
  * @author derosias
- */
+ *//*
 public class SearchGUI extends JFrame {
 	protected JTextField pattern = new JTextField(20);
 
@@ -147,5 +147,5 @@ public class SearchGUI extends JFrame {
 		SearchModel model = new SearchModel("/home/sted");
 		SearchGUI sg = new SearchGUI(model);
 	}
-}
+}*/
 
