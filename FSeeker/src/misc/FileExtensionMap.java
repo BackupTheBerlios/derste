@@ -28,8 +28,6 @@ public class FileExtensionMap extends HashMap {
 
 	private File file;
 
-	private boolean DEBUG = false;
-	
 	// TODO C'est ça, tu vas les définir un par un ?
 	private static final String deflt = "file.png";//fichier par défaut
 
@@ -66,7 +64,7 @@ public class FileExtensionMap extends HashMap {
 	}
 
 	protected Icon img(String path) {
-		return GU.getImage(path);
+		return ImagesMap.get(path);
 	}
 
 	/**
@@ -87,32 +85,21 @@ public class FileExtensionMap extends HashMap {
 		String fileStr = null;
 		if (file != null)
 			fileStr = file.toString();
-		if(DEBUG) out("fileStr = " + fileStr);		
-		//String ext = fileStr.substring(fileStr.lastIndexOf("."));
+				
 		if (file.isDirectory()) {				
-			fileIcon = img(dir /*+ GU.SEP*/ + extImg.get("dir"));
-			if(DEBUG) out(file + " est un répertoire et fileIcon = " + fileIcon);
+			fileIcon = ImagesMap.get("directory.png");
+			
 		} else {
-			Iterator it = extImg.keySet().iterator();
-			boolean ok = false;
-			while (it.hasNext()) {
-				String ext = (String) it.next();
-				if (fileStr.toString().endsWith(ext)) {
-					img((String) extImg.get(ext));
-					ok = true;
-					break;
-				}
+			String ext = fileStr.substring(fileStr.lastIndexOf('.'));
+			if (fileStr.toString().endsWith(ext)) {
+				fileIcon = ImagesMap.get(ext + ".png");
+			} else {
+			    fileIcon = ImagesMap.get("file.jpg");
 			}
-			if (!ok)//on prend le fichier image par défaut
-				img((String) extImg.get(deflt));
 		}		
 
 		return fileIcon;
 
-	}
-	
-	protected void out(String s){
-		System.out.println(s);
 	}
 
 	/**
