@@ -10,18 +10,17 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -30,11 +29,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.JViewport;
 import javax.swing.ToolTipManager;
 
 import misc.GU;
@@ -208,10 +207,10 @@ public class FSeeker {
 
             JTabbedPane tabs = new JTabbedPane();
             
-            JScrollPane viewIcon = new JScrollPane(ligui,
+            JScrollPane viewIcon = new JScrollPane(ligui.getGUI(),
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            JScrollPane viewList = new JScrollPane(lgui,
+            JScrollPane viewList = new JScrollPane(lgui.getGUI(),
                     JScrollPane.VERTICAL_SCROLLBAR_NEVER,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             JScrollPane viewTable = new JScrollPane(ftgui,
@@ -320,6 +319,7 @@ public class FSeeker {
         
         tb.setLayout(layout);
         tb.setFloatable(false);
+        tb.setRollover(true);
 
 		JPanel p = null;
         JButton b = null;
@@ -485,34 +485,40 @@ public class FSeeker {
         });
         menu.add(menuItem);
         menu.addSeparator();
-        menuItem = new JMenuItem("Trier par nom", KeyEvent.VK_N);
+        
+        ButtonGroup bg = new ButtonGroup();
+        menuItem = new JRadioButtonMenuItem("Trier par nom", fsm.getComparator() == CompareByName.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareByName.get());
             }
         });
         menu.add(menuItem);
-        menuItem = new JMenuItem("Trier par type", KeyEvent.VK_P);
+        bg.add(menuItem);
+        menuItem = new JRadioButtonMenuItem("Trier par type", fsm.getComparator() == CompareByType.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareByType.get());
             }
         });
         menu.add(menuItem);
-        menuItem = new JMenuItem("Trier par taille", KeyEvent.VK_T);
+        bg.add(menuItem);
+        menuItem = new JRadioButtonMenuItem("Trier par taille", fsm.getComparator() == CompareBySize.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareBySize.get());
             }
         });
         menu.add(menuItem);
-        menuItem = new JMenuItem("Trier par date de dernière modification", KeyEvent.VK_M);
+        bg.add(menuItem);
+        menuItem = new JRadioButtonMenuItem("Trier par date de dernière modification", fsm.getComparator() == CompareByLastModified.get());
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fsm.setComparator(CompareByLastModified.get());
             }
         });
         menu.add(menuItem);
+        bg.add(menuItem);
         mb.add(menu);
         
         mb.add(Box.createHorizontalGlue());
