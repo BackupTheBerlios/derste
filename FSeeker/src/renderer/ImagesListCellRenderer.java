@@ -48,7 +48,7 @@ public class ImagesListCellRenderer extends DefaultListCellRenderer {
 		}	
 		
 		setIcon(fileIcon);
-
+		//html pour gérer le passage à la ligne ..
 		setToolTipText("<html>Nom : " + file + "<br>Taille : " + file.length() + " octets</html>");
 		
 		setVerticalTextPosition(SwingConstants.BOTTOM);
