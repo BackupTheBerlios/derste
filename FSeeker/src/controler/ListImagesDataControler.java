@@ -1,5 +1,9 @@
 package controler;
 
+import gui.ListImagesGUI;
+
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -22,7 +28,10 @@ public class ListImagesDataControler extends MouseAdapter implements
         KeyListener, ListDataListener {
 
     /** Le modèle de liste à contrôler */
-    protected ListImagesModel m = null;;
+    protected ListImagesModel m = null;
+    
+    /** La vue associée */
+    protected ListImagesGUI gui = null;
 
     /**
      * Construit le contrôleur associé au modèle <code>m</code>.
@@ -30,8 +39,9 @@ public class ListImagesDataControler extends MouseAdapter implements
      * @param m
      *            le modèle
      */
-    public ListImagesDataControler(ListImagesModel m) {
+    public ListImagesDataControler(ListImagesModel m, ListImagesGUI gui) {
         this.m = m;
+        this.gui = gui;
     }
 
     /**
@@ -56,17 +66,38 @@ public class ListImagesDataControler extends MouseAdapter implements
         if (e.getClickCount() == 2)
             setURI(e);
     }
-
+    
+    public void mousePressed(MouseEvent e) {
+        System.out.println(e.getButton());
+        if (e.getButton() == MouseEvent.BUTTON2_DOWN_MASK) {
+            JList list = (JList) e.getSource();
+            JPopupMenu popup = list.getComponentPopupMenu();
+            
+            Point clic = e.getPoint();
+            int index = list.locationToIndex(clic);
+            Rectangle r = list.getCellBounds(index, index);
+            if (r.contains(clic)) {
+                popup.add(new JMenuItem("salut"));
+                
+            }
+        }
+    }
+    
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER)
             setURI(e);
+        else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+            m.getModel().gotoParent();
     }
 
     public void keyReleased(KeyEvent e) {}
 
     public void keyTyped(KeyEvent e) {}
 
-    public void contentsChanged(ListDataEvent e) {}
+    public void contentsChanged(ListDataEvent e) {
+        gui.ensureIndexIsVisible(0);
+        gui.setSelectedIndex(0);
+    }
 
     public void intervalAdded(ListDataEvent e) {}
 

@@ -33,7 +33,7 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
         File file = (File) value;
 
         setText(file.getName() + (file.isDirectory() ? File.separator : ""));
-		
+        
         if (file.isDirectory())
         	setFont(new Font(null, Font.BOLD, 12));
         else
