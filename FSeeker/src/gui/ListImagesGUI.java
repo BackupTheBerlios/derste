@@ -1,9 +1,6 @@
 package gui;
 
 import java.awt.FlowLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -36,7 +33,6 @@ public class ListImagesGUI extends JList implements Observer {
         setLayout(new FlowLayout());
         setCellRenderer(new ListImagesCellRenderer(m, simple));
         addMouseListener(new ListImagesDataControler(m));
-        addMouseMotionListener(new ListImagesMouseMotionListener(this, m));
     }
 
     public void update(Observable o, Object caller) {
@@ -44,23 +40,6 @@ public class ListImagesGUI extends JList implements Observer {
             revalidate();
             repaint();
         }
-    }
-}
-
-class ListImagesMouseMotionListener extends MouseMotionAdapter {
-    protected ListImagesModel lim = null;
-    protected ListImagesGUI ligui = null;
-    
-    public ListImagesMouseMotionListener(ListImagesGUI ligui, ListImagesModel lim) {
-        this.ligui = ligui;
-        this.lim = lim;     
-    }
-    
-    public void mouseMoved(MouseEvent e) {
-        int index = ligui.locationToIndex(e.getPoint());
-        File hovered = (File) lim.getElementAt(index);
-        
-        FileUtilities.getDetails(file);
     }
 }
 

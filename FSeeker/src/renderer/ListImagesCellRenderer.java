@@ -43,7 +43,7 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
         else
             setText(file.getName() + (file.isDirectory() ? "/" : ""));
 
-        //setToolTipText(FileUtilities.getDetails(file));
+        setToolTipText(FileUtilities.getDetails(file));
         
         if (!simple) {
             setVerticalTextPosition(SwingConstants.BOTTOM);
