@@ -27,9 +27,10 @@ public class FileTableControler extends MouseAdapter {
     }
 
     public void mouseClicked(MouseEvent e) {        
-        if (e.getClickCount() == 2) {
-           setURI(e);           
-        }
+        
+        if (e.getClickCount() == 1 && m.getMode() == FileTableModel.SPECIAL_MODE || e.getClickCount() == 2)
+            setURI(e); 
+            
      
     }
     
