@@ -24,7 +24,7 @@ public class ListImagesGUI extends JList {
         setLayout(new FlowLayout());
         setCellRenderer(new ListImagesCellRenderer());
 
-        new ListImagesDataControler(m);
+        new ListImagesDataControler(m, this);
         addMouseListener(new ListImagesMouseListener());
     }
 }

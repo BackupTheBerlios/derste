@@ -11,15 +11,16 @@ import model.ListImagesModel;
  */
 public class ListImagesDataControler implements ListDataListener {
 
-	private ListImagesModel m;
+	private ListImagesModel m = null;;
+	private JList list = null;
 	
-	public ListImagesDataControler(ListImagesModel m){
+	public ListImagesDataControler(ListImagesModel m, JList list){
 		this.m = m;
+		this.list = list;
 		m.addListDataListener(this);
 	}
 
 	public void contentsChanged(ListDataEvent e) {
-		JList list = (JList) e.getSource();
 		list.clearSelection();
 		list.ensureIndexIsVisible(0);
 		list.setModel(m);
