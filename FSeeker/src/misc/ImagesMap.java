@@ -29,7 +29,7 @@ public class ImagesMap {
     private static final char SEP = File.separatorChar;
 
     /** Là où sont stockées toutes les images */
-    private static final String IMAGES = "images";
+    private static final String IMAGES = "images"+SEP+"extensions";
 
     /**
      * Renvoie un objet Icon à partir du chemin de image. Si le chemin n'est pas
