@@ -41,7 +41,7 @@ public class GU {
 	 *            l'image en question à associer
 	 */
 	public static void setIcon(JLabel label, String image) {
-		ImageIcon ii = new ImageIcon(image);
+		ImageIcon ii = new ImageIcon("images/" + image);
 		label.setIcon(ii);
 	}
 
