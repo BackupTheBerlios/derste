@@ -36,7 +36,6 @@ public class ListMouseListener extends MouseAdapter {
 				ListImagesModel dlm = (ListImagesModel) list.getModel();
 				dlm.setDir(item);
 			}
-
 			if (DEBUG)
 				System.out.println("Double clicked on " + item);
 		}
