@@ -34,8 +34,8 @@ public final class ImagesMap {
 	EXTENSIONS = "extensions" + SEP;
 
     /** Les dimensions standards */
-    private static final Dimension 16X16 = new Dimension(16, 16),
-	32X32 = new Dimension(32X32);
+    private static final Dimension d16x16 = new Dimension(16, 16),
+	d32x32 = new Dimension(32, 32);
 	
     /** Les images 'spéciales' */
     public static final String	
@@ -46,11 +46,11 @@ public final class ImagesMap {
 	DIRECTORY_LOCKED_IMAGE = EXTENSIONS + "folder_locked.png";
 
     public static Icon get(String image) {
-	return get(image, 32X32);
+	return get(image, d32x32);
     }
 	
     public static Icon get16x16(String image) {
-	return get(image, 16x16);
+	return get(image, d16x16);
     }
 
 
@@ -70,7 +70,7 @@ public final class ImagesMap {
 	if (new File(chemin).exists()) {
 	    Image im = Toolkit.getDefaultToolkit().getImage(chemin);
 	    Icon pic = new ImageIcon(im.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH));
-	    images.put(preix + image, pic);
+	    images.put(prefix + image, pic);
 	    return pic;
 	}
 
@@ -112,14 +112,14 @@ public final class ImagesMap {
 @param file fichier dont obtenir l'icône
 @return l'icône */
     public static Icon get(File file) {
-	return get(file, 32X32);
+	return get(file, d32x32);
     }
 
     /** Renvoie l'icône d'un fichier en taille standard 16x16.
 @param file ficheir dont obtenir l'icône
 @return l'icône en taille 16x16 */
     public static Icon get16x16(File file) {
-	return get(file, 16X16);
+	return get(file, d16x16);
     }
 
     /**
@@ -128,7 +128,7 @@ public final class ImagesMap {
      * @return icône par défaut
      */
     public static Icon getDefault() {
-	return getDefault(32X32);			  
+	return getDefault(d32x32);			  
     }
 	
     /** Renvoie l'icône par défaut, à la taille spécifiée.
