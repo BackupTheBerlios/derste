@@ -32,8 +32,6 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 		if (!isSelected) {
 			Color c = table.getBackground();
 
-			// Faudra que tu m'explique pour ces get*, ça fait pareil sans :D
-			// && c.getRed() > 20 && c.getGreen() > 20 && c.getBlue() > 20
 			if ((row % 2) == 0)
 				setBackground(new Color(c.getRGB() - 5460)); // Mouahah
 			else
@@ -44,13 +42,16 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 	}
 
 	public void setValue(Object value) {
+		super.setValue(value);
 
 		if (value != null) {
 
 			if (value instanceof File) {
 				File file = (File) value;
 				FileDetails fd = new FileDetails(file);
-				setHorizontalAlignment(JLabel.LEFT);
+				//setVerticalTextPosition(SwingConstants.BOTTOM);
+				//setHorizontalTextPosition(SwingConstants.CENTER);
+				//setHorizontalAlignment(SwingConstants.CENTER);
 				setIcon(ImagesMap.get16x16(file));
 				setToolTipText(fd.getToolTip());
 				setFont(fd.getFont());
@@ -67,6 +68,10 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 				setIcon(null);
 			}
 
+		} else {
+			// Si la cellule représente le nihilisme totale du monde, on la
+			// représente comme telle !
+			setIcon(null);
 		}
 	}
 

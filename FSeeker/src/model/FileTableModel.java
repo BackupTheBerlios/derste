@@ -1,12 +1,11 @@
 /*
  * Created on 29 oct. 2004
- *
- *
  */
 package model;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
@@ -17,7 +16,7 @@ import misc.file.FileUtilities.FileDetails;
 
 /**
  * Classe qui permet la création d'un modèle de système de fichier pour la
- * représentation sous forme d'une vue en table (vue détails)
+ * représentation sous forme d'une vue en table (vue détails) ou vue MacOS.
  * 
  * @author aitelhab
  * @author Sted
@@ -152,168 +151,95 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 		return MODE;
 	}
 
-	// TODO J'AI JAMAIS VU UN MAXI BORDEL PAREIL. Toute la suite du fichier est
-	// chaotique putain, tu m'étonnes que y'a des bugs.
-
 	/**
 	 * Actualise la table. <br>
 	 * Cette méthode est appelé uniquement quand le MODE vaut
 	 * FileTableModel.SPECIAL_MODE.
 	 */
 	public void setDataForSpecialView() {
-
-		//Quand clique sur un dossier on retire tout element(s) et on met les
-		//fils de celui sur lequel on vient de cliquer
-
+		// On récupère les fichiers du répertoire dans lequel on vient d'entrer
 		File[] files = fsm.getFilesList();
 
-		//TODO A TESTER DANS MODERATION PEUT ETRE DES BUGS
-		//Condition pour le cas ou la table ne contient aucune colonne cad au
-		// demarrage
-		if (!(getColumnCount() == 0))
-			for (int i = lastSelectedColumn + 1; i <= getColumnCount() - 1;) {
-				removeColumn(i);
-			}
+		// On enlève les colonnes obsolètes, qui ne sont plus dans la bonne
+		// arborescence
+		if (getColumnCount() > 0)
+			removeColumns(lastSelectedColumn + 1, getColumnCount() - 1);
 
-		//On ajoute la colonne contenant les fichiers à explorer
+		// On ajoute la colonne contenant les fichiers du répertoire dans lequel
+		// on vient d'entrer
 		addColumn("", files);
-
 	}
 
 	/**
+	 * Fixe la dernière colonne sélectionnée.
 	 * 
-	 * On fixe la valeur de la dérniére colonne selectionnée
+	 * @param column
+	 *            numéro de colonne
 	 */
 	public void setSelectedColumn(int column) {
 		lastSelectedColumn = column;
 	}
 
-	/***************************************************************************
-	 * public void insertcolumn(JTable table2) { //TableModel1 =
-	 * (DefaultTableModel) table2.getModel(); TableColumn col = new
-	 * TableColumn(); col.setHeaderValue(" "); table2.addColumn(col); }
-	 **************************************************************************/
-
 	/**
-	 * >>>>>>> 1.12 Surcharge car la super-méthode remplit les lignes (valeur
-	 * null) vides par des valeurs copiées d'une colonne précedente
-	 */
-	public void addColumn(Object columnName, Vector columnData) {
-		columnIdentifiers.addElement(columnName);
-
-		if (columnData != null) {
-
-			//Nombre de lignes (changera si contient plus de lignes que
-			// dataVector (vecteur des données))
-			int oldRowCount = getRowCount();
-
-			//Nombre de lignes du vecteur à ajouter
-			int columnDataRowCount = columnData.size();
-
-			//Si le tableau à ajouter contient plus de ligne que le courant
-			// alors on aggrandit la taille du tableau courant
-			if (columnDataRowCount > getRowCount())
-				dataVector.setSize(columnDataRowCount);
-
-			//On initialise chaque chaque ligne du tableau courant (pas de
-			// valeur null)
-			justify(0, getRowCount());
-
-			//Indice de la nouvelle colonne
-			int newColumn = getColumnCount() - 1;
-
-			for (int i = 0; i < getRowCount()/* columnSize */; i++) {
-				Vector row = (Vector) dataVector.elementAt(i);
-				// System.out.println("row = " + row);
-				if (i < columnDataRowCount) {
-					row.setElementAt(columnData.elementAt(i), newColumn);
-				} else if (i >= columnDataRowCount) {
-					row.setElementAt(new String(""), newColumn);
-				}
-
-				// On remplaces les null par des ""
-				if (columnDataRowCount > oldRowCount && i >= oldRowCount
-						&& getColumnCount() > 1)
-					row.setElementAt("", newColumn - 1);
-			}
-
-		} else {
-			justify(0, getRowCount());
-		}
-
-		// On retire les lignes ne contenant rien TODO BUG ?
-		//removeEmptyRows();
-
-		//System.out.println(dataVector);
-		this.fireTableDataChanged();
-		fireTableStructureChanged();
-
-	}
-
-	/* Retire les lignes vide */
-	private void removeEmptyRows() {
-		//On supprime toutes les lignes vides
-		for (int row = getRowCount() - 1; row > 0; row--)
-			if (isEmptyRow(row))
-				dataVector.removeElementAt(row);
-	}
-
-	/* Si la ligne ne contient que des éléments vides renvoie vrai */
-	private boolean isEmptyRow(int row) {
-		int colNumber = getColumnCount();
-		boolean isEmpty = true;
-		for (int col = 0; col < colNumber; col++) {
-			Vector rowData = (Vector) dataVector.elementAt(row);
-			/*******************************************************************
-			 * Object colData = null; if (!(rowData == null)) colData =
-			 * rowData.elementAt(col); if (!(colData == null))
-			 ******************************************************************/
-			System.out.println("rowData " + rowData);
-			if (!(rowData.elementAt(col).toString().equals("") && isEmpty))
-				isEmpty = false;
-		}
-		return isEmpty;
-
-	}
-
-	/*
-	 * Initialise un ensemble de ligne. (Bon nombre de colonne pour chaque ligne
-	 * et valeur non null)
-	 * 
-	 * @param from Premiére ligne à initialiser
-	 * 
-	 * @param to Derniére ligne à initialiser
-	 */
-	private void justify(int from, int to) {
-		// Sometimes the DefaultTableModel is subclassed
-		// instead of the AbstractTableModel by mistake.
-		// Set the number of rows for the case when getRowCount
-		// is overridden.
-		dataVector.setSize(getRowCount());
-
-		for (int i = from; i < to; i++) {
-			if (dataVector.elementAt(i) == null) {
-				dataVector.setElementAt(new Vector(), i);
-			}
-			((Vector) dataVector.elementAt(i)).setSize(getColumnCount());
-		}
-	}
-
-	/**
-	 * Retire une colonne du modèle
+	 * Retire une colonne du modèle.
 	 * 
 	 * @param columnIndex
 	 *            L'index de la colonne à retirer
 	 */
-	public void removeColumn(int columnIndex) {
-
-		int oldColumnCount = getColumnCount();
-		//On retire toutes les valeurs de la colonne columnIndex
+	private void removeColumn(int columnIndex) {
 		for (int row = 0; row < getColumnCount(); row++) {
 			Vector rowVector = (Vector) dataVector.elementAt(row);
 			rowVector.removeElementAt(columnIndex);
 		}
-		this.setColumnCount(oldColumnCount - 1);
+	}
+
+	/**
+	 * Renvoie le nombre de ligne réellement utilisées.
+	 * 
+	 * @return nombre de ligne ayant des valeurs toutes non nulles
+	 */
+	protected int getNonNullRowCount() {
+		int size = super.getRowCount();
+
+		// On parcours les lignes
+		for (int i = 0; i < size; i++) {
+			Vector colv = (Vector) dataVector.get(i);
+
+			// Quand on trouve un ligne avec que des nulls dans les colonnes, on
+			// set le nombre de ligne à cette ligne ci - 1.
+			Iterator itc = colv.iterator();
+			boolean tousNulls = true;
+			while (itc.hasNext())
+				if (itc.next() != null) {
+					tousNulls = false;
+					break;
+				}
+
+			// Si on a pas breaké, alors la condition sera vraie, donc que des
+			// nulls
+			if (tousNulls)
+				return i;
+		}
+
+		return size;
+	}
+
+	/**
+	 * Supprime les colonnes de from à to inclus.
+	 * 
+	 * @param from
+	 *            indice de départ
+	 * @param to
+	 *            indice de fin
+	 */
+	protected void removeColumns(int from, int to) {
+		int oldColumnCount = getColumnCount();
+		for (int i = from; i <= to; i++)
+			removeColumn(i);
+		setColumnCount(oldColumnCount - (to - from + 1));
+
+		// On oublie PAS de mettre à jour le nombre de ligne
+		setRowCount(getNonNullRowCount());
 	}
 
 	/**
