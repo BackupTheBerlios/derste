@@ -8,7 +8,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTree;
-import javax.swing.tree.TreeSelectionModel;
 
 import misc.FileSystemTree;
 import model.FileSystemTreeModel;
@@ -26,8 +25,6 @@ public class FileSystemTreeGUI extends JTree implements Observer {
         this.m = m;
         m.addObserver(this);
 
-        getSelectionModel().setSelectionMode(
-                TreeSelectionModel.SINGLE_TREE_SELECTION);
         setModel(m);
         setEditable(true);
         setCellRenderer(new FileSystemTreeCellRenderer());

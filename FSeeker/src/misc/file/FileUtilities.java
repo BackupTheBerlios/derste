@@ -17,11 +17,12 @@ import java.util.Date;
  * @author Sted
  */
 public class FileUtilities {
-    
+
     /**
      * Retourne un texte descriptif d'un fichier.
      * 
-     * @param f le fichier à décrire.
+     * @param f
+     *            le fichier à décrire.
      * @return le texte descriptif
      */
     public static String getDetails(File f) {
@@ -54,12 +55,13 @@ public class FileUtilities {
                 unite = "Go";
             }
             sb.append("<b>Taille</b> : " + octets + " " + unite + " <br>");
-        
+
         } else {
             // Répertoire
             File[] foo = f.listFiles();
             if (foo != null && foo.length > 0)
-                sb.append("<b>Contient</b> : " + foo.length + " fichier" + (foo.length > 1 ? "s" : "") + "<br>");
+                sb.append("<b>Contient</b> : " + foo.length + " fichier"
+                        + (foo.length > 1 ? "s" : "") + "<br>");
         }
 
         // La date de dernière modification
@@ -117,10 +119,12 @@ public class FileUtilities {
             // Quoi qu'il arrive, on ferme les flux
             try {
                 sourceFile.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
             try {
                 destinationFile.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
 
         return resultat;
@@ -170,6 +174,22 @@ public class FileUtilities {
         resultat &= file.delete();
 
         return resultat;
+    }
+
+    /**
+     * Renvoie un tableau contenant les noms des fichiers d'un tableau de File.
+     * 
+     * @param files
+     *            tableau de Files dont retournés les noms
+     * @return un tableau de Strings ne contenant que les noms des fichiers
+     */
+    public static String[] toStrings(File[] files) {
+        int num = files.length;
+        String[] dirs = new String[num];
+        for (int i = 0; i < num; i++)
+            dirs[i] = files[i].getName();
+
+        return dirs;
     }
 
 }

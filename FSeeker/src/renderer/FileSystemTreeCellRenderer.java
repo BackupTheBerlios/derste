@@ -4,6 +4,7 @@
 package renderer;
 
 import java.awt.Component;
+import java.io.File;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -24,6 +25,8 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
         super.getTreeCellRendererComponent(tree, value, selected, expanded,
                 leaf, row, hasFocus);
 
+        setText(((File) value).getName());
+        
         if (expanded)
             setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_OPENED_IMAGE));
         else
