@@ -2,5 +2,7 @@
 - Utiliser le modèle MVC
 - Virer les templates de Eclipse. (y compris les trucs @see blabla)
 - Gérer les popups
-- JComponent getPreview(File f)
 - Créer un logo (pour about !! et pour icône JFrame etc :D)
+- Trouver des icônes
+- Trouver un L&F fonctionnel ?
+- Nettoyer la classe FSeeker
