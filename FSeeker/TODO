@@ -8,3 +8,4 @@
      la valeur de la hash directement les autres fois (puisque déjà créée)
   -> FileExtensionMap => à virer, c'est n'imp
   -> créer une classe ImagesMap, ne pas oublier de relier à GU.getImage
+- ARRETES DE FAIRE PLEINS DE FAUTES. J'arrête pas d'en corriger.
