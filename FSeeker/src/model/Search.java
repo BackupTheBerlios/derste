@@ -18,7 +18,7 @@ public class Search {
 
 	private final static int MAX_THREADS = 5;
 
-	protected FileSystemModel root = null;
+	protected FileSystemTreeModel root = null;
 
 	protected String pattern = null;
 
@@ -31,7 +31,7 @@ public class Search {
 	private boolean continueSearch = true;
 
 	public Search(SearchGUI gui, String root, String pattern) {
-		this.root = new FileSystemModel(root);
+		this.root = new FileSystemTreeModel(root);
 		this.gui = gui;
 
 		// On échappe tous les caractères foireux
@@ -68,9 +68,9 @@ public class Search {
 
 	class SearchThread extends Thread {
 
-		protected FileSystemModel root = null;
+		protected FileSystemTreeModel root = null;
 
-		public SearchThread(ThreadGroup tg, FileSystemModel root) {
+		public SearchThread(ThreadGroup tg, FileSystemTreeModel root) {
 			super(tg, root.getRoot().toString());
 			this.root = root;
 		}
@@ -105,7 +105,7 @@ public class Search {
 
 					String s = f.getAbsolutePath();
 					SearchThread t = new SearchThread(searchThreads,
-							new FileSystemModel(s));
+							new FileSystemTreeModel(s));
 
 					// Si on a déjà MAX threads actifs, on le mets en file
 					// d'attente

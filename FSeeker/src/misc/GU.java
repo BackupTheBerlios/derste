@@ -90,8 +90,8 @@ public class GU {
 		// TODO c'est quoi ce new JFrame foireux là ?
 		// Faut passer le parent en param là, pas un nouveau sorti d'on ne sait
 		// où
-		JOptionPane.showMessageDialog(new JFrame(), mess, "Avertissement",
-				JOptionPane.WARNING_MESSAGE, getImage("mess.png"));
+		JOptionPane.showMessageDialog(null, mess, "Avertissement",
+				JOptionPane.WARNING_MESSAGE, ImagesMap.get("ask.png"));
 	}
 
 	/**
@@ -110,35 +110,6 @@ public class GU {
 		return JOptionPane.showConfirmDialog(new JFrame(), mess, titre,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 				getImage("ask.png"));
-	}
-
-	/**
-	 * Crée un JEditorPane chargée avec une page HTML, cela est intéressant pour
-	 * afficher une mini aide ou autre dans le genre
-	 * 
-	 * @param url
-	 *            URL du fichier à charger dans le JEditorPane
-	 * @return Un JEditorPane affichant un fichier html
-	 */
-	// TODO: je pense pas que ça ait à faire quelque chose ici ça
-	public static JEditorPane createEditor(String url) {
-		JEditorPane HelpPane = new JEditorPane();
-		HelpPane.setEditable(false);
-		//eP.setContentType("text/html");
-		String helpURL = "resources" + SEP + url;
-		if (helpURL != null) {
-			try {
-				//Si pas de probléme on fixe la page
-				HelpPane.setPage(helpURL);
-			} catch (java.io.IOException e) {
-				System.err.println("Le fichier n'est pas accessible : "
-						+ helpURL);
-			}
-		} else {
-			System.err.println("Ne pas trouver : " + helpURL);
-		}
-
-		return HelpPane;
 	}
 
 	/**

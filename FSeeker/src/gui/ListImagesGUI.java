@@ -2,8 +2,6 @@ package gui;
 
 
 import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import model.ListImagesModel;
 import renderer.ImagesListCellRenderer;
@@ -20,7 +18,8 @@ public class ListImagesGUI extends JList {
     public ListImagesGUI(ListImagesModel m) {
         this.m = m;
         setModel(m);
-        setDragEnabled(true);
+        
+        //setDragEnabled(true);
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
         setCellRenderer(new ImagesListCellRenderer());
         
