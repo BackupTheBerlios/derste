@@ -41,7 +41,7 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
  
    //TODO Retirer de cette classe (dans misc car utilisé ailleurs, à voir ?)
     protected static SimpleDateFormat dateFormat = new SimpleDateFormat(
-            "EEEEEEEE dd MMMMMMMMM 'à' hh:mm:ss", Locale
+            "EEEEEEEE dd MMMMMMMMM yyyy 'à' hh:mm:ss", Locale
                     .getDefault());
     
     

@@ -14,7 +14,7 @@ import java.util.Vector;
 import java.util.*;
 import gui.FileTableGUI;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -36,6 +36,9 @@ public class FileTableModel extends DefaultTableModel implements Observer {
     public static int SPECIAL_MODE = 1;
 
     private int MODE = -1;
+
+    /* La derniére colonne selectionnée */
+    private int lastSelectedColumn = -1;
 
     protected Vector colNames = new Vector(4);
 
@@ -84,25 +87,22 @@ public class FileTableModel extends DefaultTableModel implements Observer {
         else
             setDataForSimpleView();
         //fireTableStructureChanged();
-        this.fireTableRowsUpdated(0, getRowCount()-1);
+        //fireTableDataChanged();
+
     }
 
-    public Class getColumnClass(int col) {
-        int rowIndex = 0;
-        Object o = getValueAt(rowIndex, col);
-        if (o == null) {
-            return Object.class;
-        } else {
-            return o.getClass();
-        }
-    }
+    /***************************************************************************
+     * public Class getColumnClass(int col) { int rowIndex = 0; Object o =
+     * getValueAt(rowIndex, col); if (o == null) { return Object.class; } else {
+     * return o.getClass(); } }
+     **************************************************************************/
 
     /**
      * Récupére la nouvelle URI du méta-modéle et actualise les valeurs Apellé
      * quand le MODE vaut FileTableModel.SIMPLE_MODE
      */
     public void setDataForSimpleView() {
-        File[] files = fsm.getURI().listFiles();
+        File[] files = fsm.getFilesList();
 
         int nbColumns = colNames.size();
         int nbRows = files.length;
@@ -119,8 +119,9 @@ public class FileTableModel extends DefaultTableModel implements Observer {
                 case 0:
                     rowData.addElement(files[rows]);
                     break;
-                 case 1:
-                     rowData.addElement(new Long(files[rows].length()));
+                case 1:
+                    rowData.addElement(new Long(files[rows].length()));
+                    break;
 
                 case 2:
                     rowData.addElement(files[rows].isDirectory() ? "Dossier"
@@ -139,9 +140,41 @@ public class FileTableModel extends DefaultTableModel implements Observer {
         setDataVector(data, colNames);
     }
 
+    /**
+     * Mise à jour de la liste des fichiers pour la vue special (style MacOs)
+     *  
+     */
     public void setDataForSpecialView() {
-        File[] files = fsm.getURI().listFiles();
+
+        //Quand clique sur un dossier on retire tout element(s) et on met les
+        //fils de celui sur lequel on vient de cliquer
+        
+        File[] files = fsm.getFilesList();
+
+        //TODO A TESTER DANS MODERATION PEUT ETRE DES BUGS
+        //Condition pour le cas ou la table ne contient aucune colonne
+        if (!(getColumnCount() == 0))
+            for (int i = lastSelectedColumn + 1; i <= getColumnCount() - 1;)
+                removeColumn(i);
+
+        //On ajute la colonne contenant les fichiers à explorer
         addColumn("", files);
+
+    }
+
+    /**
+     * 
+     * On fixe la valeur de la dérniére colonne selectionnée
+     */
+    public void setSelectedColumn(int column) {
+        lastSelectedColumn = column;
+    }
+
+    /**
+     * Renvoie le mode sélectionné
+     */
+    public int getMode() {
+        return MODE;
     }
 
     public void insertcolumn(JTable table2) {
@@ -152,8 +185,8 @@ public class FileTableModel extends DefaultTableModel implements Observer {
     }
 
     /**
-     * Surcharge car la supermééthode remplit les lignes par des valeurs copiées
-     * d'une colonne précedente
+     * Surcharge car la super-méthode remplit les lignes vides par des valeurs
+     * copiées d'une colonne précedente
      */
     public void addColumn(Object columnName, Vector columnData) {
         columnIdentifiers.addElement(columnName);
@@ -168,7 +201,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
             int newColumn = getColumnCount() - 1;
             for (int i = 0; i < getRowCount()/* columnSize */; i++) {
                 Vector row = (Vector) dataVector.elementAt(i);
-                System.out.println("row = " + row);
+                // System.out.println("row = " + row);
                 if (i < columnSize) {
                     row.setElementAt(columnData.elementAt(i), newColumn);
                 } else if (i >= columnSize) {
@@ -206,23 +239,20 @@ public class FileTableModel extends DefaultTableModel implements Observer {
     }
 
     /**
-     * Méthode de tri des données
-     *  
+     * Retire une colonne du modèle
+     * 
+     * @param columnIndex
+     *            L'index de la colonne à retirer
      */
-    public void sortAllRows() {
-        Vector data = getDataVector();
-        Collections.sort(data, new Comparator() {
-            public int compare(Object a, Object b) {
-                Vector v1 = (Vector) a;
-                Vector v2 = (Vector) b;
-                Object o1 = v1.get(0);
-                Object o2 = v2.get(0);
+    public void removeColumn(int columnIndex) {
 
-                return getModel().getComparator().compare(o1, o2);
-            }
-        });
-
-        fireTableStructureChanged();
+        int oldColumnCount = getColumnCount();
+        //On retire toutes les valeurs de la colonne columnIndex
+        for (int row = 0; row < getColumnCount(); row++) {
+            Vector rowVector = (Vector) dataVector.elementAt(row);
+            rowVector.removeElementAt(columnIndex);
+        }
+        this.setColumnCount(oldColumnCount - 1);
     }
 
     /**

@@ -28,7 +28,7 @@ public class TableModelControler extends MouseAdapter {
 
     public void mouseClicked(MouseEvent e) {        
         if (e.getClickCount() == 2) {
-           setURI(e);
+           setURI(e);           
         }
         //}else if (e.getClickCount() == 4) {
         //    System.out.println("4 clicks");
@@ -42,7 +42,14 @@ public class TableModelControler extends MouseAdapter {
         JTable source = (JTable) e.getSource();
         Object value = source.getValueAt(source.getSelectedRow(), source
                 .getSelectedColumn());
+        
+        //Si on est en mode spécial on fixe la valeur de la colonne séléctionnée
+        if(m.getMode() == FileTableModel.SPECIAL_MODE)
+            m.setSelectedColumn(source.getSelectedColumn());
+        
         //System.out.println("Value = "+value+" Class = "+value.getClass());
+        
+        //On modifie le méta-model pour mettre à jour l'arborescence
         if (value instanceof File)
             f = (File) value;
         if (f != null) {
@@ -55,6 +62,10 @@ public class TableModelControler extends MouseAdapter {
         }
     }
 
+    /**
+     * Méthode de Test
+     * @param args
+     */
     public static void main(String[] args) {
     }
 }
