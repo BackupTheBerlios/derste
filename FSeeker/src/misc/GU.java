@@ -37,7 +37,7 @@ import javax.swing.border.Border;
  * @author Sted
  * @author brahim
  */
-public class GU {
+ public class GU {
 
 	/**
 	 * Centre une JFrame sur l'écran.
@@ -80,11 +80,11 @@ public class GU {
 	 * 
 	 * @param s
 	 *            le message pour lequel on attend confirmation ou infirmation
-	 * @return JOptionPane.YES_OPTION ou JOptionPane.NO_OPTION selon le choix
+	 * @return true s'il y a eu confirmation, false sinon
 	 */
-	public static int confirm(String s) {
+	public static boolean confirm(String s) {
 		return JOptionPane.showConfirmDialog(null, s, "Confirmation",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
 	}
 
 	/**
