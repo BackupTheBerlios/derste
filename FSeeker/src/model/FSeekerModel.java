@@ -4,7 +4,10 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Observable;
 
 import misc.GU;
@@ -31,6 +34,9 @@ public class FSeekerModel extends Observable {
 
 	/** Le truc modifié */
 	protected int changed = NONE;
+
+	/** Liste des fichiers du répertoire courant triée */
+	protected File[] filesList = null;
 
 	/**
 	 * Retourne l'URI courante.
@@ -78,6 +84,7 @@ public class FSeekerModel extends Observable {
 				return;
 			}
 			this.uri = uri;
+			filesList = null;
 
 			setChanged(URI);
 			notifyObservers(src);
@@ -137,6 +144,12 @@ public class FSeekerModel extends Observable {
 	public void setComparator(Comparator comparator) {
 		if (comparator != this.comparator) {
 			this.comparator = comparator;
+			
+			if (filesList != null)
+				Arrays.sort(filesList, comparator);
+			else
+				filesList = getFilesList();
+			
 			setChanged(COMPARATOR);
 			notifyObservers();
 		}
@@ -159,6 +172,27 @@ public class FSeekerModel extends Observable {
 	 */
 	public boolean isChanged(int isChanged) {
 		return changed == isChanged;
+	}
+
+	/**
+	 * Retourne la liste des fichiers triés.
+	 * 
+	 * @return liste de fichiers du répertoire courant
+	 */
+	protected File[] getFilesList() {
+		if (filesList == null) {
+			File[] files = uri.listFiles();
+			filesList = new File[files.length];
+			
+			if (files != null)
+				for (int i = 0, j = 0; i < files.length; i++)
+					if (!files[i].isHidden() || showHidden)
+						filesList[j++] =  files[i];
+
+			Arrays.sort(filesList, comparator);
+		}
+
+		return filesList;
 	}
 
 }
