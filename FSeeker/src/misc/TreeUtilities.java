@@ -11,7 +11,7 @@ import javax.swing.tree.TreePath;
 /**
  * @author sted
  */
-public class FileSystemTree {
+public class TreeUtilities {
 	public static TreePath getTreePath(File f) {
 
 		LinkedList filesList = new LinkedList();

@@ -11,7 +11,7 @@ import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.TreePath;
 
-import misc.FileSystemTree;
+import misc.TreeUtilities;
 import misc.file.FileUtilities;
 import model.FileSystemTreeModel;
 import renderer.FileSystemTreeCellRenderer;
@@ -61,8 +61,8 @@ public class FileSystemTreeGUI extends JTree {
 		TreePath tp = getSelectionPath();
 		// Pas besoin de setter si on y est déjà ! (si on a provoqué l'événement
 		// quoi)
-		if (tp == null || !tp.equals(FileSystemTree.getTreePath(dir)))
-			setSelectionPath(FileSystemTree.getTreePath(dir));
+		if (tp == null || !tp.equals(TreeUtilities.getTreePath(dir)))
+			setSelectionPath(TreeUtilities.getTreePath(dir));
 	}
 
 	/**

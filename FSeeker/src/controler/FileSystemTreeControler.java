@@ -14,7 +14,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import misc.FileSystemTree;
+import misc.TreeUtilities;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
 
@@ -73,7 +73,7 @@ public class FileSystemTreeControler implements TreeSelectionListener,
 			JTree tree = (JTree) e.getSource();
 
 			// J4F
-			TreePath tp = FileSystemTree.getTreePath(m.getModel().getURI());
+			TreePath tp = TreeUtilities.getTreePath(m.getModel().getURI());
 			if (tree.isExpanded(tp))
 				tree.collapsePath(tp);
 			else

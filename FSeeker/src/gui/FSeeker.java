@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -147,7 +148,7 @@ public class FSeeker {
 			// Barre de split
 			JSplitPane splitpane = new JSplitPane();
 			splitpane.setDividerLocation(200);
-			
+
 			// Des look 'n feels balance une NullPointerException avec ça. :D
 			// ie: Tonic
 			splitpane.setOneTouchExpandable(true);
@@ -192,19 +193,25 @@ public class FSeeker {
 			ftmodel = new FileTableModel(fsm, FileTableModel.SIMPLE_MODE);
 			ftgui = new FileTableGUI(ftmodel);
 
-			/*
-			 * JDesktopPane desktop = new JDesktopPane(); JLabel l = new
-			 * JLabel("pwet"); l.setIcon(ImagesMap.getDefault()); l.setSize(100,
-			 * 100); l.setLocation(70, 70); desktop.add(l); l.setVisible(true);
-			 * 
-			 * MJInternalFrame in = new MJInternalFrame("test", false, false,
-			 * false, false); MJInternalFrame in2 = new MJInternalFrame("test",
-			 * false, false, false, false); MJInternalFrame in3 = new
-			 * MJInternalFrame("test", false, false, false, false);
-			 * 
-			 * desktop.add(in); desktop.add(in2); desktop.add(in3);
-			 * desktop.setVisible(true);
-			 */
+			JDesktopPane desktop = new JDesktopPane();
+			JLabel l = new JLabel("pwet");
+			l.setIcon(ImagesMap.getDefault());
+			l.setSize(100, 100);
+			l.setLocation(70, 70);
+			desktop.add(l);
+			l.setVisible(true);
+
+			MJInternalFrame in = new MJInternalFrame("test", false, false,
+					false, false);
+			MJInternalFrame in2 = new MJInternalFrame("test", false, false,
+					false, false);
+			MJInternalFrame in3 = new MJInternalFrame("test", false, false,
+					false, false);
+
+			desktop.add(in);
+			desktop.add(in2);
+			desktop.add(in3);
+			desktop.setVisible(true);
 
 			JTabbedPane tabs = new JTabbedPane();
 
@@ -218,7 +225,7 @@ public class FSeeker {
 					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-			//tabs.addTab("Test", null, new JScrollPane(desktop));
+			tabs.addTab("Test", null, new JScrollPane(desktop));
 			tabs.addTab("Icônes", ImagesMap.get("view_icon.png"), viewIcon,
 					"Vue avec les icônes");
 			tabs.addTab("Liste", ImagesMap.get("view_list.png"), viewList,
