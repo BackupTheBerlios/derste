@@ -13,10 +13,11 @@ import javax.swing.ImageIcon;
  * Classe permettant de gérer le chargement des images de FSeeker.
  * 
  * @author Sted
+ * @author aitelhab
  */
 public class ImagesMap {
     /** L'image par défaut */
-    private static final String DEFAULT_IMAGE = "dot.gif";
+    private static final String DEFAULT_IMAGE = "default.png";
 
     /**
      * Le tableau associatif contenant les images. <br>
@@ -28,7 +29,7 @@ public class ImagesMap {
     private static final char SEP = File.separatorChar;
 
     /** Là où sont stockées toutes les images */
-    private static final String IMAGES = "images" + SEP;
+    private static final String IMAGES = "images";
 
     /**
      * Renvoie un objet Icon à partir du chemin de image. Si le chemin n'est pas
@@ -52,6 +53,37 @@ public class ImagesMap {
         }
 
         return null;
+    }
+
+    public static Icon getIcon(File file) {
+        String s = file.getName();
+        Icon fileIcon = null;
+        String fileStr = file.toString();
+
+        if (file.isDirectory()) {
+            fileIcon = get("directory.png");
+        } else {
+
+            int rindex = fileStr.lastIndexOf('.');
+
+            String ext = null;
+            if (rindex >= 0)
+                ext = fileStr.substring(rindex + 1);
+
+            if (ext != null)
+                fileIcon = get(ext + ".png");
+            if (fileIcon == null)
+                fileIcon = getDefault();
+
+            System.out.println("Icon : " + fileIcon);
+        }
+        return fileIcon;
+    }
+
+    private  Icon getImage(String ext) {
+        if ("".equals(ext))
+            return getDefault();
+        return get(ext + ".png");
     }
 
     public static Icon getDefault() {
