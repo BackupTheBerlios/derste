@@ -5,8 +5,12 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Vector;
@@ -16,12 +20,15 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
 import misc.GU;
+import misc.PopupManager;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.FileTableModel;
@@ -191,7 +198,23 @@ public class FSeeker extends JFrame {
 		FileTableGUI ftguiSpecial = new FileTableGUI(ftmodelSpecial);
 
 		tabs = new JTabbedPane();
-
+		tabs.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					if (tabs.getTitleAt(tabs.getSelectedIndex()).indexOf("Recherche") != 0)
+						return;
+					
+					JPopupMenu popup = new JPopupMenu();
+					popup.add(PopupManager.createMenuItem("Fermer", new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						tabs.remove(tabs.getSelectedIndex());
+					}	
+					}));
+					PopupManager.showPopup(e, popup);
+				}
+			}
+		});
+		
 		JScrollPane viewIcon = new JScrollPane(ligui);
 		JScrollPane viewList = new JScrollPane(lgui);
 		JScrollPane viewTable = new JScrollPane(ftgui);
