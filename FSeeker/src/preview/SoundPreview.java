@@ -18,7 +18,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import javazoom.jl.decoder.JavaLayerException;
+
 import misc.GU;
+import misc.ImagesMap;
+import misc.MP3Previewer;
 import misc.SoundPlayer;
 
 /**
@@ -31,31 +35,39 @@ public class SoundPreview extends JPanel implements Preview, ActionListener {
     private File file;
 
     /** Le player utilisé pour gérer les sons */
-    private SoundPlayer player;
+    //private SoundPlayer player;
+    /** Permet la gestion de play et stop */
+    private MP3Previewer pl;
 
     /**
-     * Les quelques boutons qui servont à lancer les sons, mettre en pause,
-     * reprendre la lacture et enfin l'arretée
+     * Les quelques boutons qui servont à lancer le son et l'arretée
      */
-    JButton[] controls = new JButton[4];;
+    JButton[] controls = new JButton[2];;
 
     /**
-     *  Constructeur */   
+     * Constructeur
+     */
     public SoundPreview(File file) {
         this.file = file;
-        player = new SoundPlayer(file);
-        /*preview();*/
+        //player = new SoundPlayer(file);      
+        
+        try{
+        pl = new MP3Previewer(file);
+        }catch (JavaLayerException jle) {
+            GU.warn("Impossible de lire le fichier ! ");              
+        }
+        
     }
 
     /**
      * Lance la prévisualisation
      */
     public void preview() {
-        controls[0] = new JButton("Play");
-        controls[1] = new JButton("Stop");
-        controls[2] = new JButton("Pause");
-        //TODO setEnabled(false) quand la lecture est deja mise en pause
-        controls[3] = new JButton("Reprendre");
+        controls[0] = new JButton(ImagesMap.get("play.png"));
+       // controls[0].setIcon();
+        controls[1] = new JButton(ImagesMap.get32x32("stop.png"));        
+        //controls[0].setIcon();
+        
         for (int i = 0; i < controls.length; i++) {
             add(controls[i]);
             controls[i].addActionListener(this);
@@ -65,29 +77,29 @@ public class SoundPreview extends JPanel implements Preview, ActionListener {
     /** gestion d'événements TODO Optimiser */
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(controls[0]))
-            player.play();
+            try {
+                pl.play();
+            } catch (JavaLayerException jle) {
+                        GU.warn("Impossible de lire le fichier ! ");              
+            }
         else if (ev.getSource() == controls[1])
-            player.stop();
-        else if (ev.getSource() == controls[2])
-            player.pause();
-        else if (ev.getSource() == controls[3])
-            player.resume();
+            pl.stop();     
     }
 
     /**
      * 
-     *  Méthode de test de la classe
+     * Méthode de test de la classe
      */
     public static void main(String[] args) {
-        
-        //C mon fichier a moi ca 
+
+        //C mon fichier a moi ca
         SoundPreview soundp = new SoundPreview(new File("/home/brahim/055.mp3"));
-      
+
         soundp.preview();
-        JFrame jf = new JFrame("Test de SoundPreview");        
+        JFrame jf = new JFrame("Test de SoundPreview");
         jf.getContentPane().add(soundp);
         jf.setVisible(true);
         jf.pack();
-       
+
     }
 }
