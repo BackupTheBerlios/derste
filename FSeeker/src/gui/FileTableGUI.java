@@ -41,12 +41,8 @@ public class FileTableGUI extends JTable {
 		this.setDefaultRenderer(File.class, renderer);
 
 		//JHeader pour le tri
-		if(m.getMode() == FileTableModel.SIMPLE_MODE){
+		if(m.getMode() == FileTableModel.SIMPLE_MODE)
 		    sorter = new TableHeaderSorter(this, m.getModel());
-		  
-		}
-		
-		
 		
 		// propriétés de la JTable
 		setShowGrid(false);
