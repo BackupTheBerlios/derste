@@ -55,9 +55,7 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 			Color c = table.getBackground();
 
 			if ((row % 2) == 0)
-				setBackground(new Color(c.getRGB() - 5460)); // Mouahah // C KOI
-			// CA TU FAIS NIMP
-			// STEPHANE
+				setBackground(new Color(c.getRGB() - 5460)); //Couleur perso !
 			else
 				setBackground(c);
 
