@@ -23,7 +23,7 @@ import controler.FileTableControler;
 public class FileTableGUI extends JTable {
 
 	// private final static int ROWMARGIN = 5;
-
+    private TableHeaderSorter sorter;
 	private final static int ROWHEIGHT = 30;
 
 	private FileTableModel m = null;
@@ -31,8 +31,8 @@ public class FileTableGUI extends JTable {
 	public FileTableGUI(FileTableModel m) {
 		super(m);
 		this.m = m;
-
 		getTableHeader().setReorderingAllowed(false);
+		
 
 		FileTableCellRenderer renderer = new FileTableCellRenderer();
 		this.setDefaultRenderer(Object.class, renderer);
@@ -40,6 +40,14 @@ public class FileTableGUI extends JTable {
 		this.setDefaultRenderer(Date.class, renderer);
 		this.setDefaultRenderer(File.class, renderer);
 
+		//JHeader pour le tri
+		if(m.getMode() == FileTableModel.SIMPLE_MODE){
+		    sorter = new TableHeaderSorter(this, m.getModel());
+		  
+		}
+		
+		
+		
 		// propriétés de la JTable
 		setShowGrid(false);
 		// setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
