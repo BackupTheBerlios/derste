@@ -20,7 +20,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+
 import misc.PopupManager;
+
 import misc.TreeUtilities;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
