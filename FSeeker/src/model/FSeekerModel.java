@@ -32,7 +32,7 @@ public class FSeekerModel extends Observable {
 
 	/** Le truc modifié */
 	protected int changed = NONE;
-	
+
 	/** Comparateur utilisé pour afficher les fichiers */
 	protected Comparator comparator = CompareByType.get();
 
@@ -45,11 +45,91 @@ public class FSeekerModel extends Observable {
 	/** Fichier en sélection */
 	protected File selection = null;
 
+	protected File uri = null;
+
 	/** Montrer les fichiers cachés ? */
 	protected boolean showHidden = true;
 
-	/** L'URI en cours de vue */
-	protected File uri = null;
+	/** La liste des URIs visitées (précédent/suivant) */
+	protected Navigation uris = null;
+
+	/**
+	 * Classe interne gérant la navigation dans les uris. (précédent/suivant)
+	 */
+	private class Navigation {
+		/** Là où nous sommes dans la liste des uris */
+		protected int jeton = 0;
+
+		/** La liste des uris */
+		protected List liste = new ArrayList();
+
+		/**
+		 * Construit l'objet avec un fichier de départ.
+		 * 
+		 * @param start
+		 *            fichier de départ
+		 */
+		public Navigation(File start) {
+			liste.add(0, start);
+		}
+
+		/**
+		 * Se rend à l'uri précédente et la renvoie.
+		 * 
+		 * @return uri précédente
+		 */
+		public File gotoPrevious() {
+			if (jeton > 0)
+				return (File) liste.get(--jeton);
+			return getCurrent();
+		}
+
+		/**
+		 * Se rend à l'uri suivante et la renvoie.
+		 * 
+		 * @return uri suivante
+		 */
+		public File gotoNext() {
+			if (jeton + 1 < liste.size())
+				return (File) liste.get(++jeton);
+			return getCurrent();
+		}
+
+		/**
+		 * Retourne l'uri courante.
+		 * 
+		 * @return uri courante
+		 */
+		public File getCurrent() {
+			return (File) liste.get(jeton);
+		}
+
+		/**
+		 * Modifie l'uri actuelle comme étant l'uri de f.
+		 * 
+		 * @param f
+		 *            un fichier
+		 * @return le fichier ajouté
+		 */
+		public File add(File f) {
+			if (getCurrent().equals(f))
+				return f;
+
+			if (jeton + 1 < liste.size()) {
+				liste.set(++jeton, f);
+				for (int i = jeton + 1; i < liste.size(); )
+					liste.remove(i);
+			} else
+				liste.add(++jeton, f);
+
+			return f;
+		}
+
+		public String toString() {
+			return liste.toString() + " @ " + jeton;
+		}
+
+	}
 
 	/**
 	 * Construit un supra-modèle avec pour URI de départ <code>uri</code>
@@ -58,9 +138,10 @@ public class FSeekerModel extends Observable {
 	 *            URI de départ
 	 */
 	public FSeekerModel(File uri) {
+		uris = new Navigation(uri);
 		this.uri = uri;
 		this.selection = uri;
-		
+
 		// Les préférences
 		showHidden = pref.getBoolean("showHidden", true);
 		String c = pref.get("comparator", "type");
@@ -101,7 +182,7 @@ public class FSeekerModel extends Observable {
 	public File[] getFilesList() {
 		// Late instanciating
 		if (filesList == null) {
-			File[] files = uri.listFiles();
+			File[] files = getURI().listFiles();
 
 			if (files != null) {
 				List filesArray = new ArrayList(files.length);
@@ -117,7 +198,7 @@ public class FSeekerModel extends Observable {
 
 		return filesList;
 	}
-	
+
 	/**
 	 * Retourne la sélection courante.
 	 * 
@@ -140,9 +221,17 @@ public class FSeekerModel extends Observable {
 	 * Remonte dans l'arborescence de un niveau.
 	 */
 	public void gotoParent() {
-		File parent = uri.getParentFile();
+		File parent = getURI().getParentFile();
 		if (parent != null)
 			setURI(parent);
+	}
+
+	public void gotoPrevious() {
+		setURI(uris.gotoPrevious());
+	}
+
+	public void gotoNext() {
+		setURI(uris.gotoNext());
 	}
 
 	/**
@@ -217,7 +306,7 @@ public class FSeekerModel extends Observable {
 	 *            la nouvelle URI
 	 */
 	public void setURI(File uri) {
-		setURI(uri, getSelection());
+		setURI(uri, null);
 	}
 
 	/**
@@ -229,13 +318,15 @@ public class FSeekerModel extends Observable {
 	 *            la source du changement
 	 */
 	public void setURI(File uri, Object src) {
-		if (!uri.equals(this.uri)) {
+		if (!uri.equals(getURI())) {
 			if (!uri.exists()) {
 				GU.info("Ce fichier ou répertoire n'existe pas.");
 				return;
 			}
-			this.uri = uri;
 
+			this.uri = uri;
+			uris.add(uri);
+			System.out.println(uris);
 			setChanged(URI, src);
 
 			// Si on change l'URI, forcément, la sélection change.. !
