@@ -1,7 +1,5 @@
 package misc;
 
-
-
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
@@ -12,9 +10,9 @@ import java.io.IOException;
 /**
  * @author brahim
  * 
- * Classe qui ouvre une fenêtre qui permet de visualiser des fichiers locaux HTML (ou
- * autre) avec notamment la gestion des liens hypertextes
- *
+ * Classe qui ouvre une fenêtre qui permet de visualiser des fichiers locaux
+ * HTML (ou autre) avec notamment la gestion des liens hypertextes
+ *  
  */
 public class View extends JFrame implements HyperlinkListener {
 
@@ -31,7 +29,7 @@ public class View extends JFrame implements HyperlinkListener {
 		viewer.setContentType("text/html");
 		// Ajout du listener pour les hyperliens notamment
 		viewer.addHyperlinkListener(this);
-		this.home = home;		
+		this.home = home;
 		loadPage(home);
 	}
 
@@ -51,14 +49,14 @@ public class View extends JFrame implements HyperlinkListener {
 
 	private void loadPage(String urlText) {
 		try {
-			URL file = View.class.getResource(".." + GU.SEP + "resources"
-					+ GU.SEP + urlText);
+			URL file = View.class.getResource(".." + GU.pathSep + "resources"
+					+ GU.pathSep + urlText);
 			if (DEBUG)
 				System.out.println("LIEN URL : " + file);
 			viewer.setPage(file);
 
 		} catch (IOException ex) {
-			GU.message("Accés impossible à " + urlText);
+			//TODO GU.message("Accés impossible à " + urlText);
 		}
 	}
 
