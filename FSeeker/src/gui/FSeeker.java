@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
@@ -31,8 +31,10 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import misc.GU;
+import misc.ImagesMap;
 import model.FileSystemModel;
 import model.ListImagesModel;
+import controler.ToolBarControler;
 
 /*
  * Created on 15 oct. 2004
@@ -47,6 +49,9 @@ public class FSeeker extends JFrame {
     /** La version du software */
     public final static String VERSION = "0.1a";
 
+    /** Le contrôleur de la barre d'outils */
+    private final static ToolBarControler toolBarControler = new ToolBarControler();
+    
     /** Le panel central, principal, destinées à accueillir les différentes vues */
     private JPanel main = new JPanel();
 
@@ -55,10 +60,41 @@ public class FSeeker extends JFrame {
         super("FSeeker v" + VERSION);
         Container cp = getContentPane();
 
-        // Ca fait moche si on change (sous ouinouin en tout cas)
-        // GU.changeLF();
+        GU.changeLF();
         setJMenuBar(getDefaultMenuBar());
 
+		main.setLayout(new GridLayout(1, 2));
+	
+		// Foutre ça complétement à part après
+		JTree tree = new JTree(new FileSystemModel("c:\\"));
+		final ListImagesModel model = new ListImagesModel(new File("c:\\"));
+		ListImagesGUI jli = new ListImagesGUI(model);
+		
+		JPanel rightPanel = new JPanel(new BorderLayout());
+	    rightPanel.add(jli);
+	
+		
+		JSplitPane sp = new JSplitPane();
+		JScrollPane scrollTop = new JScrollPane(tree);
+		JScrollPane scrollBottom = new JScrollPane(rightPanel);
+		
+		// Propriétés de la barre de split
+		sp.setDividerLocation(200);
+		sp.setOneTouchExpandable(true);
+		
+		sp.setTopComponent(scrollTop);
+		sp.setBottomComponent(scrollBottom);
+
+		main.add(sp);
+
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+			    File f = (File) e.getPath().getLastPathComponent();
+				model.setDirectory(f);					
+			}
+		});
+		////////////////////////////
+        
         // Un border pour toolbar (en haut), statusbar (en bas), main (central)
         cp.setLayout(new BorderLayout());
         cp.add(getDefaultToolBar(), BorderLayout.NORTH);
@@ -102,6 +138,8 @@ public class FSeeker extends JFrame {
      */
     public void setMain(JPanel main) {
         this.main = main;
+        invalidate();
+        validate();
     }
 
     /**
@@ -114,55 +152,59 @@ public class FSeeker extends JFrame {
         FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         layout.setVgap(0);
         tb.setLayout(layout);
-
         tb.setFloatable(false);
-        JButton b = new JButton("");
-        b.setIcon(new ImageIcon("dot.gif"));
-        b.setToolTipText("prout");
+        
+        JButton b = null;
+                
+        b = new JButton();
+        b.setBorder(null);
+        b.setActionCommand("PREVIOUS");
+        b.addActionListener(toolBarControler);
+        b.setIcon(ImagesMap.get("previous.gif"));
+        b.setToolTipText("Précédent");
         tb.add(b);
-        JLabel l;
-        l = new JLabel("Précédent");
-        GU.setIcon(l, "dot.gif");
-        tb.add(l);
-        l = new JLabel("Suivant");
-        GU.setIcon(l, "dot.gif");
-        tb.add(l);
+        
+        b = new JButton();
+        b.setBorder(null);
+        b.setActionCommand("NEXT");
+        b.addActionListener(toolBarControler);
+        b.setIcon(ImagesMap.get("next.gif"));
+        b.setToolTipText("Suivant");
+        tb.add(b);
+        
+        b = new JButton();
+        b.setBorder(null);
+        b.setActionCommand("PARENT");
+        b.addActionListener(toolBarControler);
+        b.setIcon(ImagesMap.get("parent.gif"));
+        b.setToolTipText("Répertoire parent");
+        tb.add(b);
+        
         tb.addSeparator();
-        l = new JLabel("Parent");
-        GU.setIcon(l, "dot.gif");
-        tb.add(l);
-        tb.addSeparator(new Dimension(10, 10));
+        
         b = new JButton("Rechercher");
         tb.add(b);
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.removeAll();
-				main.setLayout(new BorderLayout());
+				JPanel p = new JPanel(new BorderLayout());
 				
-				JTree tree = new JTree(new FileSystemModel("c:\\"));
-				final ListImagesModel model = new ListImagesModel(new File("c:\\"));
-				ListImagesGUI jli = new ListImagesGUI(model);
+				JPanel psearch = new JPanel();
+				psearch.add(new JLabel("Recherche"));
+				psearch.add(new JTextField(20));
 				
-				JSplitPane sp = new JSplitPane();
-				JScrollPane scrollTop = new JScrollPane(tree);
-				JScrollPane scrollBottom = new JScrollPane(jli);		
-				sp.setTopComponent(scrollTop);
-				sp.setBottomComponent(scrollBottom);
-				main.add(sp);
-
-				tree.addTreeSelectionListener(new TreeSelectionListener() {
-					public void valueChanged(TreeSelectionEvent e) {
-					    File f = (File) e.getPath().getLastPathComponent();
-						model.setDirectory(f);					
-					}
-				});
-				
-				main.revalidate();
+				p.add(psearch, BorderLayout.WEST);
+				p.add(new JTextArea(20, 20), BorderLayout.EAST);
+				System.out.println("on met " + p);
+				setMain(p);
 			}
 		});
-        l = new JLabel("Affichage");
-        GU.setIcon(l, "dot.gif");
-        tb.add(l);
+        
+		b = new JButton();
+        b.setActionCommand("AFFICHAGE");
+        b.addActionListener(toolBarControler);
+        b.setIcon(ImagesMap.get("dot.gif"));
+        b.setToolTipText("Affichage");
+        tb.add(b);
 
         tb.addSeparator(new Dimension(10, 10));
         tb.add(new JLabel("URI : "));

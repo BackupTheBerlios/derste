@@ -22,7 +22,7 @@ public class ListImagesGUI extends JPanel {
     public ListImagesGUI(ListImagesModel m) {
         this.m = m;
         list = new JList(m);
-        
+        list.setDragEnabled(true);
         new ListImagesDataControler(m, list);
         list.addMouseListener(new ListImagesMouseListener(this));
         list.setCellRenderer(new ImagesListCellRenderer());

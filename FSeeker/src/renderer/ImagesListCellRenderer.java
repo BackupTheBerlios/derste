@@ -1,21 +1,23 @@
 package renderer;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.io.File;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 
 import misc.ImagesMap;
 
 public class ImagesListCellRenderer extends DefaultListCellRenderer {
-	private final static int iconTextGap = 1;
 
-	/*
-	 * @return un composant gérant le rendu d'une cellule pour un fichier
-	 */
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 	    // TODO Refaire cette méthode au propre
 		File file = (File) value;
@@ -47,10 +49,7 @@ public class ImagesListCellRenderer extends DefaultListCellRenderer {
 		
 		setIcon(fileIcon);
 
-		// TODO le new line, il sux des ours polaires
-		String newLine = "\n";
-		setToolTipText("Nom : " + file + newLine + " Taille : " + file.length() + " octets");
-		setIconTextGap(iconTextGap);
+		setToolTipText("<html>Nom : " + file + "<br>Taille : " + file.length() + " octets</html>");
 		
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
