@@ -120,7 +120,7 @@ public class FSeekerModel extends Observable {
 	public void showHidden(boolean showHidden) {
 		if (this.showHidden != showHidden) {
 			this.showHidden = showHidden;
-			getFilesList();
+			filesList = null;
 			setChanged(SHOWHIDDEN);
 			notifyObservers();
 		}
@@ -145,12 +145,7 @@ public class FSeekerModel extends Observable {
 	public void setComparator(Comparator comparator) {
 		if (comparator != this.comparator) {
 			this.comparator = comparator;
-			
-			if (filesList != null)
-				Arrays.sort(filesList, comparator);
-			else
-				getFilesList();
-			
+			filesList = null;
 			setChanged(COMPARATOR);
 			notifyObservers();
 		}
@@ -164,6 +159,7 @@ public class FSeekerModel extends Observable {
 	 *            FSeekerModel
 	 */
 	protected void setChanged(int whatChanged) {
+		getFilesList();
 		changed = whatChanged;
 		setChanged();
 	}
@@ -180,7 +176,7 @@ public class FSeekerModel extends Observable {
 	 * 
 	 * @return liste de fichiers du répertoire courant
 	 */
-	protected File[] getFilesList() {
+	public File[] getFilesList() {
 		if (filesList == null) {
 			File[] files = uri.listFiles();
 			filesList = new File[files.length];
