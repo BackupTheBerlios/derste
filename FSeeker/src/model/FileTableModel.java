@@ -71,10 +71,9 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 
     }
 
-	public void update(Observable o, Object arg) {
-		setData();
-		fireTableDataChanged();
-	}
+    public FSeekerModel getModel() {
+        return fsm;
+    }
 
     public void update(Observable o, Object arg) {
         System.out.println("MODEL PRINCIPAL A CHANGE");
@@ -84,7 +83,6 @@ public class FileTableModel extends DefaultTableModel implements Observer {
             setDataForSpecialView();
         else
             setDataForSimpleView();
-
 
     }
 
@@ -120,26 +118,24 @@ public class FileTableModel extends DefaultTableModel implements Observer {
                 case 0:
                     rowData.addElement(files[rows]);
                     break;
+                
 
-			data.add(rowData);
-		}
+            case 2:
+                rowData.addElement(files[rows].isDirectory() ? "Dossier"
+                        : "Fichier");
+                break;
 
-                case 2:
-                    rowData.addElement(files[rows].isDirectory() ? "Dossier"
-                            : "Fichier");
-                    break;
-
-                case 3:
-                    rowData.addElement(new Date(files[rows].lastModified()));
-                    break;
-                }
+            case 3:
+                rowData.addElement(new Date(files[rows].lastModified()));
+                break;
             }
-
-            data.add(rowData);
         }
 
-        setDataVector(data, colNames);
+        data.add(rowData);
     }
+
+    setDataVector(data, colNames);
+}
 
     public void setDataForSpecialView() {
         File[] files = fsm.getURI().listFiles();
@@ -153,30 +149,30 @@ public class FileTableModel extends DefaultTableModel implements Observer {
         table2.addColumn(col);
     }
 
-    /** Surcharge car la supermééthode remplit les lignes par des valeurs copiées
+    /**
+     * Surcharge car la supermééthode remplit les lignes par des valeurs copiées
      * d'une colonne précedente
      */
     public void addColumn(Object columnName, Vector columnData) {
         columnIdentifiers.addElement(columnName);
 
-        if (columnData != null) {         
-            
-            int columnSize = columnData.size();           
+        if (columnData != null) {
+
+            int columnSize = columnData.size();
             if (columnSize > getRowCount()) {
-                dataVector.setSize(columnSize);//Nombre de ligne + gd             
+                dataVector.setSize(columnSize);//Nombre de ligne + gd
             }
             justify(0, getRowCount());
             int newColumn = getColumnCount() - 1;
-            for (int i = 0; i < getRowCount()/*columnSize*/; i++) {
-                Vector row = (Vector) dataVector.elementAt(i);                    
+            for (int i = 0; i < getRowCount()/* columnSize */; i++) {
+                Vector row = (Vector) dataVector.elementAt(i);
                 System.out.println("row = " + row);
-                if(i < columnSize){                    
-                    row.setElementAt(columnData.elementAt(i), newColumn);                    
-                }
-                else if(i >= columnSize){                 
+                if (i < columnSize) {
+                    row.setElementAt(columnData.elementAt(i), newColumn);
+                } else if (i >= columnSize) {
                     row.setElementAt(new String(""), newColumn);
                 }
-               
+
             }
         } else {
             justify(0, getRowCount());
