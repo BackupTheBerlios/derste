@@ -14,8 +14,16 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
@@ -25,7 +33,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
+
+import model.FSeekerModel;
 
 /**
  * @author sted
@@ -35,15 +46,81 @@ public class BookmarksGUI extends JList {
 
 	protected static Color listColor = null;
 
-	public BookmarksGUI() {
+	protected FSeekerModel fsm = null;
+
+	public void addBookmark(String t, File f) {
+		m.addElement(new Bookmark(t, f));
+	}
+
+	
+	private class Hu implements Serializable {
+		public Object[] bookmarks = null;
+		public Hu(Object[] bookmarks) {
+			this.bookmarks = bookmarks;
+		}
+		
+	}
+	
+	public void write() {
+		try {
+			FileOutputStream fos = new FileOutputStream("bookmarks");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			Hu hu = new Hu(m.toArray());
+			oos.writeObject(hu);
+			oos.flush();
+			oos.close();
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
+	}
+
+	public Object[] read() {
+		try {
+			FileInputStream fis = new FileInputStream("bookmarks");
+			System.out.println("lol");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			System.out.println("lol2");
+			Object[] bookmarks = ((Hu) ois.readObject()).bookmarks;
+			System.out.println("lol3");
+			ois.close();
+			return bookmarks;
+		} catch (FileNotFoundException e) {
+			System.out.println("aucun favoris");
+		} catch (IOException e) {
+			System.out.println("erreur d'io");
+		} catch (ClassNotFoundException e) {
+			System.out.println("classe introuvable");
+		}
+		return null;
+	}
+
+	public BookmarksGUI(FSeekerModel fsm) {
 		super();
+		this.fsm = fsm;
+
+		listColor = getBackground();
 		setCellRenderer(new BookmarksRenderer());
 		setModel(m);
-		Bookmark b = new Bookmark("Racine", new File("/"));
-		m.addElement(b);
-		b = new Bookmark("Home", new File("/home/sted"));
-		m.addElement(b);
-		listColor = getBackground();
+		
+		Object bookmarks[] = read();
+		if (bookmarks != null) {
+			System.out.println("récup");
+			for (int i = 0; i < bookmarks.length; i++)
+				m.addElement(bookmarks[i]);
+		}
+		
+		addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e)
+						&& e.getClickCount() == BookmarksGUI.this.fsm
+								.getClickCount()) {
+					Bookmark b = (Bookmark) getSelectedValue();
+					if (b == null)
+						return;
+					BookmarksGUI.this.fsm.setURI(b.getFile());
+				}
+			}
+		});
 
 		DropTarget dt = new DropTarget(this, new DropTargetAdapter() {
 			public void drop(DropTargetDropEvent dtde) {
@@ -60,7 +137,10 @@ public class BookmarksGUI extends JList {
 						}
 
 						file = st.nextToken();
+						File f = new File(file);
+						addBookmark(f.getName(), f);
 						dtde.dropComplete(true);
+						write();
 
 					} catch (UnsupportedFlavorException e) {
 						dtde.rejectDrop();

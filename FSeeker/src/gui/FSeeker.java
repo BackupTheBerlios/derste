@@ -28,14 +28,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
-import preview.PreviewManager;
-
 import misc.GU;
 import misc.PopupManager;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.FileTableModel;
 import model.ListImagesModel;
+import preview.PreviewManager;
 
 /*
  * Created on 15 oct. 2004
@@ -73,11 +72,11 @@ public class FSeeker extends JFrame {
 	private FileSystemTreeGUI fstgui = null;
 
 	private SearchGUI searchgui = null;
-	
+
 	private PreviewManager preview = null;
 
 	private JList bookmarksgui = null;
-	
+
 	private JTabbedPane tabs = null;
 
 	/** Construit la fenêtre par défaut de FSeeker */
@@ -160,11 +159,8 @@ public class FSeeker extends JFrame {
 		} else if ("Recherche".equals(cb.getSelectedItem())) {
 			searchgui.setSearchPath(fsm.getURI());
 			p = searchgui;
-		}else if("Information".equals(cb.getSelectedItem())){
-		    preview = new PreviewManager(fsm);
-		    preview.update(fsm, null);// Appel explicite sinon il faut créer
-		    		//la preview dés le lancement de l'application
-		    p = preview;			
+		} else if ("Information".equals(cb.getSelectedItem())) {
+			p = preview;
 		} else if ("Favoris".equals(cb.getSelectedItem())) {
 			p.add(bookmarksgui);
 		}
@@ -179,9 +175,15 @@ public class FSeeker extends JFrame {
 
 		// Recherche
 		searchgui = new SearchGUI(this);
-		
+
 		// Bookmarks
-		bookmarksgui = new BookmarksGUI();
+		bookmarksgui = new BookmarksGUI(fsm);
+
+		// La prévisualisation
+		preview = new PreviewManager(fsm);
+		// Appel explicite sinon il faut créer la preview dés le lancement de
+		// l'application
+		preview.update(fsm, null);
 	}
 
 	public JPanel getDefaultView() {
@@ -218,20 +220,22 @@ public class FSeeker extends JFrame {
 		tabs.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
-					if (tabs.getTitleAt(tabs.getSelectedIndex()).indexOf("Recherche") != 0)
+					if (tabs.getTitleAt(tabs.getSelectedIndex()).indexOf(
+							"Recherche") != 0)
 						return;
-					
+
 					JPopupMenu popup = new JPopupMenu();
-					popup.add(PopupManager.createMenuItem("Fermer", new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						tabs.remove(tabs.getSelectedIndex());
-					}	
-					}));
+					popup.add(PopupManager.createMenuItem("Fermer",
+							new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									tabs.remove(tabs.getSelectedIndex());
+								}
+							}));
 					PopupManager.showPopup(e, popup);
 				}
 			}
 		});
-		
+
 		JScrollPane viewIcon = new JScrollPane(ligui);
 		JScrollPane viewList = new JScrollPane(lgui);
 		JScrollPane viewTable = new JScrollPane(ftgui);
@@ -300,6 +304,4 @@ public class FSeeker extends JFrame {
 	}
 
 }
-
-
 
