@@ -1,8 +1,16 @@
 /*
  * Created on 16 oct. 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO: euh, changes tes noms de méthodes ("changement" et "fire".... no comment) (anglais !!)
+ * et clarifie le tout, c'est franchement le boxon, j'ai mis un temps
+ * avant de comprendre son utilité. Et javadoc quoi ! 
+ * 
+ * Et PS lollant :
+ * private void fire(ListDataListener l, ListDataEvent lde) {
+ *	l.contentsChanged(lde);
+ *	}
+ * Pourquoi une méthode pour ça ? Sachant que tu l'appelle une seule fois. :D
+ * A part rendre encore moins incompréhensible, je vois pas pourquoi.
  */
 package model;
 
@@ -12,8 +20,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * @author Ait elhaj brahim
- *  
+ * @author brahim
  */
 public class ListImagesModel implements ListModel {
 
@@ -26,30 +33,21 @@ public class ListImagesModel implements ListModel {
 		listeners = new ArrayList(0);
 	}
 
-	/*
+	/**
 	 * Renvoie le nombre de fichiers dans le dossier
-	 * 
-	 * @see javax.swing.ListModel#getSize()
 	 */
 	public int getSize() {
 		return dir.list().length;
 	}
 
-	/*
+	/**
 	 * the file at the specified index in the directory
-	 * 
-	 * @see javax.swing.ListModel#getElementAt(int)
 	 */
 	public Object getElementAt(int index) {
 		File[] files = dir.listFiles();
 		return files[index];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.ListModel#addListDataListener(javax.swing.event.ListDataListener)
-	 */
 	public void addListDataListener(ListDataListener l) {
 		if (!listeners.contains(l) && l != null)
 			listeners.add(l);
@@ -58,20 +56,13 @@ public class ListImagesModel implements ListModel {
 	public void setDir(File dir) {
 		this.dir = dir;
 		changement();
-		
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.ListModel#removeListDataListener(javax.swing.event.ListDataListener)
-	 */
 	public void removeListDataListener(ListDataListener l) {
 		if (l != null)
 			listeners.remove(l);
 	}
-
-	
 
 	//Indique à un écouteur, qu'il y a eut un changement
 	private void fire(ListDataListener l, ListDataEvent lde) {
