@@ -33,7 +33,7 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
 			return this;
 
 		FileDetails fd = new FileDetails((File) value);
-		setText(fd.getName());
+		setText(FileSystemView.getFileSystemView().getSystemDisplayName(fd.getFile()));
 
 		if (expanded)
 			setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_OPENED_IMAGE));

@@ -287,4 +287,74 @@ public class PopupManager {
 		});
 	}
 
+	/**
+	 * Retourne le popup d'un fichier sélectionné ou null si ce fichier est
+	 * null.
+	 * 
+	 * @param f
+	 *            un fichier (normalement, celui en sélection)
+	 * @param fsm
+	 *            un supra-modèle
+	 * @return le popup
+	 */
+	public static JPopupMenu getDefaultPopupIn(final File f, FSeekerModel fsm) {
+		if (f == null)
+			return null;
+
+		// Le popup
+		JPopupMenu popup = new JPopupMenu();
+
+		// Pour créer plus facilement et clairement des popups
+		PopupManager pm = new PopupManager(f, fsm);
+
+		popup.add(pm.getFileName());
+		popup.addSeparator();
+		popup.add(pm.getOpen());
+		popup.add(pm.getCreateDirectory());
+		popup.add(pm.getCreateFile());
+		popup.addSeparator();
+		popup.add(pm.getCut());
+		popup.add(pm.getCopy());
+		popup.add(pm.getPaste());
+		popup.add(pm.getRename());
+		popup.addSeparator();
+		popup.add(pm.getDelete());
+		popup.add(pm.getRefresh());
+		popup.addSeparator();
+		popup.add(pm.getDisplay());
+		popup.addSeparator();
+		popup.add(pm.getProperties());
+
+		return popup;
+	}
+
+	/**
+	 * Retourne le popup situé en dehors de la liste des fichiers.
+	 * 
+	 * @param fsm
+	 *            un supra-modèle
+	 * @return le popup
+	 */
+	public static JPopupMenu getDefaultPopupOut(FSeekerModel fsm) {
+		// Le popup
+		JPopupMenu popup = new JPopupMenu();
+
+		// Pour créer plus facilement et clairement des popups
+		PopupManager pm = new PopupManager(fsm.getURI(), fsm);
+
+		popup.add(pm.getFileName());
+		popup.addSeparator();
+		popup.add(pm.getCreateDirectory());
+		popup.add(pm.getCreateFile());
+		popup.addSeparator();
+		popup.add(pm.getPaste());
+		popup.add(pm.getRefresh());
+		popup.addSeparator();
+		popup.add(pm.getDisplay());
+		popup.addSeparator();
+		popup.add(pm.getProperties());
+
+		return popup;
+	}
+
 }

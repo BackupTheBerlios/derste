@@ -10,6 +10,7 @@ import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import misc.ImagesMap;
@@ -49,13 +50,11 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 			if (value instanceof File) {
 				File file = (File) value;
 				FileDetails fd = new FileDetails(file);
-				//setVerticalTextPosition(SwingConstants.BOTTOM);
-				//setHorizontalTextPosition(SwingConstants.CENTER);
-				//setHorizontalAlignment(SwingConstants.CENTER);
 				setIcon(ImagesMap.get16x16(file));
 				setToolTipText(fd.getToolTip());
 				setFont(fd.getFont());
-				setText(fd.getName());
+				setHorizontalAlignment(JLabel.LEFT);
+				setText(FileSystemView.getFileSystemView().getSystemDisplayName(file));
 
 			} else if (value instanceof Date) {
 				setHorizontalAlignment(JLabel.LEFT);
@@ -72,6 +71,7 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 			// Si la cellule représente le nihilisme totale du monde, on la
 			// représente comme telle !
 			setIcon(null);
+			setHorizontalAlignment(JLabel.LEFT);
 		}
 	}
 

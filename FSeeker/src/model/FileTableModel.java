@@ -4,8 +4,10 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
@@ -31,7 +33,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 
 	/** Mode recherche */
 	public static int SEARCH_MODE = 2;
-	
+
 	/** Mode par défaut */
 	protected int MODE = SIMPLE_MODE;
 
@@ -65,7 +67,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 		colNames.addElement("Taille");
 		colNames.addElement("Type");
 		colNames.addElement("Date de Modification");
-		
+
 		if (MODE == SPECIAL_MODE)
 			setDataForSpecialView();
 		else {
@@ -89,12 +91,17 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	 * Appelée quand le supra-modèle est modifiée.
 	 */
 	public void update(Observable o, Object arg) {
-		if (MODE == SPECIAL_MODE)
-			setDataForSpecialView();
-		else 
-			setDataForSimpleView();
+		if (fsm.isChanged(FSeekerModel.SELECTION)) {
+			fireSelectionChanged(fsm.getSelection());
+		} else {
 
-		fireTableDataChanged();
+			if (MODE == SPECIAL_MODE)
+				setDataForSpecialView();
+			else
+				setDataForSimpleView();
+
+			fireTableDataChanged();
+		}
 	}
 
 	/**
@@ -250,10 +257,65 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 		setRowCount(getNonNullRowCount());
 	}
 
+	public int getIndexOf(Object o, int column) {
+		int size = getRowCount();
+
+		// On parcours les lignes
+		for (int i = 0; i < size; i++) {
+			Vector colv = (Vector) dataVector.get(i);
+			if (colv.get(column).equals(o))
+				return i;
+		}
+
+		return -1;
+	}
+
 	/**
 	 * @inheritDoc
 	 */
 	public boolean isCellEditable(int row, int column) {
 		return false;
+	}
+
+	/**
+	 * Listeners en attente de l'événement qui modifie la sélection du modèle
+	 * (issue du supra-modèle)
+	 */
+	protected List selectionListeners = new ArrayList();
+
+	/**
+	 * Prévient les listeners abonnés que la nouvelle sélection est le fichier
+	 * f.
+	 * 
+	 * @param f
+	 *            nouveau fichier sélectionné
+	 */
+	protected void fireSelectionChanged(File f) {
+		Iterator it = selectionListeners.iterator();
+		SelectionChangedEvent e = new SelectionChangedEvent(this, f);
+		while (it.hasNext())
+			((SelectionChangedListener) it.next()).selectionChanged(e);
+	}
+
+	/**
+	 * Ajoute un listener à l'écoute du changement de sélection du modèle.
+	 * 
+	 * @param l
+	 *            un listener
+	 */
+	public void addSelectionChangedListener(SelectionChangedListener l) {
+		if (l != null && !selectionListeners.contains(l))
+			selectionListeners.add(l);
+	}
+
+	/**
+	 * Supprime un listener à l'écoute du changement de sélection du modèle.
+	 * 
+	 * @param l
+	 *            un listener
+	 */
+	public void removeSelectionChangedListener(SelectionChangedListener l) {
+		if (l != null)
+			selectionListeners.remove(l);
 	}
 }

@@ -106,6 +106,10 @@ public class FileUtilities {
             return name;
         }
 
+        public File getFile() {
+        	return f;
+        }
+        
         public String getLastModified() {
             if (lastModified == null)
                 lastModified = dateFormat.format(new Date(f.lastModified()));
