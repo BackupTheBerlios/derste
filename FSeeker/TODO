@@ -4,7 +4,7 @@ OK ON MET TOUT DANS images à la base du projet
 tu apelle GU.createImage.. pour creer un icone t tu lui passe le nom du fichier c tt simple 
 comme ca le chemin est gere en attribut dans la classe GU
 Si on fait ca pourtant pas de probléme 
-
+CHEZ MOI CA MARCHE LA JE COMMIT ET PRS DONC CHEZ TOI CA DOIT MARCHER LES ICONES @+
 
 - UNE SEULE CLASSE PAR FICHIER. (je réglerai le tout plus tard)
 car encore quelques détail (vérifier selon le model MVC)

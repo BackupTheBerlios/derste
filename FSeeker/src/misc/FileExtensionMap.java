@@ -29,7 +29,8 @@ public class FileExtensionMap extends HashMap {
 
 	private File file;
 
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
+	
 	private static final String deflt = "file.png";//fichier par défaut
 
 	private static final String dir = "directory.png";//répértoire
