@@ -2,13 +2,10 @@ package gui;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import misc.file.FileUtilities;
 import model.ListImagesModel;
