@@ -11,6 +11,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import misc.file.FileUtilities;
@@ -63,6 +65,7 @@ public class PreviewManager extends JPanel implements Observer {
         removeAll();//Sécurité
         
         Preview p = null;
+        JPanel preview = null;
         String mime = "";
         String ext = "";
 
@@ -87,7 +90,7 @@ public class PreviewManager extends JPanel implements Observer {
             // Fichier texte
             p = new TextPreview(selection);
         } else if (ext.equals("mp3") || ext.equals("wav")) {
-            // Fichier mp3 ou wav
+            // Fichier mp3 ou wav                  
             p = new SoundPreview(selection);
         } else {
             // Fichier par défaut
@@ -98,7 +101,7 @@ public class PreviewManager extends JPanel implements Observer {
         
         // On lance la preview
         p.preview();
-        JPanel preview = (JPanel) p;
+        preview = (JPanel) p;
         preview.setOpaque(true);
         preview.setBackground(BACKG);
         add(preview);
@@ -107,11 +110,9 @@ public class PreviewManager extends JPanel implements Observer {
         JPanel info = new FileInfo(selection);
         info.setOpaque(true);
         info.setBackground(BACKG);
-        add(info);
-        
-        // On ajoute le panel contenant tout les autres au panel courant 
-        //add(main);
-        
+        add(info);        
+       
+        //On met à jour l'affichage
         repaint();
         revalidate();
     }
