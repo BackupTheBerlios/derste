@@ -6,9 +6,10 @@ package misc;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.*;
+import java.io.File;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
@@ -26,10 +27,12 @@ import javax.swing.border.Border;
  */
 public class GU {
 
-	public static final char SEP = File.separatorChar;//System.getProperty("path.separator");
-	
-	//Probléme de fichier ? Tout mettre dans images à la base
-	private static final String RESOURCES =  "images" + SEP;
+	/** Le séparateur de path du système */
+	// System.getProperty("path.separator");
+	public static final char SEP = File.separatorChar;
+
+	/** Là où sont stockées toutes les images */
+	private static final String IMAGES = "images" + SEP;
 
 	/**
 	 * Centre une JFrame sur l'écran.
@@ -46,18 +49,16 @@ public class GU {
 	}
 
 	/**
-	 * Attribue une image à un JLabel. (setIcon..) TODO: Faire un type global
-	 * pour les JButtons, JLabel etc.
+	 * Attribue une image à un JLabel. (setIcon..)
 	 * 
 	 * @param label
 	 *            le JLabel auquel affecté une image
 	 * @param image
 	 *            l'image en question à associer
 	 */
+	/* TODO: Faire un type global pour les JButtons, JLabel etc. */
 	public static void setIcon(JLabel label, String image) {
-		//TODO Mettre toutres les images dans resources/images
-		ImageIcon ii = createImg(image);
-		label.setIcon(ii);
+		label.setIcon(getImage(image));
 	}
 
 	/**
@@ -72,9 +73,8 @@ public class GU {
 	 *            adresse du fichier sur le systéme
 	 * @return
 	 */
-	public static ImageIcon createImg(String location) {
-		ImageIcon img = new ImageIcon(RESOURCES + location);
-		return img;
+	public static Icon getImage(String location) {
+		return new ImageIcon(IMAGES + location);
 	}
 
 	/**
@@ -85,9 +85,11 @@ public class GU {
 	 *            Message à afficher dans la boite de dialogue
 	 */
 	public static void message(String mess) {
-
+		// TODO c'est quoi ce new JFrame foireux là ?
+		// Faut passer le parent en param là, pas un nouveau sorti d'on ne sait
+		// où
 		JOptionPane.showMessageDialog(new JFrame(), mess, "Avertissement",
-				JOptionPane.WARNING_MESSAGE, createImg("mess.png"));
+				JOptionPane.WARNING_MESSAGE, getImage("mess.png"));
 	}
 
 	/**
@@ -102,10 +104,10 @@ public class GU {
 	 *         selon le choix
 	 */
 	public static int confirm(String titre, String mess) {
-		int reponse = JOptionPane.showConfirmDialog(new JFrame(), mess, titre,
+		// TODO: idem que message (new JFrame() n'imp)
+		return JOptionPane.showConfirmDialog(new JFrame(), mess, titre,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				createImg("ask.png"));
-		return reponse;
+				getImage("ask.png"));
 	}
 
 	/**
@@ -116,6 +118,7 @@ public class GU {
 	 *            URL du fichier à charger dans le JEditorPane
 	 * @return Un JEditorPane affichant un fichier html
 	 */
+	// TODO: je pense pas que ça ait à faire quelque chose ici ça	
 	public static JEditorPane createEditor(String url) {
 		JEditorPane HelpPane = new JEditorPane();
 		HelpPane.setEditable(false);
