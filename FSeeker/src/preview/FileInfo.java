@@ -30,8 +30,7 @@ public class FileInfo extends JPanel {
     public  FileInfo(File file){
         this.file = file;
         infoLabel = new JLabel(FileUtilities.getToolTip(file));
-        add(infoLabel);
-       // infoLabel.setText();
+        add(infoLabel);      
     }  
     
 
