@@ -22,10 +22,11 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
     protected ListImagesModel m = null;
 
     public ListImagesCellRenderer(ListImagesModel m) {
-        this.m = m;
+        this(m, false);
     }
 
-    public ListImagesCellRenderer(boolean simple) {
+    public ListImagesCellRenderer(ListImagesModel m, boolean simple) {
+        this.m = m;
         this.simple = simple;
     }
 
@@ -42,8 +43,8 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
         else
             setText(file.getName() + (file.isDirectory() ? "/" : ""));
 
-        setToolTipText(FileUtilities.getDetails(file));
-
+        //setToolTipText(FileUtilities.getDetails(file));
+        
         if (!simple) {
             setVerticalTextPosition(SwingConstants.BOTTOM);
             setHorizontalTextPosition(SwingConstants.CENTER);

@@ -9,7 +9,8 @@ import javax.swing.JList;
 import model.ListImagesModel;
 
 /**
- * @author brahim
+ * @author Sted
+ * @author brahim 
  */
 public class ListImagesDataControler extends MouseAdapter {
 
