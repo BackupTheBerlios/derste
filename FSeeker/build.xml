@@ -50,5 +50,10 @@
     <delete dir="${build}"/>
     <delete dir="${dist}"/>
   </target>
+
+<target name="javadoc">
+<javadoc access="public" author="true" classpath="lib/commons-logging-api.jar:lib/mp3spi1.9.1.jar:lib/jl04.jar:lib/tritonus_share.jar:lib/basicplayer2.3.jar:/home/sted/eclipse/ws/FSeeker/build:lib/skinlf.jar" destdir="/home/sted/testjavadoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="gui,model,preview,misc.file,controler,misc,renderer" sourcepath="/home/sted/eclipse/ws/FSeeker/src" splitindex="true" use="true" version="true"/>
+</target>
+
 </project>
 
