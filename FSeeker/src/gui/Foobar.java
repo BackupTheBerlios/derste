@@ -52,7 +52,7 @@ public class Foobar extends JFrame {
 		
 		//////////////////////////////////////////////////
 		StatusBar sb = new StatusBar();
-		JLabel label = new JLabel("Pwet, lalala");
+		JLabel label = new JLabel("Pwet, lilili");
 		
 		c.setLayout(new BorderLayout());
 		c.add(label, BorderLayout.NORTH);
