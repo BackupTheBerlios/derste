@@ -1,8 +1,5 @@
 /*
  * Created on 17 oct. 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package misc;
 
@@ -11,6 +8,8 @@ import java.util.Iterator;
 import java.io.*;
 
 import javax.swing.*;
+
+/* Cette classe est tout sauf bien. Lire le TODO */
 
 /**
  * @author brahim
@@ -31,6 +30,7 @@ public class FileExtensionMap extends HashMap {
 
 	private boolean DEBUG = false;
 	
+	// TODO C'est ça, tu vas les définir un par un ?
 	private static final String deflt = "file.png";//fichier par défaut
 
 	private static final String dir = "directory.png";//répértoire
@@ -54,7 +54,8 @@ public class FileExtensionMap extends HashMap {
 	 */
 	public FileExtensionMap(File file) {
 		this.file = file;
-		//On initialise la HashMap avec toutes les valeurs connues
+		// On initialise la HashMap avec toutes les valeurs connues
+		// TODO C'est ça, une par une !
 		extImg.put("dir", dir);
 		extImg.put("txt", txt);
 		extImg.put("java", java);
@@ -65,7 +66,7 @@ public class FileExtensionMap extends HashMap {
 	}
 
 	protected ImageIcon img(String path) {
-		return GU.createImg(path);
+		return GU.getImage(path);
 	}
 
 	/**
@@ -80,6 +81,7 @@ public class FileExtensionMap extends HashMap {
 	 * @return l'image associée à ce type de fichier, avec dir le dossier des
 	 *         images
 	 */
+	// Tout reprendre à 0, c'est n'imp, c'est le boxon, + lire TODO
 	public ImageIcon getIcon(String dir) {
 		ImageIcon fileIcon = null;
 		String fileStr = null;
@@ -117,6 +119,7 @@ public class FileExtensionMap extends HashMap {
 	 * 
 	 * @param args Argument de la lgine de commande (inutile)
 	 */
+	// TODO Pourquoi tu fais pleins de fautes ?
 	public static void main(String[] args) {
 		FileExtensionMap testMap = new FileExtensionMap(new File("/"));
 		JPanel jp = new JPanel();
