@@ -27,10 +27,10 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
         super.getListCellRendererComponent(list, value, index, isSelected,
                 cellHasFocus);
 
-        File file = (File) value;
+        final File file = (File) value;
 
         setText(file.getName() + (file.isDirectory() ? "/" : ""));
-        setToolTipText(FileUtilities.getDetails(file));
+       	setToolTipText(FileUtilities.getDetails(file));
 
         if (!simple) {
             setVerticalTextPosition(SwingConstants.BOTTOM);

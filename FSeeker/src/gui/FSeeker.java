@@ -10,12 +10,12 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
 import javax.swing.ToolTipManager;
 
 import misc.GU;
@@ -62,10 +63,10 @@ import controler.ToolBarControler;
 public class FSeeker {
 
     /** La version du software */
-    public final static String VERSION = "0.2a";
+    public final static String VERSION = "0.3a";
 
     private final static File ROOT = ((System.getProperty("os.name"))
-            .matches("Linux") ? File.listRoots()[0] : File.listRoots()[1]);
+            .indexOf("dows") >= 0 ? File.listRoots()[1] : File.listRoots()[0]);
 
     private JFrame f = null;
 
@@ -110,6 +111,7 @@ public class FSeeker {
         f = new JFrame("FSeeker v" + VERSION);
         Container cp = f.getContentPane();
         ToolTipManager.sharedInstance().setInitialDelay(1500);
+        ToolTipManager.sharedInstance().setReshowDelay(1000);
         
         // GU.changeLF();
         f.setJMenuBar(getDefaultMenuBar());
@@ -184,7 +186,7 @@ public class FSeeker {
             ftmodel = new FileTableModel(ROOT, "prout");
             ftgui = new FileTableGUI(ftmodel);
 
-            JDesktopPane desktop = new JDesktopPane();
+            /*JDesktopPane desktop = new JDesktopPane();
             JLabel l = new JLabel("pwet");
             l.setIcon(ImagesMap.getDefault());
             l.setSize(100, 100);
@@ -202,20 +204,21 @@ public class FSeeker {
             desktop.add(in);
             desktop.add(in2);
             desktop.add(in3);
-            desktop.setVisible(true);
+            desktop.setVisible(true);*/
 
             JTabbedPane tabs = new JTabbedPane();
-            JScrollPane viewIcon = new JScrollPane(ligui/*,
+            
+            JScrollPane viewIcon = new JScrollPane(ligui,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER*/);
-            JScrollPane viewList = new JScrollPane(lgui/*,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            JScrollPane viewList = new JScrollPane(lgui,
                     JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED*/);
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             JScrollPane viewTable = new JScrollPane(ftgui,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-            tabs.addTab("Test", null, new JScrollPane(desktop));
+            //tabs.addTab("Test", null, new JScrollPane(desktop));
             tabs.addTab("Icônes", ImagesMap.get("view_icon.png"), viewIcon,
                     "Vue avec les icônes");
             tabs.addTab("Liste", ImagesMap.get("view_list.png"), viewList,
