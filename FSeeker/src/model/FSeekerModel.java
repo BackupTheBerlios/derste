@@ -120,6 +120,7 @@ public class FSeekerModel extends Observable {
 	public void showHidden(boolean showHidden) {
 		if (this.showHidden != showHidden) {
 			this.showHidden = showHidden;
+			getFilesList();
 			setChanged(SHOWHIDDEN);
 			notifyObservers();
 		}
@@ -148,7 +149,7 @@ public class FSeekerModel extends Observable {
 			if (filesList != null)
 				Arrays.sort(filesList, comparator);
 			else
-				filesList = getFilesList();
+				getFilesList();
 			
 			setChanged(COMPARATOR);
 			notifyObservers();
