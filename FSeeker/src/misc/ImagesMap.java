@@ -32,6 +32,7 @@ public class ImagesMap {
 	
 	/** Les images 'spéciales' */
 	private static final String	
+		FSEEKER_LOGO = "fseeker.png",
 		DEFAULT_IMAGE = EXTENSIONS + "default.png",
 		DIRECTORY_OPENED_IMAGE = EXTENSIONS + "folder_yellow.png",
 		DIRECTORY_CLOSED_IMAGE = EXTENSIONS + "folder_yellow_open.png",
@@ -116,6 +117,10 @@ public class ImagesMap {
 	 */
 	public static Icon getDirectoryClosed() {
 		return get(DIRECTORY_CLOSED_IMAGE);
+	}
+	
+	public static Icon getLogo() {
+		return get(FSEEKER_LOGO);
 	}
 	
 }
