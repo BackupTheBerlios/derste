@@ -25,9 +25,9 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
                 leaf, row, hasFocus);
 
         if (expanded)
-        	setIcon(ImagesMap.getDirectoryOpened());
+            setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_OPENED_IMAGE));
         else
-        	setIcon(ImagesMap.getDirectoryClosed());
+            setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_CLOSED_IMAGE));
 
         return this;
     }

@@ -18,21 +18,30 @@ public class FileUtilities {
     public static String getDetails(File f) {
         StringBuffer sb = new StringBuffer(50);
         sb.append("<html>");
+
+        // Une jolie image pour faire staïlle
         sb.append("<center><img src=\"images/dot.gif\"></center><br>");
 
+        // Le type et le nom (pour les aveugles)
         sb.append("<b>" + (f.isDirectory() ? "Doss" : "Fich") + "ier</b> : "
                 + f.getName() + "<br>");
-        sb.append("<b>Taille</b> : " + f.length() + " octets<br>");
 
+        // On affiche la taille pour un fichier, le nombre d'élement contenu
+        // pour un dossier
+        if (f.isFile())
+            sb.append("<b>Taille</b> : " + f.length() + " octets<br>");
+        else {
+            File[] foo = f.listFiles();
+            if (foo != null && foo.length > 0)
+                sb.append("<b>Contient</b> : " + foo.length + " fichiers<br>");
+        }
+
+        // La date de dernière modification
         DateFormat dateFormat = DateFormat.getDateTimeInstance(
                 DateFormat.DEFAULT, DateFormat.DEFAULT);
         Date d = new Date(f.lastModified());
         sb.append("<b>Dernière modification</b> : " + dateFormat.format(d)
                 + "<br>");
-
-        File[] foo = f.listFiles();
-        if (foo != null && foo.length > 0)
-            sb.append("<b>Contient</b> : " + foo.length + " fichiers");
 
         sb.append("</html>");
 
@@ -135,7 +144,7 @@ public class FileUtilities {
                 resultat &= files[i].delete();
 
         resultat &= file.delete();
-        
+
         return resultat;
     }
 

@@ -3,6 +3,8 @@
  */
 package misc;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
 
@@ -25,13 +27,15 @@ public class ImagesMap {
 	/** Le séparateur de fichier */
 	private static final char SEP = File.separatorChar;
 
+    private static final String PREFIX16x16 = "16x16-";
+	
 	/** Là où sont stockées toutes les images */
 	private static final String 
 		IMAGES = "images" + SEP, 
 		EXTENSIONS = "extensions" + SEP;
 	
 	/** Les images 'spéciales' */
-	private static final String	
+	public static final String	
 		FSEEKER_LOGO = "fseeker.png",
 		DEFAULT_IMAGE = EXTENSIONS + "default.png",
 		DIRECTORY_OPENED_IMAGE = EXTENSIONS + "folder_yellow.png",
@@ -51,7 +55,7 @@ public class ImagesMap {
 		if (images.containsKey(image))
 			return (Icon) images.get(image);
 
-		// Sinon on la charge dans la hasp et on renvoie
+		// Sinon on la charge dans la hashmap et on renvoie
 		String chemin = IMAGES + image;
 		if (new File(chemin).exists()) {
 			Icon pic = new ImageIcon(chemin);
@@ -60,8 +64,27 @@ public class ImagesMap {
 		}
 		
 		// On tente de mettre l'image par défaut
-		return image.equals(DEFAULT_IMAGE) ? null : getDefault();
+		return image.equals(DEFAULT_IMAGE) ? null : get(DEFAULT_IMAGE);
 	}
+	
+	public static Icon get16x16(String image) {
+		// Si on l'a déjà chargée, on renvoie celle de la hashmap
+		if (images.containsKey(PREFIX16x16 + image))
+			return (Icon) images.get(PREFIX16x16 + image);
+
+		// Sinon on la charge dans la hashmap et on renvoie
+		String chemin = IMAGES + image;
+		if (new File(chemin).exists()) {
+		    Image im = Toolkit.getDefaultToolkit().getImage(IMAGES + image);
+		    Icon pic = new ImageIcon(im.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+			images.put(PREFIX16x16 + image, pic);
+			return pic;
+		}
+		
+		// On tente de mettre l'image par défaut
+		return image.equals(DEFAULT_IMAGE) ? null : get16x16(DEFAULT_IMAGE);
+	}
+	
 
 	/**
 	 * Renvoie un objet Icon à partir d'un fichier. L'Icon renvoyé dépendra de
@@ -72,24 +95,54 @@ public class ImagesMap {
 	 *            le fichier
 	 * @return la ressource Icon
 	 */
-	public static Icon getImage(File file) {
+	public static Icon get(File file) {
 		// Image spéciale pour tous les répertoires
 		if (file.isDirectory()) {
 			if (file.canRead())
 				return get(DIRECTORY_CLOSED_IMAGE);
 			return get(DIRECTORY_LOCKED_IMAGE);
 		}
-
+		
 		// On a un fichier, on regarde son extension
 		String s = file.getName();
 		int rindex = s.lastIndexOf('.');
 
 		// Y'a pas de '.' ou bien on a un fichier genre : "truc."
 		if (rindex == -1 || rindex + 1 >= s.length())
-			return getDefault();
+			return get(DEFAULT_IMAGE);
 
 		String extension = s.substring(rindex + 1);
 		return get(EXTENSIONS + extension + ".png");
+	}
+
+	
+	/**
+	 * Renvoie un objet Icon à partir d'un fichier. L'Icon renvoyé dépendra de
+	 * l'extension de ce fichier. Si l'extension n'a pas d'image associée,
+	 * l'image par défaut est renvoyée.
+	 * 
+	 * @param file
+	 *            le fichier
+	 * @return la ressource Icon
+	 */
+	public static Icon get16x16(File file) {
+		// Image spéciale pour tous les répertoires
+		if (file.isDirectory()) {
+			if (file.canRead())
+				return get16x16(DIRECTORY_CLOSED_IMAGE);
+			return get16x16(DIRECTORY_LOCKED_IMAGE);
+		}
+		
+		// On a un fichier, on regarde son extension
+		String s = file.getName();
+		int rindex = s.lastIndexOf('.');
+
+		// Y'a pas de '.' ou bien on a un fichier genre : "truc."
+		if (rindex == -1 || rindex + 1 >= s.length())
+			return get16x16(DEFAULT_IMAGE);
+
+		String extension = s.substring(rindex + 1);
+		return get16x16(EXTENSIONS + extension + ".png");
 	}
 
 	/**
@@ -101,27 +154,6 @@ public class ImagesMap {
 		return get(DEFAULT_IMAGE);
 	}
 	
-	/**
-	 * Retourne l'icône par défaut, représentant un répertoire ouvert.
-	 * 
-	 * @return icône d'un répertoire ouvert
-	 */
-	public static Icon getDirectoryOpened() {
-		return get(DIRECTORY_OPENED_IMAGE);
-	}
-	
-	/**
-	 * Retourne l'icône par défaut, représentant un répertoire fermé.
-	 * 
-	 * @return icône d'un répertoire fermé
-	 */
-	public static Icon getDirectoryClosed() {
-		return get(DIRECTORY_CLOSED_IMAGE);
-	}
-	
-	public static Icon getLogo() {
-		return get(FSEEKER_LOGO);
-	}
 	
 }
 

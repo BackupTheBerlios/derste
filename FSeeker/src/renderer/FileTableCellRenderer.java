@@ -59,7 +59,7 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 		if (cl == File.class) {
 			File file = (File) value;
 			//JLabel lab = new JLabel();
-			Icon fileIcon = ImagesMap.getImage(file);
+			Icon fileIcon = ImagesMap.get16x16(file);
 			//lab.setIcon(fileIcon);
 			setIcon(fileIcon);
 			super.setValue(file.getName() + (file.isDirectory() ? "/" : ""));

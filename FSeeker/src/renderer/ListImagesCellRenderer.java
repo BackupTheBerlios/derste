@@ -37,14 +37,15 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
 		File file = (File) value;
 		setText(file.getName() + (file.isDirectory() ? "/" : ""));
 
-		setIcon(ImagesMap.getImage(file));
 		setToolTipText(FileUtilities.getDetails(file));
 
 		if (!simple) {
 			setVerticalTextPosition(SwingConstants.BOTTOM);
 			setHorizontalTextPosition(SwingConstants.CENTER);
 			setHorizontalAlignment(SwingConstants.CENTER);
-		}
+			setIcon(ImagesMap.get(file));
+		} else
+			setIcon(ImagesMap.get16x16(file));
 
 		return this;
 	}

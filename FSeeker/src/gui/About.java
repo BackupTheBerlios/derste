@@ -17,7 +17,7 @@ import misc.ImagesMap;
  */
 public class About {
 	public About(Frame owner) {
-		Icon fseeker = ImagesMap.getLogo();
+		Icon fseeker = ImagesMap.get(ImagesMap.FSEEKER_LOGO);
 		JOptionPane.showMessageDialog(owner, "FSeeker a été réalisé par Stéphane D. tout seul, car il vaut bien", "A propos", JOptionPane.INFORMATION_MESSAGE, fseeker);
 	}
 }
