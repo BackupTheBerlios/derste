@@ -7,6 +7,7 @@ import java.io.File;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileSystemView;
 
 import misc.ImagesMap;
 
@@ -46,7 +47,7 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
             setIcon(ImagesMap.get(file));
         } else
             setIcon(ImagesMap.get16x16(file));
-
+	
         return this;
     }
 }

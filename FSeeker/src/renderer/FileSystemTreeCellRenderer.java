@@ -6,7 +6,9 @@ package renderer;
 import java.awt.Component;
 import java.io.File;
 
+import javax.swing.JFileChooser;
 import javax.swing.JTree;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import misc.ImagesMap;
@@ -33,10 +35,10 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
         
         if (value == null)
             return this;
-                
-        if (root != value)
-        	setText(((File) value).getName());
         
+        FileSystemView sys = FileSystemView.getFileSystemView();
+        setText(sys.getSystemDisplayName((File) value));
+		
         if (expanded)
             setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_OPENED_IMAGE));
         else
