@@ -7,9 +7,23 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
+import misc.FileDetails;
 import misc.ImagesMap;
 
+/**
+ * @author sted
+ */
+
 public class ListImagesCellRenderer extends DefaultListCellRenderer {
+
+	protected boolean simple = false;
+
+	public ListImagesCellRenderer() {
+	}
+
+	public ListImagesCellRenderer(boolean simple) {
+		this.simple = simple;
+	}
 
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
@@ -24,11 +38,13 @@ public class ListImagesCellRenderer extends DefaultListCellRenderer {
 		setText(file.getName() + (file.isDirectory() ? "/" : ""));
 
 		setIcon(ImagesMap.getImage(file));
-		setToolTipText("<html>Nom : " + file + "<br>Taille : " + file.length()
-				+ " octets</html>");
-		setVerticalTextPosition(SwingConstants.BOTTOM);
-		setHorizontalTextPosition(SwingConstants.CENTER);
-		setHorizontalAlignment(SwingConstants.CENTER);
+		setToolTipText(FileDetails.getDetails(file));
+
+		if (!simple) {
+			setVerticalTextPosition(SwingConstants.BOTTOM);
+			setHorizontalTextPosition(SwingConstants.CENTER);
+			setHorizontalAlignment(SwingConstants.CENTER);
+		}
 
 		return this;
 	}
