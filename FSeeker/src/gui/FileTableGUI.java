@@ -28,7 +28,7 @@ public class FileTableGUI extends JTable {
 
     private final static int ROWHEIGHT = 30;
 
-    private TableModel m;
+    private FileTableModel m = null;
 
     public FileTableGUI(FileTableModel m) {
         super(m);

@@ -17,12 +17,12 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import misc.GU;
 import misc.file.FileUtilities.FileDetails;
-import renderer.FileTableCellRenderer;
+import model.FileTableModel;
 
 /**
  * Panel de recherche.
@@ -293,20 +293,19 @@ public class SearchGUI extends JPanel {
 		// Go !
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if ("".equals(pattern.getText())) {
+					GU.warn("Il faut indiquer un pattern");
+					return;
+				}
 				ok.setEnabled(false);
 				stop.setEnabled(true);
 
-				// Un nouveau modèle vide
-				DefaultTableModel dtm = new DefaultTableModel(colNames, 0);
-				JTable results = new JTable(dtm);
-
-				// Le renderer associé
-				FileTableCellRenderer renderer = new FileTableCellRenderer();
-				results.setDefaultRenderer(Object.class, renderer);
-				results.setDefaultRenderer(File.class, renderer);
+				// La table des résultats
+				FileTableModel dtm = new FileTableModel(null, FileTableModel.SEARCH_MODE);
+				FileTableGUI results = new FileTableGUI(dtm);
 
 				// On ajoute un nouveau tab dans FSeeker
-				SearchGUI.this.fs.addTab("Recherche : " + searchPath, null,
+				SearchGUI.this.fs.addTab("Recherche : " + searchPath + " (" + pattern.getText() + ")", null,
 						new JScrollPane(results), "Résultats de la recherche");
 
 				// On lance la recherche !

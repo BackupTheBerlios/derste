@@ -29,6 +29,9 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	/** Mode à la MacOS */
 	public static int SPECIAL_MODE = 1;
 
+	/** Mode recherche */
+	public static int SEARCH_MODE = 2;
+	
 	/** Mode par défaut */
 	protected int MODE = SIMPLE_MODE;
 
@@ -36,13 +39,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	protected int lastSelectedColumn = -1;
 
 	/** Les colonnes */
-	protected Vector colNames = new Vector(4);
-	{
-		colNames.addElement("Nom du fichier");
-		colNames.addElement("Taille");
-		colNames.addElement("Type");
-		colNames.addElement("Date de Modification");
-	}
+	protected Vector colNames = new Vector();
 
 	/** Le supra-modèle */
 	protected FSeekerModel fsm = null;
@@ -58,14 +55,23 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	 */
 	public FileTableModel(FSeekerModel fsm, int mode) {
 		this.fsm = fsm;
-		fsm.addObserver(this);
+		if (fsm != null)
+			fsm.addObserver(this);
 		this.MODE = mode;
 
+		colNames.addElement("Nom du fichier");
+		if (mode == SEARCH_MODE)
+			colNames.addElement("Chemin");
+		colNames.addElement("Taille");
+		colNames.addElement("Type");
+		colNames.addElement("Date de Modification");
+		
 		if (MODE == SPECIAL_MODE)
 			setDataForSpecialView();
 		else {
 			setColumnIdentifiers(colNames);
-			setDataForSimpleView();
+			if (MODE == SIMPLE_MODE)
+				setDataForSimpleView();
 		}
 
 	}
@@ -85,7 +91,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	public void update(Observable o, Object arg) {
 		if (MODE == SPECIAL_MODE)
 			setDataForSpecialView();
-		else
+		else 
 			setDataForSimpleView();
 
 		fireTableDataChanged();
