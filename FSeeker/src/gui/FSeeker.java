@@ -373,9 +373,6 @@ public class FSeeker {
         ugui = new URIGUI(uriModel);
         tb.add(ugui, BorderLayout.SOUTH);
 
-        fstm.addObserver(ugui);
-        uriModel.addObserver(fstgui);
-
         return tb;
     }
 
