@@ -22,6 +22,8 @@ import misc.GU;
  */
 
 /**
+ * Classe inutile.
+ * 
  * @author Sted
  */
 public class Foobar extends JFrame {
