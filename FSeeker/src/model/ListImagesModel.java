@@ -6,7 +6,6 @@ package model;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.TreeSet;
 
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
@@ -22,9 +21,7 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
 	/** Le supra-modèle */
 	protected FSeekerModel fsm = null;
 
-	/**
-	 * L'ensemble trié contenant les fichiers du répertoire courant
-	 */
+	/** L'ensemble trié contenant les fichiers du répertoire courant */
 	protected File[] filesList = null;
 
 	/**
@@ -74,6 +71,7 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
 	public Object getElementAt(int index) {
 		return filesList[index];
 	}
+	
 
 	public void addListDataListener(ListDataListener l) {
 	}

@@ -26,6 +26,9 @@ public class FileUtilities {
      * @return le texte descriptif
      */
     public static String getDetails(File f) {
+    	if (f == null)
+    		return null;
+    	
         StringBuffer sb = new StringBuffer(50);
         sb.append("<html>");
 
