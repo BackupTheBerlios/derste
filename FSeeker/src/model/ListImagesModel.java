@@ -68,7 +68,8 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
         File[] files = fsm.getURI().listFiles();
         if (files != null)
             for (int i = 0; i < files.length; i++)
-                liste.add(files[i]);
+            	if (!files[i].isHidden() || getModel().showHidden())
+            		liste.add(files[i]);
     }
 
     /**
