@@ -69,7 +69,10 @@ public class FileTableGUI extends JTable {
 		addMouseListener(ftc);
 		addKeyListener(ftc);
 		m.addSelectionChangedListener(ftc);
+		this.getSelectionModel().addListSelectionListener(ftc);
+	}
+	
+
 
 	}
 
-}
