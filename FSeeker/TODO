@@ -1,3 +1,5 @@
 - UNE SEULE CLASSE PAR FICHIER.
 - Utiliser le modèle MVC
 - Virer les templates de Eclipse. (y compris les trucs @see blabla)
+- Gérer les popups
+- JComponent getPreview(File f)
