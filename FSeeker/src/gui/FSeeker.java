@@ -4,28 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ToolTipManager;
-import javax.swing.event.ListDataListener;
 
 import misc.GU;
-import misc.ImagesMap;
-import misc.LookAndFeels;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.FileTableModel;
@@ -58,7 +51,7 @@ public class FSeeker extends JFrame {
 	private JPanel main = null;
 
 	private JPanel subleft = null;
-	
+
 	private JPanel left = null;
 
 	/** Le combobox du panel à gauche (arbo, infos, recherche etc) */
@@ -77,8 +70,8 @@ public class FSeeker extends JFrame {
 
 		ToolTipManager.sharedInstance().setInitialDelay(1500);
 		ToolTipManager.sharedInstance().setReshowDelay(1000);
-		
-		initModelAndGuis();
+
+		initModelsAndGuis();
 		setJMenuBar(new MenuBarGUI(this));
 
 		// La vue par défaut (tree + icônes/détails/liste/etc.)
@@ -103,26 +96,35 @@ public class FSeeker extends JFrame {
 	}
 
 	public void setSubLeftPanel(JPanel p) {
+		if (subleft != null)
+			left.remove(subleft);
 		subleft = p;
 		left.add(subleft, BorderLayout.CENTER);
-		left.repaint();
 		left.revalidate();
+		left.repaint();
 	}
 
 	public JPanel getLeftPanel() {
 		left = new JPanel(new BorderLayout());
-		String[] tab = { "Arborescence", "Recherche", "Favoris", "Information" };
-		cb = new JComboBox(tab);
+
+		// Pas un [] car, le jcombobox transforme en vector..! alors autant
+		// directement faire avec
+		Vector choices = new Vector(Arrays.asList(new String[] {
+				"Arborescence", "Recherche", "Favoris", "Information" }));
+		cb = new JComboBox(choices);
+
 		cb.setSelectedIndex(0);
 		cb.setEditable(false);
 		cb.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				setSubLeftPanel(getSubLeftPanel());
+				if (e.getStateChange() == ItemEvent.SELECTED)
+					setSubLeftPanel(getSubLeftPanel());
 			}
 		});
-		
+
 		left.add(cb, BorderLayout.NORTH);
-		left.add(getSubLeftPanel(), BorderLayout.CENTER);
+		setSubLeftPanel(getSubLeftPanel());
+
 		return left;
 	}
 
@@ -138,7 +140,7 @@ public class FSeeker extends JFrame {
 		return p;
 	}
 
-	private void initModelAndGuis() {
+	private void initModelsAndGuis() {
 		// L'arbre
 		FileSystemTreeModel fstm = new FileSystemTreeModel(fsm);
 		fstgui = new FileSystemTreeGUI(fstm);
@@ -183,8 +185,8 @@ public class FSeeker extends JFrame {
 
 		tabs.addTab("Icônes", null/* ImagesMap.get("view_icon.png") */,
 				viewIcon, "Vue avec les icônes");
-		tabs.addTab("Liste", null/* ImagesMap.get("view_list.png") */, viewList,
-				"Vue en liste");
+		tabs.addTab("Liste", null/* ImagesMap.get("view_list.png") */,
+				viewList, "Vue en liste");
 		tabs.addTab("Détails", null/* ImagesMap.get("view_details.png") */,
 				viewTable, "Vue de détails");
 		tabs.addTab("Détails", null /* ImagesMap.get("view_details.png") */,
