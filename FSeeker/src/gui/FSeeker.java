@@ -183,7 +183,7 @@ public class FSeeker {
 
             lgui = new ListImagesGUI(lim, true);
 
-            ftmodel = new FileTableModel(ROOT, "prout");
+            ftmodel = new FileTableModel(fsm);
             ftgui = new FileTableGUI(ftmodel);
 
             /*JDesktopPane desktop = new JDesktopPane();
