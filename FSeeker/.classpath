@@ -8,5 +8,5 @@
 	<classpathentry kind="lib" path="jars/commons-logging-api.jar"/>
 	<classpathentry kind="lib" path="jars/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="jars/skinlf.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="build"/>
 </classpath>
