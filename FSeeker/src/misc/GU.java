@@ -18,6 +18,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author derosias
  */
 public class GU {
+
+	/** Le séparateur de répertoire */
+	public final static String pathSep = System.getProperty("path.separator");
+
 	/**
 	 * Centre une JFrame sur l'écran.
 	 * 
@@ -33,8 +37,8 @@ public class GU {
 	}
 
 	/**
-	 * Attribue une image à un JLabel. (setIcon..)
-	 * TODO: Faire un type global pour les JButtons, JLabel etc.
+	 * Attribue une image à un JLabel. (setIcon..) TODO: Faire un type global
+	 * pour les JButtons, JLabel etc.
 	 * 
 	 * @param label
 	 *            le JLabel auquel affecté une image
@@ -42,19 +46,17 @@ public class GU {
 	 *            l'image en question à associer
 	 */
 	public static void setIcon(JLabel label, String image) {
-		String sep = System.getProperty("path.separator");
-		ImageIcon ii = new ImageIcon("images" + sep + image);
+		ImageIcon ii = new ImageIcon("images" + pathSep + image);
 		label.setIcon(ii);
 	}
 
-	
 	/**
 	 * Fixe le Look & Feel à celui du système sous-jacent.
 	 */
 	public static void changeLF() {
 		changeLF(UIManager.getSystemLookAndFeelClassName());
 	}
-	
+
 	/**
 	 * Fixe le Look & Feel à celui spécifié.
 	 */
