@@ -93,5 +93,25 @@ public final class LookAndFeels {
 
 		return menu;
 	}
+	
+	/**
+	 * Fixe le Look & Feel à celui du système sous-jacent.
+	 */
+	public static void changeLF() {
+		changeLF(UIManager.getSystemLookAndFeelClassName());
+	}
+	
+	/**
+	 * Fixe le Look & Feel à celui spécifié.
+	 */
+	public static void changeLF(String name) {
+		try {
+			UIManager.setLookAndFeel(name);
+		} catch (UnsupportedLookAndFeelException e) {
+		} catch (IllegalAccessException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+		}
+	}
 
 }

@@ -27,7 +27,6 @@ import javax.swing.border.Border;
 public class GU {
 
 	/** Le séparateur de path du système */
-	// System.getProperty("path.separator");
 	public static final char SEP = File.separatorChar;
 
 	/** Là où sont stockées toutes les images */
@@ -61,13 +60,6 @@ public class GU {
 	}
 
 	/**
-	 * Fixe le Look & Feel à celui du système sous-jacent.
-	 */
-	public static void changeLF() {
-		changeLF(UIManager.getSystemLookAndFeelClassName());
-	}
-
-	/**
 	 * @param location
 	 *            adresse du fichier sur le systéme
 	 * @return
@@ -86,11 +78,8 @@ public class GU {
 	 *            Message à afficher dans la boite de dialogue
 	 */
 	public static void message(String mess) {
-		// TODO c'est quoi ce new JFrame foireux là ?
-		// Faut passer le parent en param là, pas un nouveau sorti d'on ne sait
-		// où
 		JOptionPane.showMessageDialog(null, mess, "Avertissement",
-				JOptionPane.WARNING_MESSAGE, ImagesMap.get("ask.png"));
+				JOptionPane.INFORMATION_MESSAGE, ImagesMap.get("ask.png"));
 	}
 
 	/**
@@ -105,8 +94,7 @@ public class GU {
 	 *         selon le choix
 	 */
 	public static int confirm(String titre, String mess) {
-		// TODO: idem que message (new JFrame() n'imp)
-		return JOptionPane.showConfirmDialog(new JFrame(), mess, titre,
+		return JOptionPane.showConfirmDialog(null, mess, titre,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 				getImage("ask.png"));
 	}
@@ -134,16 +122,5 @@ public class GU {
 		frame.pack();
 	}
 
-	/**
-	 * Fixe le Look & Feel à celui spécifié.
-	 */
-	public static void changeLF(String name) {
-		try {
-			UIManager.setLookAndFeel(name);
-		} catch (UnsupportedLookAndFeelException e) {
-		} catch (IllegalAccessException e) {
-		} catch (ClassNotFoundException e) {
-		} catch (InstantiationException e) {
-		}
-	}
+
 }
