@@ -8,8 +8,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTree;
-import javax.swing.tree.TreePath;
 
+import misc.FileSystemTree;
 import model.FileSystemTreeModel;
 import model.URIModel;
 import renderer.FileSystemTreeCellRenderer;
@@ -63,9 +63,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
     }
     
     public void setDirectory(File dir) {
-        setSelectionPath(new TreePath(dir));
-        expandPath(new TreePath(dir));
-        
+        setSelectionPath(FileSystemTree.getTreePath(dir));
         System.out.println("FileSystemTreeGUI.setDirectory() / " + dir);
     }
 
