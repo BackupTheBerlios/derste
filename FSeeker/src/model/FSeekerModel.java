@@ -22,8 +22,15 @@ public class FSeekerModel extends Observable {
 
 	/** Montrer les fichiers cachés ? */
 	protected boolean showHidden = true;
-	
+
+	/** Comparateur utilisé pour afficher les fichiers */
 	protected Comparator comparator = CompareByType.get();
+
+	/** Les identifiants pour savoir quoi a été modifié */
+	public static final int NONE = 0, COMPARATOR = 1, URI = 2, SHOWHIDDEN = 3;
+
+	/** Le truc modifié */
+	protected int changed = NONE;
 
 	/**
 	 * Retourne l'URI courante.
@@ -64,13 +71,17 @@ public class FSeekerModel extends Observable {
 
 		// System.out.println("FSeekerModel.setURI(" + uri.getAbsolutePath() +
 		// ")");
-		if (!uri.exists()) {
-			GU.message("Ce fichier ou répertoire n'existe pas.");
-			return;
+
+		if (!uri.equals(this.uri)) {
+			if (!uri.exists()) {
+				GU.message("Ce fichier ou répertoire n'existe pas.");
+				return;
+			}
+			this.uri = uri;
+
+			setChanged(URI);
+			notifyObservers(src);
 		}
-		this.uri = uri;
-		setChanged();
-		notifyObservers(src);
 	}
 
 	/**
@@ -102,19 +113,52 @@ public class FSeekerModel extends Observable {
 	public void showHidden(boolean showHidden) {
 		if (this.showHidden != showHidden) {
 			this.showHidden = showHidden;
-			setChanged();
+			setChanged(SHOWHIDDEN);
 			notifyObservers();
 		}
 	}
-	
+
+	/**
+	 * Retourne le comparateur utilisé pour afficher les fichiers.
+	 * 
+	 * @return le comparateur
+	 */
 	public Comparator getComparator() {
 		return comparator;
 	}
-	
+
+	/**
+	 * Modifie le comparateur utilisé pour afficher les fichiers, et préviens
+	 * tous les abonnés.
+	 * 
+	 * @param comparator
+	 *            nouveau comparateur
+	 */
 	public void setComparator(Comparator comparator) {
-		this.comparator = comparator;
+		if (comparator != this.comparator) {
+			this.comparator = comparator;
+			setChanged(COMPARATOR);
+			notifyObservers();
+		}
+	}
+
+	/**
+	 * Indique quoi a été modifié, et indique l'état du modèle comme modifié.
+	 * 
+	 * @param whatChanged
+	 *            une constante représentant un composant global défini dans
+	 *            FSeekerModel
+	 */
+	protected void setChanged(int whatChanged) {
+		changed = whatChanged;
 		setChanged();
-		notifyObservers();
+	}
+
+	/**
+	 * @return <code>true</code> si ce que représente isChanged a été modifié
+	 */
+	public boolean isChanged(int isChanged) {
+		return changed == isChanged;
 	}
 
 }
