@@ -30,7 +30,8 @@ public class FSeekerModel extends Observable {
 	protected Comparator comparator = CompareByType.get();
 
 	/** Les identifiants pour savoir quoi a été modifié */
-	public static final int NONE = 0, COMPARATOR = 1, URI = 2, SHOWHIDDEN = 4;
+	public static final int NONE = 0, COMPARATOR = 1, URI = 2, SHOWHIDDEN = 4,
+			SELECTION = 8;
 
 	/** Le truc modifié */
 	protected int changed = NONE;
@@ -40,7 +41,10 @@ public class FSeekerModel extends Observable {
 
 	/** Nombre de clics pour ouvrir un dossier / fichier */
 	protected int nbClick = 2;
-	
+
+	/** Fichier en sélection */
+	protected File selection = null;
+
 	/**
 	 * Retourne l'URI courante.
 	 * 
@@ -77,6 +81,9 @@ public class FSeekerModel extends Observable {
 			this.uri = uri;
 
 			setChanged(URI, src);
+
+			// Si on change l'URI, forcément, la sélection change.. !
+			setSelection(uri, src);
 		}
 	}
 
@@ -87,7 +94,7 @@ public class FSeekerModel extends Observable {
 	 *            la nouvelle URI
 	 */
 	public void setURI(File uri) {
-		setURI(uri, null);
+		setURI(uri, getSelection());
 	}
 
 	/**
@@ -154,11 +161,13 @@ public class FSeekerModel extends Observable {
 	 * @param src
 	 *            la source du changement
 	 */
-	protected void setChanged(int whatChanged, Object src) {
-		filesList = null;
+	protected void setChanged(int whatChanged, Object param) {
+		// Seul la sélection ne modifie pas la liste des fichiers
+		if (whatChanged != SELECTION)
+			filesList = null;
 		changed = whatChanged;
 		setChanged();
-		notifyObservers(src);
+		notifyObservers(param);
 	}
 
 	/**
@@ -166,18 +175,45 @@ public class FSeekerModel extends Observable {
 	 * à jour dans un même dossier par exemple.
 	 */
 	public void update() {
-		setChanged(URI, null);
+		setChanged(URI, getSelection());
 	}
 
 	/**
-	 * Indique que le modèle a changé sans rien modifié. Utiliser pour une mise
-	 * à jour dans un même dossier par exemple, et permet de prévenir qu'un fichier est sélectionné.
+	 * Permet de modifier le fichier en cours de sélection
+	 * 
+	 * @param f
+	 *            fichier sélectionné
 	 */
-	public void update(File f) {
-		setChanged(URI, f);
+	public void setSelection(File f) {
+		setSelection(f, null);
+	}
+
+	/**
+	 * Permet de modifier le fichier en cours de sélection
+	 * 
+	 * @param f
+	 *            fichier sélectionné
+	 * @param src
+	 *            la source du changement
+	 */
+	public void setSelection(File f, Object src) {
+		selection = f;
+		setChanged(SELECTION, src);
 	}
 	
 	/**
+	 * Retourne la sélection courante.
+	 * 
+	 * @return la sélection
+	 */
+	public File getSelection() {
+		return selection;
+	}
+
+	/**
+	 * Indique si un état (URI, SELECTION etc) a été modifié. Possibilité de
+	 * combiner les valeurs, ie : URI | SELECTION par exemple.
+	 * 
 	 * @return <code>true</code> si ce que représente isChanged a été modifié
 	 */
 	public boolean isChanged(int isChanged) {

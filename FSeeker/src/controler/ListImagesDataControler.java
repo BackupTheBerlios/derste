@@ -15,6 +15,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import misc.PopupManager;
 import model.ListImagesModel;
@@ -28,7 +30,8 @@ import model.SelectionChangedListener;
  * @author brahim
  */
 public class ListImagesDataControler extends MouseAdapter implements
-		KeyListener, ListDataListener, SelectionChangedListener {
+		KeyListener, ListDataListener, SelectionChangedListener,
+		ListSelectionListener {
 
 	/** Le modèle de liste à contrôler */
 	protected ListImagesModel m = null;
@@ -112,7 +115,7 @@ public class ListImagesDataControler extends MouseAdapter implements
 
 		return popup;
 	}
-	
+
 	/**
 	 * Quand on clique, ca ouvre le dossier si on est positionné sur un dossier.
 	 * 
@@ -120,7 +123,7 @@ public class ListImagesDataControler extends MouseAdapter implements
 	 *            l'événement associé
 	 */
 	public void mouseClicked(MouseEvent e) {
-		// Si on a un clic droit
+		// Si on a un clic droit > popup
 		if (SwingUtilities.isRightMouseButton(e)) {
 
 			JList list = (JList) e.getSource();
@@ -128,7 +131,7 @@ public class ListImagesDataControler extends MouseAdapter implements
 			Point clic = e.getPoint();
 			int index = list.locationToIndex(clic);
 			Rectangle r = list.getCellBounds(index, index);
-			if (r.contains(clic)) {
+			if (r != null && r.contains(clic)) {
 				list.setSelectedIndex(index);
 				File f = (File) m.getElementAt(index);
 				PopupManager.showPopup(e, getPopupIn(f));
@@ -138,15 +141,13 @@ public class ListImagesDataControler extends MouseAdapter implements
 			}
 		}
 
-		// Sinon, si c'est un gauche seul
-		else if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == m.getModel().getClickCount()) {
+		// Sinon, si c'est un gauche > ouverture
+		else if (SwingUtilities.isLeftMouseButton(e)
+				&& e.getClickCount() == m.getModel().getClickCount()) {
 			File f = (File) ((JList) e.getSource()).getSelectedValue();
 			m.getModel().setURI(f);
 		}
 
-	}
-
-	public void mousePressed(MouseEvent e) {
 	}
 
 	/**
@@ -160,15 +161,43 @@ public class ListImagesDataControler extends MouseAdapter implements
 		GeneralControler.keyPressed(e, f, m.getModel());
 	}
 
-	public void keyReleased(KeyEvent e) {
-	}
-
-	public void keyTyped(KeyEvent e) {
-	}
-
+	/**
+	 * Le contenu du modèle a été modifié, on s'assure de revenir au début de la
+	 * liste.
+	 * 
+	 * @param e
+	 *            l'événement associé
+	 */
 	public void contentsChanged(ListDataEvent e) {
 		gui.ensureIndexIsVisible(0);
-		gui.setSelectedIndex(0);
+
+		// Ne pas mettre de sélection sinon la sélection du supra-modèle ne sera
+		// pas concordante
+		if (m.getSize() > 0)
+			gui.clearSelection();
+	}
+
+	/**
+	 * La sélection du modèle a été modifié, on met à jour la vue.
+	 * 
+	 * @param e
+	 *            l'événement associé
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		gui.setSelectedValue(e.getSelection(), true);
+	}
+
+	/**
+	 * La sélection de la vue a été modifié, on met à jour le modèle.
+	 * 
+	 * @param e
+	 *            l'événement associé
+	 */
+	public void valueChanged(ListSelectionEvent e) {
+		JList source = (JList) e.getSource();
+		Object o = source.getSelectedValue();
+		if (o instanceof File)
+			m.getModel().setSelection((File) o, source);
 	}
 
 	public void intervalAdded(ListDataEvent e) {
@@ -177,7 +206,12 @@ public class ListImagesDataControler extends MouseAdapter implements
 	public void intervalRemoved(ListDataEvent e) {
 	}
 
-	public void selectionChanged(SelectionChangedEvent e) {
-		gui.setSelectedValue(e.getSelection(), true);
+	public void keyReleased(KeyEvent e) {
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
+
+	public void mousePressed(MouseEvent e) {
 	}
 }

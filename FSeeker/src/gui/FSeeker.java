@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -27,7 +27,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -407,15 +406,22 @@ public class FSeeker {
      * @return la barre d'état
      */
     private JToolBar getDefaultStatusBar() {
-        JToolBar sb = new JToolBar();
-        JPanel p = new JPanel(new GridLayout(1, 2));
-        sb.add(p);
-        JLabel l = new JLabel("FSeeker " + VERSION);
-        p.add(l);
-        final JProgressBar pb = new JProgressBar(0, 100);
+        class TestToolBar extends JToolBar implements Observer {
+            protected JLabel l = new JLabel("FSeeker " + VERSION);
+            
+        	public TestToolBar() {
+        		fsm.addObserver(this);
+                add(l);
+                setFloatable(false);
+        	}
+        	
+			public void update(Observable o, Object arg) {
+				if (fsm.isChanged(FSeekerModel.SELECTION)) 
+					l.setText(fsm.getSelection().toString());
+			}
+        }
 
-        sb.addSeparator(new Dimension(10, 10));
-        Timer t = new Timer();
+        /*Timer t = new Timer();
         new Timer().schedule(new TimerTask() {
             public void run() {
                 if (pb.getValue() == 100)
@@ -423,10 +429,9 @@ public class FSeeker {
                 else
                     pb.setValue(pb.getValue() + 1);
             }
-        }, 0, 100);
-        p.add(pb);
-        sb.setFloatable(false);
-        return sb;
+        }, 0, 100);*/
+        
+        return new TestToolBar();
 
     }
 
@@ -460,35 +465,8 @@ public class FSeeker {
         });
         menu.add(menuItem);
         menu.addSeparator();
-        menuItem = new JMenuItem("Couper", KeyEvent.VK_X);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("couper");
-            }
-        });
-        menu.add(menuItem);
-        menuItem = new JMenuItem("Copier", KeyEvent.VK_C);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("copier");
-            }
-        });
-        menu.add(menuItem);
-        menuItem = new JMenuItem("Coller", KeyEvent.VK_V);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("coller");
-            }
-        });
-        menu.add(menuItem);
-        menu.addSeparator();
-        menuItem = new JMenuItem("Préférences", KeyEvent.VK_P);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("préférences");
-            }
-        });
-        menu.add(menuItem);
+        
+        
         mb.add(menu);
 
         PopupManager pm = new PopupManager(null, fsm);

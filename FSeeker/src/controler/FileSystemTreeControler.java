@@ -54,7 +54,7 @@ public class FileSystemTreeControler extends MouseAdapter implements
 
 		popup.add(pm.getFileName());
 		popup.addSeparator();
-		
+
 		// Spécial au JTree
 		if (gui.isExpanded(TreeUtilities.getTreePath(f)))
 			popup.add(PopupManager.createMenuItem("Fermer",
@@ -107,7 +107,7 @@ public class FileSystemTreeControler extends MouseAdapter implements
 	 */
 	public void valueChanged(TreeSelectionEvent e) {
 		File f = (File) e.getPath().getLastPathComponent();
-		m.getModel().setURI(f, gui);
+		m.getModel().setURI(f, e.getSource());
 	}
 
 	/**
@@ -118,12 +118,6 @@ public class FileSystemTreeControler extends MouseAdapter implements
 	 */
 	public void keyPressed(KeyEvent e) {
 		GeneralControler.keyPressed(e, m.getModel().getURI(), m.getModel());
-	}
-
-	public void keyReleased(KeyEvent e) {
-	}
-
-	public void keyTyped(KeyEvent e) {
 	}
 
 	/**
@@ -164,4 +158,9 @@ public class FileSystemTreeControler extends MouseAdapter implements
 		}
 	}
 
+	public void keyReleased(KeyEvent e) {
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
 }

@@ -183,7 +183,7 @@ public class PopupManager {
 					// En copie, on ne met pas la source à null pour faire de
 					// multiple copie
 
-					fsm.update(cc);
+					fsm.setSelection(cc);
 				}
 			}
 		});
@@ -208,7 +208,7 @@ public class PopupManager {
 			public void actionPerformed(ActionEvent e) {
 				File newf = null;
 				if ((newf = FileUtilities.rename(f)) != null)
-					fsm.update(newf);
+					fsm.setSelection(newf);
 			}
 		});
 	}
