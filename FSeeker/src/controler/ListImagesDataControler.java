@@ -11,17 +11,24 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JList;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import misc.PopupManager;
 import model.ListImagesModel;
+import model.SelectionChangedEvent;
+import model.SelectionChangedListener;
 
 /**
+ * Gère les modèles et les vues ListImages*.
+ * 
  * @author Sted
  * @author brahim
  */
 public class ListImagesDataControler extends MouseAdapter implements
-		KeyListener, ListDataListener {
+		KeyListener, ListDataListener, SelectionChangedListener {
 
 	/** Le modèle de liste à contrôler */
 	protected ListImagesModel m = null;
@@ -41,31 +48,102 @@ public class ListImagesDataControler extends MouseAdapter implements
 	}
 
 	/**
+	 * Retourne le popup d'un fichier sélectionné ou null si ce fichier est
+	 * null.
+	 * 
+	 * @param f
+	 *            un fichier (normalement, celui en sélection)
+	 * @return le popup
+	 */
+	public JPopupMenu getPopupIn(final File f) {
+		if (f == null)
+			return null;
+
+		// Le popup
+		JPopupMenu popup = new JPopupMenu();
+
+		// Pour créer plus facilement et clairement des popups
+		PopupManager pm = new PopupManager(f, m.getModel());
+
+		popup.add(pm.getFileName());
+		popup.addSeparator();
+		popup.add(pm.getOpen());
+		popup.add(pm.getCreateDirectory());
+		popup.add(pm.getCreateFile());
+		popup.addSeparator();
+		popup.add(pm.getCut());
+		popup.add(pm.getCopy());
+		popup.add(pm.getPaste());
+		popup.add(pm.getRename());
+		popup.addSeparator();
+		popup.add(pm.getDelete());
+		popup.add(pm.getRefresh());
+		popup.addSeparator();
+		popup.add(pm.getDisplay());
+		popup.addSeparator();
+		popup.add(pm.getProperties());
+
+		return popup;
+	}
+
+	/**
+	 * Retourne le popup situé en dehors de la liste des fichiers.
+	 * 
+	 * @return le popup
+	 */
+	public JPopupMenu getPopupOut() {
+		// Le popup
+		JPopupMenu popup = new JPopupMenu();
+
+		// Pour créer plus facilement et clairement des popups
+		PopupManager pm = new PopupManager(m.getModel().getURI(), m.getModel());
+
+		popup.add(pm.getFileName());
+		popup.addSeparator();
+		popup.add(pm.getCreateDirectory());
+		popup.add(pm.getCreateFile());
+		popup.addSeparator();
+		popup.add(pm.getPaste());
+		popup.add(pm.getRefresh());
+		popup.addSeparator();
+		popup.add(pm.getDisplay());
+		popup.addSeparator();
+		popup.add(pm.getProperties());
+
+		return popup;
+	}
+	
+	/**
 	 * Quand on clique, ca ouvre le dossier si on est positionné sur un dossier.
 	 * 
 	 * @param e
 	 *            l'événement associé
 	 */
 	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 2) {
-			File f = (File) ((JList) e.getSource()).getSelectedValue();
-			GeneralControler.mouseSimpleClick(f, m.getModel());
-		}
+		// Si on a un clic droit
+		if (SwingUtilities.isRightMouseButton(e)) {
 
-
-		if (e.getButton() == MouseEvent.BUTTON3_DOWN_MASK) {
 			JList list = (JList) e.getSource();
-			//TOUT LE MONDE n'a pas la 1.5
-			//JPopupMenu popup = list.getComponentPopupMenu();
 
 			Point clic = e.getPoint();
 			int index = list.locationToIndex(clic);
 			Rectangle r = list.getCellBounds(index, index);
 			if (r.contains(clic)) {
-				//popup.add(new JMenuItem("salut"));
-
+				list.setSelectedIndex(index);
+				File f = (File) m.getElementAt(index);
+				PopupManager.showPopup(e, getPopupIn(f));
+			} else {
+				// Le popup à l'extérieur des éléments
+				PopupManager.showPopup(e, getPopupOut());
 			}
 		}
+
+		// Sinon, si c'est un gauche seul
+		else if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == m.getModel().getClickCount()) {
+			File f = (File) ((JList) e.getSource()).getSelectedValue();
+			m.getModel().setURI(f);
+		}
+
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -99,4 +177,7 @@ public class ListImagesDataControler extends MouseAdapter implements
 	public void intervalRemoved(ListDataEvent e) {
 	}
 
+	public void selectionChanged(SelectionChangedEvent e) {
+		gui.setSelectedValue(e.getSelection(), true);
+	}
 }

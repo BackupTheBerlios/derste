@@ -6,7 +6,6 @@ package controler;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import misc.GU;
 import misc.file.FileUtilities;
 import model.FSeekerModel;
 
@@ -39,29 +38,11 @@ public class GeneralControler {
 			fsm.gotoParent();
 			break;
 		case KeyEvent.VK_DELETE:
-			if (GU.confirm("Êtes-vous sûr de vouloir supprimer le fichier : "
-					+ f.getName()))
-				if (!FileUtilities.delete(f))
-					GU.warn("Impossible de supprimer le fichier : "
-							+ f.getName());
-				else
-					fsm.update();
+			if (FileUtilities.delete(f))
+				fsm.update();
 			break;
 		}
 
-	}
-
-	/**
-	 * Quand l'utilisateur a simple cliqué quelque part, on gère. !
-	 * 
-	 * @param f
-	 *            le fichier en sélection (sous le click)
-	 * @param fsm
-	 *            le supra-modèle
-	 */
-	public static void mouseSimpleClick(File f, FSeekerModel fsm) {
-		if (f.isDirectory())
-			fsm.setURI(f);
 	}
 
 }

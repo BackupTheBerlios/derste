@@ -12,7 +12,11 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
+
+import misc.GU;
 
 /**
  * Classe utilitaire portant sur les fichiers.
@@ -48,6 +52,8 @@ public class FileUtilities {
 			if (type == null)
 				// TODO si fichier, évaluer le type (jpg, avi, exe etc)
 				type = (f.isDirectory() ? "Dossier" : "Fichier");
+			//type =
+			// FileSystemView.getFileSystemView().getSystemTypeDescription(f);
 			return type;
 		}
 
@@ -117,7 +123,8 @@ public class FileUtilities {
 			sb.append("<html>");
 
 			// Une jolie image pour faire staïlle
-			sb.append("<center><img src=\"../../images/dot.gif\"></center><br>");
+			sb
+					.append("<center><img src=\"../../images/dot.gif\"></center><br>");
 
 			// Le type et le nom (pour les aveugles)
 			sb.append("<b>" + getType() + "</b> : " + getName() + "<br>");
@@ -154,16 +161,24 @@ public class FileUtilities {
 	 *            fichier source
 	 * @param dst
 	 *            fichier destination
-	 * @return <code>true</code> si la copie a réussi
+	 * @return null si la copie a échoué, le fichier copié sinon
 	 */
-	public static boolean copy(File src, File dst) {
-		// On n'écrase pas (à faire du côté de l'appelant ça)
-		if (dst.exists())
-			return false;
+	public static File copy(File src, File dst) {
+		// Si fichier => répertoire, on crée en fait "répertoire/fichier"
+		if (dst.isDirectory())
+			dst = new File(dst, src.getName());
+
+		// On n'écrase pas si le fichier existe déjà
+		if (dst.isFile() && dst.exists()) {
+			int i = 1;
+			while (dst.exists())
+				dst = new File(dst.getParentFile(), dst.getName() + " (" + i++
+						+ ")");
+		}
 
 		boolean resultat = false;
 
-		// Declaration des flux
+		// Déclaration des flux
 		FileInputStream sourceFile = null;
 		FileOutputStream destinationFile = null;
 
@@ -200,7 +215,14 @@ public class FileUtilities {
 			}
 		}
 
-		return resultat;
+		if (!resultat)
+			GU
+					.warn("Impossible de copier le fichier : " + src + " vers "
+							+ dst);
+		else
+			return dst;
+	
+		return null;
 	}
 
 	/**
@@ -210,29 +232,77 @@ public class FileUtilities {
 	 *            fichier source
 	 * @param dst
 	 *            fichier destination
-	 * @return <code>true</code> si le déplacement a réussi
+	 * @return null si le déplacement a échoué, le fichier déplacé sinon
 	 */
-	public static boolean move(File src, File dst) {
-		// On n'écrase pas, et on essaye avec renameTo ou avec delete + copy
-		return !dst.exists()
-				&& (src.renameTo(dst) || (copy(src, dst) && src.delete()));
+	public static File move(File src, File dst) {
+		// Si fichier => répertoire, on crée en fait "répertoire/fichier"
+		if (dst.isDirectory())
+			dst = new File(dst, src.getName());
+
+		// On n'écrase pas si le fichier existe déjà
+		if (dst.isFile() && dst.exists()) {
+			int i = 1;
+			while (dst.exists())
+				dst = new File(dst.getParentFile(), dst.getName() + " (" + i++
+						+ ")");
+		}
+		
+		// On essaye avec renameTo ou avec delete + copy
+		boolean res = src.renameTo(dst) || ((dst = copy(src, dst)) != null && src.delete());
+
+		if (!res)
+			GU.warn("Impossible de déplacer le fichier : " + src + " vers "
+					+ dst);
+		
+		return (res ? dst : null);
 	}
 
+	public static File rename(File f) {
+		File newf = null;
+		while (true) {
+			newf = new File(f.getParentFile(), JOptionPane.showInputDialog(null, "Nouveau nom du fichier : ", "Renommer " + f.getName(), JOptionPane.QUESTION_MESSAGE));
+			if (newf.exists())
+				GU.warn("Ce fichier existe déjà.");
+			else
+				break;
+		}
+
+		if (f.renameTo(newf))
+			return newf;
+		else
+			GU.warn("Impossible de renommer le fichier : " + f + " en " + newf);
+		
+		return null;		
+	}
+	
 	/**
-	 * Supprime un fichier ou répertoire (en récursif pour celui-ci).
+	 * Supprime un fichier ou répertoire (en récursif pour celui-ci) SANS
+	 * demander confirmation à l'utilisateur. (utile si c'est le programme qui
+	 * l'appelle lui-même, par exemple, le cas d'un couper/coller)
 	 * 
 	 * @param file
 	 *            le fichier ou répertoire à supprimer
 	 * @return <code>true</code> si la suppression a été correctement
 	 *         effectuée
 	 */
-	public static boolean delete(File file) {
-		// Cas triviaux
-		if (!file.exists())
+	public static boolean delete(File file, boolean dontConfirm) {
+		// On ne prend pas ce cas
+		if (!dontConfirm)
 			return false;
 
-		if (file.isFile())
-			return file.delete();
+		// Cas triviaux
+		if (!file.exists()) {
+			GU.warn("Le fichier : " + file + " n'existe pas.");
+			return false;
+		}
+
+		if (file.isFile()) {
+			if (!file.delete()) {
+				GU.warn("Impossible de supprimer le fichier : " + file);
+				return false;
+			}
+			return true;
+		}
 
 		// On a un répertoire, récursivité powa
 		boolean resultat = true;
@@ -246,7 +316,26 @@ public class FileUtilities {
 
 		resultat &= file.delete();
 
+		if (!resultat)
+			GU.warn("Impossible de supprimer le répertoire : " + file);
+
 		return resultat;
+	}
+
+	/**
+	 * Supprime un fichier ou répertoire (en récursif pour celui-ci) en
+	 * demandant confirmation à l'utilisateur.
+	 * 
+	 * @param file
+	 *            le fichier ou répertoire à supprimer
+	 * @return <code>true</code> si la suppression a été correctement
+	 *         effectuée
+	 */
+	public static boolean delete(File file) {
+		if (!GU.confirm("Êtes-vous sûr de vouloir supprimer le fichier : "
+				+ file + " ?"))
+			return false;
+		return delete(file, true);
 	}
 
 	/**
@@ -266,6 +355,71 @@ public class FileUtilities {
 			dirs[i] = files[i].getName();
 
 		return dirs;
+	}
+
+	public static File createDirectory(File sel) {
+		String s = "Nouveau dossier";
+
+		// On crée le fichier au même niveau que la sélection
+		File f = null;
+		if (sel.getParentFile() != null)
+			f = sel.getParentFile();
+		else
+			f = sel;
+
+		File dir = new File(f, s);
+		int i = 1;
+		while (dir.exists())
+			dir = new File(f, s + " (" + i++ + ")");
+
+		if (!dir.mkdir())
+			GU.warn("Impossible de créer de répertoire dans le dossier : "
+					+ f.getAbsolutePath());
+		else
+			return dir;
+		return null;
+	}
+
+	public static File createFile(File sel) {
+		String s = "Nouveau fichier";
+
+		// On crée le fichier au même niveau que la sélection
+		File f = null;
+		if (sel.getParentFile() != null)
+			f = sel.getParentFile();
+		else
+			f = sel;
+
+		File dir = new File(f, s);
+		int i = 1;
+		while (dir.exists())
+			dir = new File(f, s + " (" + i++ + ")");
+
+		try {
+			if (dir.createNewFile())
+				return dir;
+		} catch (IOException e) {
+		}
+		GU.warn("Impossible de créer de fichier dans le dossier : "
+				+ f.getAbsolutePath());
+		return null;
+	}
+
+	public static void showProperties(File f) {
+		GU.info("Pwet");
+	}
+
+	public static void openFile(File f) {
+		if (f.isFile()) {
+			JFileChooser jfc = new JFileChooser(f);
+			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+				try {
+					Runtime.getRuntime().exec(
+							jfc.getSelectedFile().getAbsolutePath() + " "
+									+ f.getAbsolutePath());
+				} catch (IOException e) {
+				}
+		}
 	}
 
 }

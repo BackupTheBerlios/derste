@@ -16,10 +16,8 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -30,7 +28,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -40,10 +37,7 @@ import javax.swing.ToolTipManager;
 import misc.GU;
 import misc.ImagesMap;
 import misc.LookAndFeels;
-import misc.file.CompareByLastModified;
-import misc.file.CompareByName;
-import misc.file.CompareBySize;
-import misc.file.CompareByType;
+import misc.PopupManager;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.FileTableModel;
@@ -497,67 +491,8 @@ public class FSeeker {
         menu.add(menuItem);
         mb.add(menu);
 
-        menu = new JMenu("Affichage");
-        menuItem = new JCheckBoxMenuItem("Afficher les fichiers cachés", fsm
-                .showHidden());
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fsm.showHidden(!fsm.showHidden());
-            }
-        });
-        menu.add(menuItem);
-        menu.addSeparator();
-
-        ButtonGroup bg = new ButtonGroup();
-        menuItem = new JRadioButtonMenuItem("Trier par nom", fsm
-                .getComparator() == CompareByName.get());
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                fsm.setComparator(CompareByName.get());
-            }
-        });
-        menu.add(menuItem);
-        bg.add(menuItem);
-        menuItem = new JRadioButtonMenuItem("Trier par type", fsm
-                .getComparator() == CompareByType.get());
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                fsm.setComparator(CompareByType.get());
-            }
-        });
-        menu.add(menuItem);
-        bg.add(menuItem);
-        menuItem = new JRadioButtonMenuItem("Trier par taille", fsm
-                .getComparator() == CompareBySize.get());
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                fsm.setComparator(CompareBySize.get());
-            }
-        });
-        menu.add(menuItem);
-        bg.add(menuItem);
-        menuItem = new JRadioButtonMenuItem(
-                "Trier par date de dernière modification",
-                fsm.getComparator() == CompareByLastModified.get());
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                fsm.setComparator(CompareByLastModified.get());
-            }
-        });
-        menu.add(menuItem);
-        bg.add(menuItem);
-
-        menu.addSeparator();
-        menuItem = new JCheckBoxMenuItem("Activer les tooltips", ToolTipManager
-                .sharedInstance().isEnabled());
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ToolTipManager.sharedInstance().setEnabled(
-                        !ToolTipManager.sharedInstance().isEnabled());
-            }
-        });
-        menu.add(menuItem);
-
+        PopupManager pm = new PopupManager(null, fsm);
+        menu = pm.getDisplay();
         menu.add(LookAndFeels.getLookAndFeelsMenu(f));
         mb.add(menu);
 

@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 import model.FileTableModel;
 
@@ -43,9 +44,10 @@ public class FileTableControler extends MouseAdapter implements KeyListener {
 	 *            l'événement associé
 	 */
 	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 1) {
+		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == m.getModel().getClickCount()) {
 			Object o = getSelectedObject(e);
-			GeneralControler.mouseSimpleClick((File) o, m.getModel());
+			if (((File) o).isDirectory())
+				m.getModel().setURI((File) o);
 		}
 	}
 

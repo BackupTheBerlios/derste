@@ -5,17 +5,22 @@ package controler;
 
 import gui.FileSystemTreeGUI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
+import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import com.sun.corba.se.spi.orbutil.fsm.FSM;
-
+import misc.PopupManager;
 import misc.TreeUtilities;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
@@ -26,8 +31,54 @@ import model.FileSystemTreeModel;
  * @author Sted
  * @author brahim
  */
-public class FileSystemTreeControler implements TreeSelectionListener,
-		KeyListener, URIChangedListener {
+public class FileSystemTreeControler extends MouseAdapter implements
+		TreeSelectionListener, KeyListener, URIChangedListener {
+
+	/**
+	 * Retourne le popup d'un fichier sélectionné ou null si ce fichier est
+	 * null.
+	 * 
+	 * @param f
+	 *            un fichier (normalement, celui en sélection)
+	 * @return le popup
+	 */
+	public JPopupMenu getPopup(final File f) {
+		if (f == null)
+			return null;
+
+		// Le popup
+		JPopupMenu popup = new JPopupMenu();
+
+		// Pour créer plus facilement et clairement des popups
+		PopupManager pm = new PopupManager(f, m.getModel());
+
+		popup.add(pm.getFileName());
+		popup.addSeparator();
+		
+		// Spécial au JTree
+		if (gui.isExpanded(TreeUtilities.getTreePath(f)))
+			popup.add(PopupManager.createMenuItem("Fermer",
+					new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							gui.collapsePath(TreeUtilities.getTreePath(f));
+						}
+					}));
+		else
+			popup.add(PopupManager.createMenuItem("Ouvrir",
+					new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							gui.expandPath(TreeUtilities.getTreePath(f));
+						}
+					}));
+
+		popup.addSeparator();
+		popup.add(pm.getCreateDirectory());
+		popup.add(pm.getCreateFile());
+		popup.addSeparator();
+		popup.add(pm.getProperties());
+
+		return popup;
+	}
 
 	/** Le modèle associé */
 	protected FileSystemTreeModel m = null;
@@ -85,6 +136,32 @@ public class FileSystemTreeControler implements TreeSelectionListener,
 	public void URIChanged(URIChangedEvent e) {
 		if (m.getModel().isChanged(FSeekerModel.URI))
 			gui.setDirectory(m.getModel().getURI());
+	}
+
+	/**
+	 * Gère le clic droit dans l'arbre.
+	 * 
+	 * @param e
+	 *            l'événement associé
+	 */
+	public void mouseClicked(MouseEvent e) {
+		// On vérifie qu'il s'agit du click droit
+		if (SwingUtilities.isRightMouseButton(e)) {
+
+			JTree source = (JTree) e.getSource();
+
+			// On sélectionne le noeud où on l'utilisateur a cliqué
+			TreePath path = source.getPathForLocation(e.getX(), e.getY());
+			source.setSelectionPath(path);
+
+			// On récup la sélection
+			File f = null;
+			if (path != null)
+				f = (File) path.getLastPathComponent();
+
+			// On affiche le popup
+			PopupManager.showPopup(e, getPopup(f));
+		}
 	}
 
 }

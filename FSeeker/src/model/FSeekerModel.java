@@ -38,6 +38,9 @@ public class FSeekerModel extends Observable {
 	/** Liste des fichiers du répertoire courant triée */
 	protected File[] filesList = null;
 
+	/** Nombre de clics pour ouvrir un dossier / fichier */
+	protected int nbClick = 2;
+	
 	/**
 	 * Retourne l'URI courante.
 	 * 
@@ -167,6 +170,14 @@ public class FSeekerModel extends Observable {
 	}
 
 	/**
+	 * Indique que le modèle a changé sans rien modifié. Utiliser pour une mise
+	 * à jour dans un même dossier par exemple, et permet de prévenir qu'un fichier est sélectionné.
+	 */
+	public void update(File f) {
+		setChanged(URI, f);
+	}
+	
+	/**
 	 * @return <code>true</code> si ce que représente isChanged a été modifié
 	 */
 	public boolean isChanged(int isChanged) {
@@ -196,6 +207,16 @@ public class FSeekerModel extends Observable {
 		}
 
 		return filesList;
+	}
+
+	/**
+	 * Retourne le nombre de clics nécessaire pour ouvrir un répertoire ou un
+	 * fichier. Normalement, 1 ou 2.
+	 * 
+	 * @return ce nombre
+	 */
+	public int getClickCount() {
+		return nbClick;
 	}
 
 }

@@ -48,6 +48,7 @@ public class FileSystemTreeGUI extends JTree {
 		FileSystemTreeControler fstc = new FileSystemTreeControler(m, this);
 		addTreeSelectionListener(fstc);
 		addKeyListener(fstc);
+		addMouseListener(fstc);
 		m.addURIChangedListener(fstc);
 	}
 

@@ -4,6 +4,9 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -70,10 +73,28 @@ public class ListImagesModel extends AbstractListModel implements Observer {
     /**
      * Met à jour la liste des fichiers, et prévient les vues du changement.
      */
-    public void update(Observable o, Object caller) {
+    public void update(Observable o, Object param) {
         int lastSize = getSize();
     	filesList = getModel().getFilesList();
         fireContentsChanged(this, 0, getSize() - 1);
+        if (param != null && param instanceof File)
+        	fireSelectionChanged((File) param);
+    }
+    
+    protected List selectionListeners = new ArrayList();
+    protected void fireSelectionChanged(File f) {
+    	Iterator it = selectionListeners.iterator();
+    	SelectionChangedEvent e = new SelectionChangedEvent(this, f);
+    	while (it.hasNext())
+    		((SelectionChangedListener) it.next()).selectionChanged(e);
+    }
+    public void addSelectionChangedListener(SelectionChangedListener l) {
+    	if (l != null && !selectionListeners.contains(l))
+    		selectionListeners.add(l);
+    }
+    public void removeSelectionChangedListener(SelectionChangedListener l) {
+    	if (l != null)
+    		selectionListeners.remove(l);
     }
 
 }

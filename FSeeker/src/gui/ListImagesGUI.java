@@ -43,9 +43,6 @@ public class ListImagesGUI extends JList {
 
         setVisibleRowCount(0);
         setDragEnabled(true);
-        //JPopupMenu popup = new JPopupMenu("Options");
-        //popup.add(new JMenuItem("Couper", KeyEvent.VK_V));
-        //setComponentPopupMenu(popup);
         
         // Le prototypage accélère la vitesse d'affichage (pas de calcul à
         // faire) et uniformise l'affichage
@@ -63,6 +60,7 @@ public class ListImagesGUI extends JList {
         addMouseListener(controler);
         addKeyListener(controler);
         m.addListDataListener(controler);
+        m.addSelectionChangedListener(controler);
     }
 
     /**
