@@ -50,6 +50,16 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 		fireTableDataChanged();
 	}
 
+	public Class getColumnClass(int col) {
+        int rowIndex = 0;
+        Object o = getValueAt(rowIndex, col);
+        if (o == null) {
+            return Object.class;
+        } else {
+            return o.getClass();
+        }
+    }
+	
 	/**
 	 * Récupére la nouvelle URI du méta-modéle et actualise les valeurs
 	 */
