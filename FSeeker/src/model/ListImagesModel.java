@@ -4,7 +4,6 @@
 package model;
 
 import java.io.File;
-import java.text.Collator;
 import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
@@ -14,77 +13,58 @@ import java.util.TreeSet;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
+import misc.file.CompareByType;
+
 /**
  * @author Sted
  * @author brahim
  */
 public class ListImagesModel extends Observable implements ListModel, Observer {
 
+    /** Le supra-modèle */
     protected FSeekerModel fsm = null;
 
-    protected File parent = null;
+    /** Le comparateur utilisé */
+    private Comparator currentComparator = CompareByType.get();
 
-    private Comparator currentComparator = new CMP_BY_NAME();
-    
+    /** L'ensemble trié contenant les fichiers du répertoire courant */
     protected Set liste = new TreeSet(currentComparator);
 
-    private class CMP_BY_NAME implements Comparator {
-        public int compare(Object o1, Object o2) {
-            if (o1 == null)
-                return 1;
-            if (o2 == null)
-                return -1;
-
-            File f1 = (File) o1;
-            File f2 = (File) o2;
-
-            if (f1 == parent)
-                return -1;
-            if (f2 == parent)
-                return 1;
-
-            if (f1.isDirectory() && f2.isFile())
-                return -1;
-            if (f1.isFile() && f2.isDirectory())
-                return 1;
-
-            return Collator.getInstance().compare(f1.getName(), f2.getName());
-        }
-    }
-
+    /**
+     * Construit un modèle de liste de fichiers.
+     * 
+     * @param fsm
+     *            le supra-modèle
+     */
     public ListImagesModel(FSeekerModel fsm) {
         this.fsm = fsm;
-        this.parent = fsm.getURI();
         fsm.addObserver(this);
         refreshListFiles();
     }
 
+    /**
+     * Retourne le supra-modèle.
+     * 
+     * @return supra-modèle
+     */
     public FSeekerModel getModel() {
         return fsm;
-    }
-
-    public File getParent() {
-        return parent;
-    }
-
-    public void setParent(File parent) {
-        if (parent == null)
-            parent = getModel().getURI();
-        this.parent = parent;
     }
 
     public void update(Observable o, Object caller) {
         // Le modèle peut s'auto changer, il est à la fois modèle et contrôleur
         // !
-        setParent(getModel().getURI().getParentFile());
         refreshListFiles();
         setChanged();
         notifyObservers(caller);
     }
 
+    /**
+     * Met à jour l'attribut <code>liste</code> (contenant les noms de
+     * fichiers du répertoire courant).
+     */
     protected void refreshListFiles() {
         liste.clear();
-        liste.add(parent);
         File[] files = fsm.getURI().listFiles();
         if (files != null)
             for (int i = 0; i < files.length; i++)
@@ -92,12 +72,20 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
     }
 
     /**
-     * Renvoie le nombre de fichiers dans le dossier.
+     * Renvoie le nombre de fichiers dans le dossier courant.
+     * 
+     * @return nombre de fichiers dans le dossier courant
      */
     public int getSize() {
         return liste.size();
     }
 
+    /**
+     * Renvoie l'élément à l'index <code>index</code> dans la liste.
+     * 
+     * @param index l'index de l'objet désiré
+     * @return l'objet à l'index désiré
+     */
     public Object getElementAt(int index) {
         return liste.toArray()[index];
     }
@@ -107,5 +95,5 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
 
     public void removeListDataListener(ListDataListener l) {
     }
-   
+
 }
