@@ -7,7 +7,9 @@ import java.io.File;
 import java.util.Observable;
 
 /**
- * @author derosias
+ * Le supra-modèle qui contient l'URI courante.
+ * 
+ * @author Sted
  */
 public class FSeekerModel extends Observable {
     protected File uri = null;
@@ -16,10 +18,12 @@ public class FSeekerModel extends Observable {
         return uri;
     }
     
-    public FSeekerModel() {
+    public FSeekerModel(File uri) {
+        this.uri = uri;
     }
     
     public void setURI(File uri) {
+        System.out.println("FSeekerModel.setURI(" + uri + ")");
         this.uri = uri;
         setChanged();
         notifyObservers();

@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -35,11 +34,11 @@ import javax.swing.JToolBar;
 
 import misc.GU;
 import misc.ImagesMap;
+import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.FileTableModel;
 import model.ListImagesModel;
 import model.URIModel;
-import controler.FSeekerControler;
 import controler.ToolBarControler;
 
 /*
@@ -62,6 +61,8 @@ public class FSeeker {
 
     private JFrame f = null;
 
+    private FSeekerModel fsm = null;
+    
     private FileSystemTreeModel fstm = null;
 
     private ListImagesModel lim = null;
@@ -95,7 +96,9 @@ public class FSeeker {
     private JPanel main = null;
 
     /** Construit la fenêtre par défaut de FSeeker */
-    public FSeeker() {
+    public FSeeker(FSeekerModel fsm) {
+        this.fsm = fsm;
+        
         f = new JFrame("FSeeker v" + VERSION);
         Container cp = f.getContentPane();
 
@@ -147,24 +150,25 @@ public class FSeeker {
             comboPaths.setSelectedItem(ROOT);
             // Ca sent le ComboBoxModel (favoris rajouté à la main, pan)
 
-            comboPaths.addActionListener(new ActionListener() {
+            /*comboPaths.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     fstm.setCurrentDirectory((File) comboPaths
                             .getSelectedItem());
                 }
-            });
+            });*/
 
             left.add(comboPaths, BorderLayout.NORTH);
 
             // L'arbre
-            fstm = new FileSystemTreeModel(ROOT);
+            fstm = new FileSystemTreeModel(fsm);
             fstgui = new FileSystemTreeGUI(fstm);
+            
             left.add(new JScrollPane(fstgui), BorderLayout.CENTER);
 
             ///////////////////////////////////////////////
             // La sous vue à droite avec les sous-sous-vues
 
-            lim = new ListImagesModel(ROOT);
+            lim = new ListImagesModel(fsm);
             ligui = new ListImagesGUI(lim);
 
             lgui = new ListImagesGUI(lim, true);
@@ -262,10 +266,10 @@ public class FSeeker {
      * 
      * @param uri
      */
-    public FSeeker(String start) {
-        this();
-        fstm.setCurrentDirectory(new File(start));
-    }
+    /*TODO public FSeeker(FSeekerModel fsm, String start) {
+        this.fsm = fsm;
+        fsm.setURI(new File(start));
+    }*/
 
     /**
      * Renvoie le JPanel central.
@@ -355,7 +359,7 @@ public class FSeeker {
         tb.addSeparator();
 
         tb.add(new JLabel("Adresse : "));
-        uriModel = new URIModel(ROOT);
+        uriModel = new URIModel(fsm);
         ugui = new URIGUI(uriModel);
         tb.add(ugui);
 
@@ -484,15 +488,8 @@ public class FSeeker {
      *            URI de départ
      */
     public static void main(String args[]) {
-        FSeeker fs = null;
-
-        if (args.length == 0) {
-            fs = new FSeeker();
-        } else {
-            fs = new FSeeker(args[0]);
-        }
-
-        new FSeekerControler(fs);
+        FSeekerModel fsm = new FSeekerModel(ROOT);
+        new FSeeker(fsm);
     }
 
 }

@@ -5,7 +5,6 @@ import java.util.Observer;
 
 import javax.swing.JTextField;
 
-import model.FileSystemTreeModel;
 import model.URIModel;
 import controler.URIControler;
 
@@ -41,16 +40,6 @@ public class URIGUI extends JTextField implements Observer {
      * Met à jour l'affichage graphique (l'uri affichée) quand le modèle change.
      */
     public void update(Observable o, Object arg) {
-        System.out.println("URIGUI.update() / " + o);
-
-        if (o instanceof URIModel) {
-            URIModel urim = (URIModel) o;
-            setText(urim.getURI().getAbsolutePath());
-
-        } else if (o instanceof FileSystemTreeModel) {
-            FileSystemTreeModel fstm = (FileSystemTreeModel) o;
-            m.setURI(fstm.getCurrentDirectory());
-        }
-
+        setText(m.getModel().getURI().getAbsolutePath());
     }
 }

@@ -3,7 +3,6 @@
  */
 package controler;
 
-
 import java.io.File;
 
 import javax.swing.event.TreeSelectionEvent;
@@ -12,20 +11,20 @@ import javax.swing.event.TreeSelectionListener;
 import model.FileSystemTreeModel;
 
 /**
- * @author brahim
  * @author Sted
+ * @author brahim
  */
 public class FileSystemTreeControler implements TreeSelectionListener {
-	protected FileSystemTreeModel m = null;
-	
-	public FileSystemTreeControler(FileSystemTreeModel m) {
-		this.m = m;
-	}
+    protected FileSystemTreeModel m = null;
 
-	public void valueChanged(TreeSelectionEvent e) {
-		//System.out.println("FileSystemTreeControler.valueChanged() / " + e);
-	    File f = (File) e.getPath().getLastPathComponent();
-		//m.setCurrentDirectory(f);
-	}
-	    
+    public FileSystemTreeControler(FileSystemTreeModel m) {
+        this.m = m;
+    }
+
+    public void valueChanged(TreeSelectionEvent e) {
+        File f = (File) e.getNewLeadSelectionPath().getLastPathComponent();
+        System.out.println("<<< on passe : " + f.getAbsolutePath());
+        m.getModel().setURI(f);
+    }
+
 }

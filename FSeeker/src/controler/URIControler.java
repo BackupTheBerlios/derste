@@ -24,7 +24,7 @@ public class URIControler implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         URIGUI ugui = (URIGUI) e.getSource();
         String f = ugui.getText();
-        m.setURI(new File(f));
+        m.getModel().setURI(new File(f));
     }
 
 }

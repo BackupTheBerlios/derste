@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -18,19 +19,8 @@ import javax.swing.tree.TreePath;
  * @author brahim
  * @author Sted
  */
-public class FileSystemTreeModel extends Observable implements TreeModel {
+public class FileSystemTreeModel extends Observable implements TreeModel, Observer {
 
-    protected File currentDirectory = null;
-    public void setCurrentDirectory(File current) {
-        System.out.println("FileSystemTreeModel.setCurrentDirectory()");
-        currentDirectory = current;
-        setChanged();
-        notifyObservers();
-    }
-    public File getCurrentDirectory() {
-        return currentDirectory;
-    }
-    
     /**
      * Représente un fichier. Utilisé pour que le toString ne renvoie que le nom
      * de fichier.
@@ -70,7 +60,7 @@ public class FileSystemTreeModel extends Observable implements TreeModel {
             return getName();
         }
     }
-
+    
     /** Racine de l'arbre */
     protected File root = null;
 
@@ -83,26 +73,22 @@ public class FileSystemTreeModel extends Observable implements TreeModel {
             return (pathname.isDirectory());
         }
     };
-
-    /**
-     * Construit un FileSystemTreeModel avec le fichier représenté par
-     * <code>s</code> comme racine.
-     * 
-     * @param s
-     *            racine
-     */
-    public FileSystemTreeModel(String s) {
-        this(new File(s));
+    
+    protected FSeekerModel fsm = null;
+    
+    public FSeekerModel getModel() {
+        return fsm;
     }
-
-    /**
-     * Construit un FileSystemTreeModel avec <code>root</code> comme racine.
-     * 
-     * @param root
-     *            racine
-     */
-    public FileSystemTreeModel(File root) {
-        this.root = root;
+    
+    public void update(Observable o, Object arg) {
+        setChanged();
+        notifyObservers();
+    }
+    
+    public FileSystemTreeModel(FSeekerModel fsm) {
+        this.fsm = fsm;
+        this.root = fsm.getURI();
+        fsm.addObserver(this);
     }
 
     public Object getRoot() {

@@ -9,7 +9,6 @@ import javax.swing.JList;
 import model.ListImagesModel;
 import renderer.ListImagesCellRenderer;
 import controler.ListImagesDataControler;
-import controler.ListImagesMouseListener;
 
 /**
  * @author brahim
@@ -19,6 +18,7 @@ public class ListImagesGUI extends JList implements Observer {
 
     private ListImagesModel m = null;
 
+    // TODO le truc du false / true sera à virer quand le jdesktoppane sera ok
     public ListImagesGUI(ListImagesModel m) {
         this(m, false);
     }
@@ -32,13 +32,12 @@ public class ListImagesGUI extends JList implements Observer {
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
         setLayout(new FlowLayout());
         setCellRenderer(new ListImagesCellRenderer(simple));
-
-        new ListImagesDataControler(m, this);
-        addMouseListener(new ListImagesMouseListener());
+        addMouseListener(new ListImagesDataControler(m));
     }
     
 	public void update(Observable o, Object arg) {
-		System.out.println("ListImagesGUI.update()");
+		revalidate();
+        repaint();
 	}
 }
 
