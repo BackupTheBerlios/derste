@@ -1,5 +1,8 @@
 /*
  * Created on 14 oct. 2004
+ *
+ * TODO To change the template for this generated file go to
+ * Window - Preferences - Java - Code Style - Code Templates
  */
 package gui;
 
@@ -9,9 +12,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.swing.Icon;
-import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
@@ -19,24 +22,28 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 
-import misc.GU;
 import model.FileSystemModel;
+import misc.GU;
 
 /**
  * @author brahim
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public class FileSystemGUI extends JPanel {
 	protected FileSystemModel m = null;
 
 	protected JTextPane text = new JTextPane();
-
+	
 	protected JTree tree = null;
-
+	
+	
 	public FileSystemGUI(FileSystemModel m) {
 		this.m = m;
-		m.addTreeModelListener(new MyTreeModelListener());
+		m.addTreeModelListener(new MyTreeModelListener());		
 		setLayout(new GridLayout(1, 2));
 		tree = new JTree(m);
 		tree.setEditable(true);
@@ -49,7 +56,7 @@ public class FileSystemGUI extends JPanel {
 
 				setText("Path : " + s + "\nFichier : "
 						+ e.getPath().getLastPathComponent().toString()
-
+					
 						+ "\nTaille : "
 						+ ((File) e.getPath().getLastPathComponent()).length()
 						+ " octets");
@@ -61,11 +68,14 @@ public class FileSystemGUI extends JPanel {
 		add(sp);
 
 	}
-
-	public void setText(String txt) {
+	
+	public void setText(String txt){
 		text.setText(txt);
+
 	}
 }
+
+
 
 class MyTreeModelListener implements TreeModelListener {
 	public void treeNodesChanged(TreeModelEvent e) {
@@ -82,63 +92,36 @@ class MyTreeModelListener implements TreeModelListener {
 	}
 }
 
-// TODO UNIFORMISER CES PUTAINS DE CHEMIN D'IMAGES !!!
-// et faire que ca fonctionne, que ca affiche !!! ><
-class MyCellRenderer extends DefaultTreeCellRenderer {
-	protected final static Icon directoryOpened = GU.getImage("dot.gif"),
-			directoryClosed = GU.getImage("dot.gif");
+class MyCellRenderer extends JLabel implements TreeCellRenderer {
+	protected ImageIcon directoryOpened = new ImageIcon("diropen.gif"),
+			directoryClosed = new ImageIcon("dir.gif");
 
 	protected HashMap extimg = new HashMap();
 	{
-		extimg.put("txt", "txt.png");
-		extimg.put("java", "dot.gif");
-		extimg.put("class", "dot.gif");
-		extimg.put("gif", "dot.gif");
+		extimg.put("txt", "txt.gif");
+		extimg.put("java", "java.gif");
+		extimg.put("class", "class.gif");
+		extimg.put("gif", "gif.gif");
 	}
 
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
 			boolean selected, boolean expanded, boolean leaf, int row,
 			boolean hasFocus) {
-		super.getTreeCellRendererComponent(tree, value, selected, expanded,
-				leaf, row, hasFocus);
-		
-		if (((File) value).isDirectory()) {
-			if (expanded) {
-				setIcon(directoryOpened);
-			}
-			else
-				setIcon(directoryClosed);
-		} else {
-			Iterator it = extimg.keySet().iterator();
-			boolean ok = false;
-			while (it.hasNext()) {
-				String ext = (String) it.next();
-				if (value.toString().endsWith(ext)) {
-					setIcon(GU.getImage((String) extimg.get(ext)));
-					ok = true;
-					break;
-				}
-			}
-			if (!ok)
-				setIcon(GU.getImage("dot.gif"));
-		}
-		
+		setText(value.toString());
+		//Utiliser setIcon
+
 		return this;
 	}
 }
+
+
 
 class FileSystemMain {
 	public static void main(String args[]) {
 		FileSystemModel m = new FileSystemModel("/");
 		FileSystemGUI gui = new FileSystemGUI(m);
-		//TODO GU.createGUI("Test FileSystemGUI", gui);
-
-		JFrame f = new JFrame();
-		f.add(gui);
-		f.pack();
-		f.setVisible(true);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		GU.createGUI("Test FileSystemGUI", gui);
+		
 	}
 }
 

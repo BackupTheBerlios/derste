@@ -3,7 +3,7 @@ package gui;
 /** liste des imports * */
 import javax.swing.*;
 
-
+import event.*;
 
 import java.awt.*;
 import misc.*;
@@ -14,7 +14,13 @@ import java.io.*;
 
 //import javax.swing.event.*;
 
-public class ListImagesGUI extends JPanel  {
+/**
+ * @author brahim
+ *
+ * TODO To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+public class ListImagesGUI extends JPanel {
 
 	private int DefaultVisibleRow = 5;
 
@@ -24,21 +30,20 @@ public class ListImagesGUI extends JPanel  {
 
 	/**
 	 * 
-	 * @param listData
-	 *            Elements to display in the JList
+	 * @param m
+	 *            modéle qui va permettre de représenter le systéme de fichier
 	 *  
 	 */
 	public ListImagesGUI(ListImagesModel m) {
 		this.m = m;
 		list = new JList(m);
-		ImagesListDataListener  l1 = new ImagesListDataListener(m, list);
-		list.addMouseListener(new ListMouseListener(list));
+		ImagesListDataListener l1 = new ImagesListDataListener(m, list);
+		list.addMouseListener(new ListMouseListener(this));
 		list.setCellRenderer(new ImageCellRenderer());
 		list.setVisibleRowCount(DefaultVisibleRow);
 		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		JScrollPane sp = new JScrollPane(list);
 		add(sp);
-		
 
 	}
 
@@ -54,7 +59,9 @@ public class ListImagesGUI extends JPanel  {
 		jf.pack();
 	}
 
-
+	public JList getList() {
+		return list;
+	}
 
 }
 
@@ -62,8 +69,7 @@ class ImageCellRenderer extends JLabel implements ListCellRenderer {
 
 	//TODO gérer les extensions de fichier (images associées) àl'aide d'une
 	// HashMap
-	Icon textIcon = GU.getImage("txt.png");
-			//TODO GU.createImg("txt.png");
+	ImageIcon textIcon = GU.createImg("txt.png");
 
 	int space = 1;
 
@@ -77,15 +83,21 @@ class ImageCellRenderer extends JLabel implements ListCellRenderer {
 	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList,
 	 *      java.lang.Object, int, boolean, boolean)
 	 */
-	public Component getListCellRendererComponent(JList list, Object value,	int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList list, Object value, // value
+			// to
+			// display
+			int index, // cell index
+			boolean isSelected, // is the cell selected
+			boolean cellHasFocus) { // the list and the cell have the focus
 		File file = (File) value;
 		String s = file.getName();
 		setIcon(textIcon);
 		setText(s);
 		String newLine = "\n";
 		setToolTipText("Name : " + file + newLine + file.length());
-		setIconTextGap(space); //espace entre image et texte
-		setVerticalTextPosition(JLabel.BOTTOM); //Texte en dessous de l'image
+		setIconTextGap(space);//espace entre image et texte
+		setVerticalTextPosition(JLabel.BOTTOM);//Texte en dessous de
+		// l'image
 		setHorizontalTextPosition(JLabel.CENTER);
 		setBackground(isSelected ? backColor : foreColor);
 		setForeground(isSelected ? foreColor : backColor);
@@ -95,6 +107,4 @@ class ImageCellRenderer extends JLabel implements ListCellRenderer {
 		return this;
 	}
 }
-
-
 
