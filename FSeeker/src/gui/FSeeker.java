@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -32,7 +33,7 @@ import misc.GU;
  * @author Sted
  */
 public class FSeeker extends JFrame {
-	private final static String VERSION = "0.1";
+	public final static String VERSION = "0.1";
 
 	private JPanel main = null;
 
@@ -45,7 +46,7 @@ public class FSeeker extends JFrame {
 		Container cp = getContentPane();
 		cp.setLayout(new BorderLayout());
 		cp.add(getToolBar(), BorderLayout.NORTH);
-		
+
 		cp.add(getStatusBar(), BorderLayout.SOUTH);
 
 		//setPreferredSize(new Dimension(640, 480));
@@ -186,7 +187,7 @@ public class FSeeker extends JFrame {
 		menuItem = new JMenuItem("A propos", KeyEvent.VK_A);
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("à propos");
+				new About(FSeeker.this);
 			}
 		});
 		menu.add(menuItem);
