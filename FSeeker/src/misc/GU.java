@@ -34,6 +34,7 @@ public class GU {
 
 	/**
 	 * Attribue une image à un JLabel. (setIcon..)
+	 * TODO: Faire un type global pour les JButtons, JLabel etc.
 	 * 
 	 * @param label
 	 *            le JLabel auquel affecté une image
@@ -41,7 +42,8 @@ public class GU {
 	 *            l'image en question à associer
 	 */
 	public static void setIcon(JLabel label, String image) {
-		ImageIcon ii = new ImageIcon("images/" + image);
+		String sep = System.getProperty("path.separator");
+		ImageIcon ii = new ImageIcon("images" + sep + image);
 		label.setIcon(ii);
 	}
 
