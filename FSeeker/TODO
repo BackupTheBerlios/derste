@@ -1,6 +1,15 @@
-- Uniformiser le truc pour les images etc. car c'est la merde là.
-/resources ? /resources/images ? qué esta ?
+- Uniformiser le truc pour les images 
 
-- UNE SEULE CLASSE PAR FICHIER.
+OK ON MET TOUT DANS images à la base du projet 
+tu apelle GU.createImage.. pour creer un icone t tu lui passe le nom du fichier c tt simple 
+comme ca le chemin est gere en attribut dans la classe GU
+Si on fait ca pourtant pas de probléme 
+
+
+- UNE SEULE CLASSE PAR FICHIER. (je réglerai le tout plus tard)
+car encore quelques détail (vérifier selon le model MVC)
 
 - Virer les templates de Eclipse si tu les modifs pas. (y compris les trucs @see blabla dont on se fout)
+
+A NOTER QUE CA MARCHE POUR les principales fonctionnalites pour l'affcihage dan un JLIst
+mais pas optimisé (pas de Layou) .. no prob je m'y attele
