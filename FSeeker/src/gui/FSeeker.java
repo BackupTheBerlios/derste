@@ -8,12 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -27,17 +22,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.tree.TreePath;
 
+import misc.FileSystemTree;
 import misc.GU;
 import misc.ImagesMap;
 import model.FileSystemTreeModel;
+import model.FileTableModel;
 import model.ListImagesModel;
 import model.URIModel;
 import controler.FSeekerControler;
@@ -55,391 +50,373 @@ import controler.ToolBarControler;
 
 public class FSeeker {
 
-    /** La version du software */
-    public final static String VERSION = "0.1a";
+	/** La version du software */
+	public final static String VERSION = "0.1a";
 
-    private File start = File.listRoots()[0];
+	private final static File ROOT = (System.getProperty("os.name").contains(
+			"Linux") ? File.listRoots()[0] : File.listRoots()[1]);
 
-    private JFrame f = null;
+	private JFrame f = null;
 
-    private FileSystemTreeModel fstm = null;
+	private FileSystemTreeModel fstm = null;
 
-    private ListImagesModel lim = null;
+	private ListImagesModel lim = null;
 
-    private URIModel uriModel = null;
+	private URIModel uriModel = null;
 
-    private FileSystemTreeGUI fstgui = null;
+	private FileSystemTreeGUI fstgui = null;
 
-    private ListImagesGUI ligui = null;
+	private ListImagesGUI ligui = null;
 
-    private URIGUI ugui = null;
+	private ListImagesGUI lgui = null;
 
-    private JPopupMenu popup = null;
+	private FileTableGUI ftgui = null;
 
-    /** Le contrôleur de la barre d'outils */
-    private final ToolBarControler toolBarControler = new ToolBarControler(this);
+	private FileTableModel ftmodel = null;
 
-    /** Le panel central, principal, destinées à accueillir les différentes vues */
-    private JPanel main = null;
+	private URIGUI ugui = null;
 
-    /** Construit la fenêtre par défaut de FSeeker */
-    public FSeeker() {
-        f = new JFrame("FSeeker v" + VERSION);
-        Container cp = f.getContentPane();
+	//private JPopupMenu popup = null;
 
-        // GU.changeLF();
-        f.setJMenuBar(getDefaultMenuBar());
+	/** Singleton contenant la vue principale par défaut */
+	private JPanel defaultView = null;
 
-        // La vue pas défaut (tree + icônes)
-        setView(getDefaultView());
+	/** Singleton contenant la vue à la "macos" */
+	private JPanel macosView = null;
 
-        // Un border pour toolbar (en haut), statusbar (en bas), main (central)
-        cp.setLayout(new BorderLayout());
-        cp.add(getDefaultToolBar(), BorderLayout.NORTH);
-        cp.add(main, BorderLayout.CENTER);
-        cp.add(getDefaultStatusBar(), BorderLayout.SOUTH);
+	/** Le contrôleur de la barre d'outils */
+	private final ToolBarControler toolBarControler = new ToolBarControler(this);
 
-        // Une taille raisonnable au départ (dans un fichier de config après
-        // sans doute)
-        f.setSize(new Dimension(640, 480));
+	/** Le panel central, principal, destinées à accueillir les différentes vues */
+	private JPanel main = null;
 
-        GU.center(f);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-    }
+	/** Construit la fenêtre par défaut de FSeeker */
+	public FSeeker() {
+		f = new JFrame("FSeeker v" + VERSION);
+		Container cp = f.getContentPane();
 
-    public JPanel getDefaultView() {
-        JPanel main = new JPanel();
-        main.setLayout(new GridLayout(1, 2));
+		// GU.changeLF();
+		f.setJMenuBar(getDefaultMenuBar());
 
-        // Trouver un bon système qui garde en mémoire les trucs, voir le panel
-        // entier
+		// La vue pas défaut (tree + icônes/détails/liste/etc.)
+		setView(getDefaultView());
+		File home = new File(System.getProperty("user.home"));
+		fstgui.setSelectionPath(FileSystemTree.getTreePath(home));
 
-        if (fstm == null)
-            fstm = new FileSystemTreeModel(start);
-        if (fstgui == null) {
-            fstgui = new FileSystemTreeGUI(fstm);
-            fstgui.addMouseListener(popupListener);
-            
-            LinkedList ll = new LinkedList();
-            File home = new File(System.getProperty("user.home"));
-            
-            while (true) {
-            	ll.addLast(home);
-            	home = home.getParentFile();
-				if (home == null)  {
-					break;
-				}
-            }
+		// Un border pour toolbar (en haut), statusbar (en bas), main (central)
+		cp.setLayout(new BorderLayout());
+		cp.add(getDefaultToolBar(), BorderLayout.NORTH);
+		cp.add(main, BorderLayout.CENTER);
+		cp.add(getDefaultStatusBar(), BorderLayout.SOUTH);
 
-            TreePath pathToHome = new TreePath(ll.removeLast());
-            
-            while (true) {
-            	try {
-            		pathToHome = pathToHome.pathByAddingChild(ll.removeLast());
-            	} catch (NoSuchElementException e) {
-            		break;
-            	}
-            }
-            
-            fstgui.setSelectionPath(pathToHome);
-            //fstgui.expandPath(pathToHome);
-        }
+		// Une taille raisonnable au départ (dans un fichier de config après
+		// sans doute) Mode maximisé ?
+		f.setSize(new Dimension(800, 600));
+		GU.center(f);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setVisible(true);
+	}
 
-        if (lim == null)
-            lim = new ListImagesModel((File) fstm.getRoot());
-        
-        if (ligui == null)
-            ligui = new ListImagesGUI(lim);
+	public JPanel getDefaultView() {
+		if (defaultView == null) {
+			// Coupage en deux
+			defaultView = new JPanel(new GridLayout(1, 2));
 
-        JTabbedPane tp = new JTabbedPane();
-        tp.addTab("Icônes", ImagesMap.getDefault(), new JScrollPane(ligui),
-                "Vue avec les icônes");
-        tp.addTab("Liste", ImagesMap.getDefault(), null, "Vue en liste");
-        tp.addTab("Détails", ImagesMap.getDefault(), null, "Vue de détails");
+			// Barre de split
+			JSplitPane splitpane = new JSplitPane();
+			splitpane.setDividerLocation(200);
+			splitpane.setOneTouchExpandable(true);
 
-        // Barre de split
-        JSplitPane sp = new JSplitPane();
-        sp.setDividerLocation(200);
-        sp.setOneTouchExpandable(true);
+			///////////////////////////////////////
+			// La sous vue à gauche (arbre + combo)
+			JPanel left = new JPanel(new BorderLayout());
 
-        JPanel tree = new JPanel(new BorderLayout());
-                
-        Vector paths = new Vector();
-        paths.add(new File(System.getProperty("user.home")));
-        for (int i = 0; i < File.listRoots().length; i++)
-        	paths.add(File.listRoots()[i]);
-		
-        tree.add(new JComboBox(paths), BorderLayout.NORTH);
-                
-        tree.add(new JScrollPane(fstgui), BorderLayout.CENTER);
+			// La liste des paths qu'on affichera dans le combo
+			Vector paths = new Vector();
+			paths.add(new File(System.getProperty("user.home")));
+			for (int i = 0; i < File.listRoots().length; i++)
+				paths.add(File.listRoots()[i]);
+			left.add(new JComboBox(paths), BorderLayout.NORTH);
 
-        sp.setTopComponent(tree);
-        sp.setBottomComponent(tp);
-        main.add(sp);
+			// L'arbre
+			fstm = new FileSystemTreeModel(ROOT);
+			fstgui = new FileSystemTreeGUI(fstm);
+			left.add(new JScrollPane(fstgui), BorderLayout.CENTER);
 
-        return main;
-    }
+			///////////////////////////////////////////////
+			// La sous vue à droite avec les sous-sous-vues
 
-    /**
-     * Construit la fenêtre avec en démarrage, la vue ouvert au noeud
-     * <code>uri</code> (pas le root)
-     * 
-     * @param uri
-     */
-    public FSeeker(String start) {
-        // TODO implémenter ça + gérer si on a passé http://pwetpwet => HTML, ou
-        // (file:///)rep/truc.html local
-    }
+			lim = new ListImagesModel(ROOT);
+			ligui = new ListImagesGUI(lim);
 
-    /**
-     * Renvoie le JPanel central.
-     * 
-     * @return le panel central courant
-     */
-    public JPanel getMain() {
-        return main;
-    }
+			lgui = new ListImagesGUI(lim, true);
 
-    /**
-     * Permet de fixer le panel central.
-     * 
-     * @param main
-     *            le nouveau panel central
-     */
+			ftmodel = new FileTableModel(ROOT, "prout");
+			ftgui = new FileTableGUI(ftmodel);
 
-    class PopupListener extends MouseAdapter {
-        public void mousePressed(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+			JTabbedPane tabs = new JTabbedPane();
+			JScrollPane viewIcon = new JScrollPane(ligui,
+					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			JScrollPane viewList = new JScrollPane(lgui,
+					JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			JScrollPane viewTable = new JScrollPane(ftgui,
+					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			
+			tabs.addTab("Icônes", ImagesMap.get("view_icon.png"), viewIcon,
+					"Vue avec les icônes");
+			tabs.addTab("Liste", ImagesMap.get("view_list.png"),
+					viewList, "Vue en liste");
+			tabs.addTab("Détails", ImagesMap.get("view_details.png"),
+					viewTable, "Vue de détails");
 
-        public void mouseReleased(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+			// Assemblage et Pan !
+			splitpane.setTopComponent(left);
+			splitpane.setBottomComponent(tabs);
+			defaultView.add(splitpane);
+		}
 
-        private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                popup.show(e.getComponent(), e.getX(), e.getY());
-            }
-        }
-    }
+		return defaultView;
+	}
 
-    MouseListener popupListener = new PopupListener();
+	/**
+	 * Construit la fenêtre avec en démarrage, la vue ouvert au noeud
+	 * <code>uri</code> (pas le root)
+	 * 
+	 * @param uri
+	 */
+	public FSeeker(String start) {
+		// TODO implémenter ça + gérer si on a passé http://pwetpwet => HTML, ou
+		// (file:///)rep/truc.html local
+	}
 
-    public void setView(JPanel main) {
-        if (this.main != null)
-            f.remove(this.main);
+	/**
+	 * Renvoie le JPanel central.
+	 * 
+	 * @return le panel central courant
+	 */
+	public JPanel getMain() {
+		return main;
+	}
 
-        f.getContentPane().add(main, BorderLayout.CENTER);
-        this.main = main;
+	/**
+	 * Permet de fixer le panel central.
+	 * 
+	 * @param main
+	 *            le nouveau panel central
+	 */
 
-        f.repaint();
-        main.revalidate();
-        // TODO revalidate et tout le bord ne font rien, que faire..!
-    }
+	public void setView(JPanel main) {
+		if (this.main != null)
+			f.remove(this.main);
 
-    /**
-     * Renvoie la barre d'outils par défaut.
-     * 
-     * @return la barre d'outils
-     */
-    private JToolBar getDefaultToolBar() {
-        JToolBar tb = new JToolBar(JToolBar.HORIZONTAL);
-        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
-        layout.setVgap(0);
-        tb.setLayout(layout);
-        tb.setFloatable(false);
+		f.getContentPane().add(main, BorderLayout.CENTER);
+		this.main = main;
 
-        JButton b = null;
+		main.revalidate();
+	}
 
-        b = new JButton();
-        b.setActionCommand("PREVIOUS");
-        b.addActionListener(toolBarControler);
-        b.setIcon(ImagesMap.get("previous.gif"));
-        b.setToolTipText("Précédent");
-        tb.add(b);
+	/**
+	 * Renvoie la barre d'outils par défaut.
+	 * 
+	 * @return la barre d'outils
+	 */
+	private JToolBar getDefaultToolBar() {
+		JToolBar tb = new JToolBar(JToolBar.HORIZONTAL);
+		FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+		layout.setVgap(0);
+		tb.setLayout(layout);
+		tb.setFloatable(false);
 
-        b = new JButton();
-        b.setActionCommand("NEXT");
-        b.addActionListener(toolBarControler);
-        b.setIcon(ImagesMap.get("next.gif"));
-        b.setToolTipText("Suivant");
-        tb.add(b);
+		JButton b = null;
 
-        b = new JButton();
-        b.setActionCommand("PARENT");
-        b.addActionListener(toolBarControler);
-        b.setIcon(ImagesMap.get("parent.gif"));
-        b.setToolTipText("Répertoire parent");
-        tb.add(b);
+		b = new JButton();
+		b.setActionCommand("PREVIOUS");
+		b.addActionListener(toolBarControler);
+		b.setIcon(ImagesMap.get("previous.gif"));
+		b.setToolTipText("Précédent");
+		tb.add(b);
 
-        tb.addSeparator();
+		b = new JButton();
+		b.setActionCommand("NEXT");
+		b.addActionListener(toolBarControler);
+		b.setIcon(ImagesMap.get("next.gif"));
+		b.setToolTipText("Suivant");
+		tb.add(b);
 
-        b = new JButton("Rechercher");
-        b.setActionCommand("SEARCHVIEW");
-        b.addActionListener(toolBarControler);
-        b.setIcon(ImagesMap.getDefault());
-        b.setToolTipText("Rechercher un fichier ou un répertoire");
-        tb.add(b);
+		b = new JButton();
+		b.setActionCommand("PARENT");
+		b.addActionListener(toolBarControler);
+		b.setIcon(ImagesMap.get("parent.gif"));
+		b.setToolTipText("Répertoire parent");
+		tb.add(b);
 
-        b = new JButton();
-        b.setActionCommand("TREEVIEW");
-        b.addActionListener(toolBarControler);
-        b.setIcon(ImagesMap.getDefault());
-        b.setToolTipText("Affichage avec l'arborescence sous forme d'arbre");
-        tb.add(b);
+		tb.addSeparator();
 
-        b = new JButton();
-        b.setActionCommand("MACOSVIEW");
-        b.addActionListener(toolBarControler);
-        b.setIcon(ImagesMap.getDefault());
-        b.setToolTipText("Affichage par thème à la MacOS");
-        tb.add(b);
+		b = new JButton("Rechercher");
+		b.setActionCommand("SEARCHVIEW");
+		b.addActionListener(toolBarControler);
+		b.setIcon(ImagesMap.getDefault());
+		b.setToolTipText("Rechercher un fichier ou un répertoire");
+		tb.add(b);
 
-        tb.addSeparator();
+		b = new JButton();
+		b.setActionCommand("TREEVIEW");
+		b.addActionListener(toolBarControler);
+		b.setIcon(ImagesMap.getDefault());
+		b.setToolTipText("Affichage avec l'arborescence sous forme d'arbre");
+		tb.add(b);
 
-        tb.add(new JLabel("Adresse : "));
-        uriModel = new URIModel(start);
-        ugui = new URIGUI(uriModel);
-        tb.add(ugui);
+		b = new JButton();
+		b.setActionCommand("MACOSVIEW");
+		b.addActionListener(toolBarControler);
+		b.setIcon(ImagesMap.getDefault());
+		b.setToolTipText("Affichage par thème à la MacOS");
+		tb.add(b);
 
-        fstm.addObserver(ugui);
-        uriModel.addObserver(fstgui);
+		tb.addSeparator();
 
-        return tb;
-    }
+		tb.add(new JLabel("Adresse : "));
+		uriModel = new URIModel(ROOT);
+		ugui = new URIGUI(uriModel);
+		tb.add(ugui);
 
-    /**
-     * Renvoie la barre d'état par défaut.
-     * 
-     * @return la barre d'état
-     */
-    private JToolBar getDefaultStatusBar() {
-        JToolBar sb = new JToolBar();
-        JPanel p = new JPanel(new GridLayout(1, 2));
-        sb.add(p);
-        JLabel l = new JLabel("FSeeker " + VERSION);
-        p.add(l);
-        final JProgressBar pb = new JProgressBar(0, 100);
+		fstm.addObserver(ugui);
+		uriModel.addObserver(fstgui);
 
-        sb.addSeparator(new Dimension(10, 10));
-        Timer t = new Timer();
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                if (pb.getValue() == 100)
-                    pb.setValue(0);
-                else
-                    pb.setValue(pb.getValue() + 1);
-            }
-        }, 0, 100);
-        p.add(pb);
-        sb.setFloatable(false);
-        return sb;
+		return tb;
+	}
 
-    }
+	/**
+	 * Renvoie la barre d'état par défaut.
+	 * 
+	 * @return la barre d'état
+	 */
+	private JToolBar getDefaultStatusBar() {
+		JToolBar sb = new JToolBar();
+		JPanel p = new JPanel(new GridLayout(1, 2));
+		sb.add(p);
+		JLabel l = new JLabel("FSeeker " + VERSION);
+		p.add(l);
+		final JProgressBar pb = new JProgressBar(0, 100);
 
-    /**
-     * Renvoie la barre de menu par défaut.
-     * 
-     * @return la barre de menu
-     */
-    private JMenuBar getDefaultMenuBar() {
-        JMenuBar mb = new JMenuBar();
-        JMenu menu;
-        JMenuItem menuItem;
+		sb.addSeparator(new Dimension(10, 10));
+		Timer t = new Timer();
+		new Timer().schedule(new TimerTask() {
+			public void run() {
+				if (pb.getValue() == 100)
+					pb.setValue(0);
+				else
+					pb.setValue(pb.getValue() + 1);
+			}
+		}, 0, 100);
+		p.add(pb);
+		sb.setFloatable(false);
+		return sb;
 
-        menu = new JMenu("Fichier");
-        menuItem = new JMenuItem("Quitter", KeyEvent.VK_Q);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                f.dispose();
-                System.exit(0);
-            }
-        });
-        menu.add(menuItem);
-        mb.add(menu);
+	}
 
-        menu = new JMenu("Edition");
-        menuItem = new JMenuItem("Annuler", KeyEvent.VK_C);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("annuler");
-            }
-        });
-        menu.add(menuItem);
-        menu.addSeparator();
-        menuItem = new JMenuItem("Couper", KeyEvent.VK_X);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("couper");
-            }
-        });
-        menu.add(menuItem);
-        menuItem = new JMenuItem("Copier", KeyEvent.VK_C);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("copier");
-            }
-        });
-        menu.add(menuItem);
-        menuItem = new JMenuItem("Coller", KeyEvent.VK_V);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("coller");
-            }
-        });
-        menu.add(menuItem);
-        menu.addSeparator();
-        menuItem = new JMenuItem("Préférences", KeyEvent.VK_P);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("préférences");
-            }
-        });
-        menu.add(menuItem);
-        mb.add(menu);
-        mb.add(Box.createHorizontalGlue());
+	/**
+	 * Renvoie la barre de menu par défaut.
+	 * 
+	 * @return la barre de menu
+	 */
+	private JMenuBar getDefaultMenuBar() {
+		JMenuBar mb = new JMenuBar();
+		JMenu menu;
+		JMenuItem menuItem;
 
-        menu = new JMenu("Aide");
-        menuItem = new JMenuItem("Sommaire", KeyEvent.VK_S);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("sommaire");
-            }
-        });
-        menu.add(menuItem);
-        menu.addSeparator();
-        menuItem = new JMenuItem("A propos", KeyEvent.VK_A);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                new About(f);
-            }
-        });
-        menu.add(menuItem);
-        mb.add(menu);
+		menu = new JMenu("Fichier");
+		menuItem = new JMenuItem("Quitter", KeyEvent.VK_Q);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				f.dispose();
+				System.exit(0);
+			}
+		});
+		menu.add(menuItem);
+		mb.add(menu);
 
-        popup = new JPopupMenu("Popup");
-        popup.add(menu);
+		menu = new JMenu("Edition");
+		menuItem = new JMenuItem("Annuler", KeyEvent.VK_C);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("annuler");
+			}
+		});
+		menu.add(menuItem);
+		menu.addSeparator();
+		menuItem = new JMenuItem("Couper", KeyEvent.VK_X);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("couper");
+			}
+		});
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Copier", KeyEvent.VK_C);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("copier");
+			}
+		});
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Coller", KeyEvent.VK_V);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("coller");
+			}
+		});
+		menu.add(menuItem);
+		menu.addSeparator();
+		menuItem = new JMenuItem("Préférences", KeyEvent.VK_P);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("préférences");
+			}
+		});
+		menu.add(menuItem);
+		mb.add(menu);
+		mb.add(Box.createHorizontalGlue());
 
-        return mb;
-    }
+		menu = new JMenu("Aide");
+		menuItem = new JMenuItem("Sommaire", KeyEvent.VK_S);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("sommaire");
+			}
+		});
+		menu.add(menuItem);
+		menu.addSeparator();
+		menuItem = new JMenuItem("A propos", KeyEvent.VK_A);
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new About(f);
+			}
+		});
+		menu.add(menuItem);
+		mb.add(menu);
 
-    /**
-     * Démarrage absolu de l'application.
-     * 
-     * @param args
-     *            URI de départ
-     */
-    public static void main(String args[]) {
-        FSeeker fs = null;
+		return mb;
+	}
 
-        if (args.length == 0) {
-            fs = new FSeeker();
-        } else {
-            fs = new FSeeker(args[0]);
-        }
+	/**
+	 * Démarrage absolu de l'application.
+	 * 
+	 * @param args
+	 *            URI de départ
+	 */
+	public static void main(String args[]) {
+		FSeeker fs = null;
 
-        new FSeekerControler(fs);
-    }
+		if (args.length == 0) {
+			fs = new FSeeker();
+		} else {
+			fs = new FSeeker(args[0]);
+		}
+
+		new FSeekerControler(fs);
+	}
 
 }
