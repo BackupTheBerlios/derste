@@ -13,29 +13,19 @@ import controler.ListImagesMouseListener;
 /**
  * @author brahim
  */
-public class ListImagesGUI extends JPanel {
+public class ListImagesGUI extends JList {
 
     private ListImagesModel m = null;
 
-    private JList list = null;
-
     public ListImagesGUI(ListImagesModel m) {
         this.m = m;
-        list = new JList(m);
-        list.setDragEnabled(true);
-        new ListImagesDataControler(m, list);
-        list.addMouseListener(new ListImagesMouseListener(this));
-        list.setCellRenderer(new ImagesListCellRenderer());
-        list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        setModel(m);
+        setDragEnabled(true);
+        setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        setCellRenderer(new ImagesListCellRenderer());
         
-        JScrollPane sp = new JScrollPane(list);
-        add(sp);
-
+        new ListImagesDataControler(m, this);
+        addMouseListener(new ListImagesMouseListener(this));
     }
-
-    public JList getList() {
-        return list;
-    }
-
 }
 
