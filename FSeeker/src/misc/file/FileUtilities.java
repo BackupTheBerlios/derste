@@ -130,9 +130,9 @@ public class FileUtilities {
             StringBuffer sb = new StringBuffer(50);
             sb.append("<html>");
 
-            // Une jolie image pour faire staïlle
-            sb
-                    .append("<center><img src=\"../../images/dot.gif\"></center><br>");
+            // Une jolie image pour faire staïlle 
+           /* sb
+                    .append("<center><img src=\"../../images/dot.gif\"></center><br>");*/
 
             // Le type et le nom (pour les aveugles)
             sb.append("<b>" + getType() + "</b> : " + getName() + "<br>");
