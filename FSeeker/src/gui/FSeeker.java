@@ -62,21 +62,28 @@ public class FSeeker extends JFrame {
 	/** Le panel central, principal, destinées à accueillir les différentes vues */
 	private JPanel main = null;
 
+	/** Le composant sous le combobox à gauche (favoris, arbo etc) */
 	private JComponent subleft = null;
 
+	/** Le panel avec le combo + le subleft */
 	private JPanel left = null;
 
 	/** Le combobox du panel à gauche (arbo, infos, recherche etc) */
 	private JComboBox cb = null;
 
+	/** L'arbre dans le subleft */
 	private FileSystemTreeGUI fstgui = null;
 
+	/** Le panel de recherche dans le subleft */
 	private SearchGUI searchgui = null;
 
+	/** Le panel de preview dans le subleft */
 	private PreviewManager preview = null;
 
+	/** Le panel de bookmark dans le subleft */
 	private JList bookmarksgui = null;
 
+	/** Les tabulations dans la vue de droite */
 	private JTabbedPane tabs = null;
 
 	/** Construit la fenêtre par défaut de FSeeker */
@@ -89,7 +96,6 @@ public class FSeeker extends JFrame {
 		ToolTipManager.sharedInstance().setInitialDelay(1500);
 		ToolTipManager.sharedInstance().setReshowDelay(1000);
 
-		initModelsAndGuis();
 		setJMenuBar(new MenuBarGUI(this));
 
 		// La vue par défaut (tree + icônes/détails/liste/etc.)
@@ -109,15 +115,39 @@ public class FSeeker extends JFrame {
 		setVisible(true);
 	}
 
+	/**
+	 * Retourne le supra-modèle
+	 * 
+	 * @return le supra-modèle
+	 */
 	public FSeekerModel getModel() {
 		return fsm;
 	}
 
+	/**
+	 * Ajoute une tabulation.
+	 * 
+	 * @param title
+	 *            titre de la tabulation
+	 * @param icon
+	 *            icône de la tabulation
+	 * @param component
+	 *            le composant contenu dans la tabulation
+	 * @param tip
+	 *            le tip associé
+	 */
 	public void addTab(String title, Icon icon, Component component, String tip) {
 		tabs.addTab(title, icon, component, tip);
 		tabs.setSelectedComponent(component);
 	}
 
+	/**
+	 * Change la sous-vue de gauche (favoris, recherche etc) en affichant le
+	 * composant c.
+	 * 
+	 * @param c
+	 *            le composant
+	 */
 	public void setSubLeftPanel(JComponent c) {
 		if (subleft != null)
 			left.remove(subleft);
@@ -127,7 +157,32 @@ public class FSeeker extends JFrame {
 		left.repaint();
 	}
 
+	/**
+	 * Retourne le panel de gauche (combo + sous-vue).
+	 * 
+	 * @return le panel de gauche
+	 */
 	public JPanel getLeftPanel() {
+		// Initialisation des différents modèles et différentes vues
+
+		// L'arbre
+		FileSystemTreeModel fstm = new FileSystemTreeModel(fsm);
+		fstgui = new FileSystemTreeGUI(fstm);
+
+		// Recherche
+		searchgui = new SearchGUI(this);
+
+		// Bookmarks
+		bookmarksgui = new BookmarksGUI(fsm);
+
+		// La prévisualisation
+		preview = new PreviewManager(fsm);
+		// Appel explicite sinon il faut créer la preview dés le lancement de
+		// l'application
+		preview.update(fsm, null);
+
+		// Création du combo
+
 		left = new JPanel(new BorderLayout());
 
 		// Pas un [] car, le jcombobox transforme en vector..! alors autant
@@ -151,6 +206,11 @@ public class FSeeker extends JFrame {
 		return left;
 	}
 
+	/**
+	 * Retourne le sous-panel à gauche (favoris, arborescence etc).
+	 * 
+	 * @return le sous-panel à gauche
+	 */
 	private JPanel getSubLeftPanel() {
 		JPanel p = new JPanel(new BorderLayout());
 
@@ -168,24 +228,12 @@ public class FSeeker extends JFrame {
 		return p;
 	}
 
-	private void initModelsAndGuis() {
-		// L'arbre
-		FileSystemTreeModel fstm = new FileSystemTreeModel(fsm);
-		fstgui = new FileSystemTreeGUI(fstm);
-
-		// Recherche
-		searchgui = new SearchGUI(this);
-
-		// Bookmarks
-		bookmarksgui = new BookmarksGUI(fsm);
-
-		// La prévisualisation
-		preview = new PreviewManager(fsm);
-		// Appel explicite sinon il faut créer la preview dés le lancement de
-		// l'application
-		preview.update(fsm, null);
-	}
-
+	/**
+	 * Retourne la vue de droite par défaut. (tab avec toutes les vues
+	 * intégrées.
+	 * 
+	 * @return la vue de droite
+	 */
 	public JPanel getDefaultView() {
 		// Coupure en deux
 		JPanel defaultView = new JPanel(new GridLayout(1, 2));
@@ -259,17 +307,6 @@ public class FSeeker extends JFrame {
 	}
 
 	/**
-	 * Construit la fenêtre avec en démarrage, la vue ouvert au noeud
-	 * <code>uri</code> (pas le root)
-	 * 
-	 * @param uri
-	 */
-	/*
-	 * TODO public FSeeker(FSeekerModel fsm, String start) { this.fsm = fsm;
-	 * fsm.setURI(new File(start)); }
-	 */
-
-	/**
 	 * Renvoie le JPanel central.
 	 * 
 	 * @return le panel central courant
@@ -301,6 +338,8 @@ public class FSeeker extends JFrame {
 	public static void main(String args[]) {
 		FSeekerModel fsm = new FSeekerModel(ROOT);
 		new FSeeker(fsm);
+		if (args.length > 0)
+			fsm.setURI(new File(args[0]));
 	}
 
 }
