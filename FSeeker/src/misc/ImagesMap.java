@@ -34,7 +34,8 @@ public class ImagesMap {
 	private static final String	
 		DEFAULT_IMAGE = EXTENSIONS + "default.png",
 		DIRECTORY_OPENED_IMAGE = EXTENSIONS + "folder_yellow.png",
-		DIRECTORY_CLOSED_IMAGE = EXTENSIONS + "folder_yellow_open.png";
+		DIRECTORY_CLOSED_IMAGE = EXTENSIONS + "folder_yellow_open.png",
+		DIRECTORY_LOCKED_IMAGE = EXTENSIONS + "folder_locked.png";
 
 	/**
 	 * Renvoie un objet Icon à partir du chemin de image. Si le chemin n'est pas
@@ -72,8 +73,11 @@ public class ImagesMap {
 	 */
 	public static Icon getImage(File file) {
 		// Image spéciale pour tous les répertoires
-		if (file.isDirectory())
-			return get(DIRECTORY_CLOSED_IMAGE);
+		if (file.isDirectory()) {
+			if (file.canRead())
+				return get(DIRECTORY_CLOSED_IMAGE);
+			return get(DIRECTORY_LOCKED_IMAGE);
+		}
 
 		// On a un fichier, on regarde son extension
 		String s = file.getName();
