@@ -1,11 +1,13 @@
 package gui;
 
 /** liste des imports * */
+import event.ListMouseListener;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -13,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
-import event.ListMouseListener;
 import misc.GU;
 import model.ListImagesModel;
 
@@ -21,9 +22,6 @@ import model.ListImagesModel;
 
 /**
  * @author brahim
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ListImagesGUI extends JPanel {
 
@@ -36,7 +34,7 @@ public class ListImagesGUI extends JPanel {
 	/**
 	 * 
 	 * @param m
-	 *            modéle qui va permettre de représenter le systéme de fichier
+	 *            modèle qui va permettre de représenter le systéme de fichier
 	 *  
 	 */
 	public ListImagesGUI(ListImagesModel m) {
@@ -72,43 +70,38 @@ public class ListImagesGUI extends JPanel {
 
 class ImageCellRenderer extends JLabel implements ListCellRenderer {
 
-	//TODO gérer les extensions de fichier (images associées) àl'aide d'une
-	// HashMap
-	ImageIcon textIcon = GU.createImg("txt.png");
+	// TODO gérer les extensions de fichier (images associées) à l'aide d'une
+	// HashMap -> voir TODO
+	private Icon textIcon = GU.getImage("txt.png");
 
-	int space = 1;
+	private int space = 1;
 
-	Color backColor = Color.black;
+	private Color backColor = Color.black;
 
-	Color foreColor = Color.white;
+	private Color foreColor = Color.white;
 
 	/*
 	 * @returns un composant gérant le rendu d'une cellule pour un fichier
-	 * 
-	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList,
-	 *      java.lang.Object, int, boolean, boolean)
 	 */
-	public Component getListCellRendererComponent(JList list, Object value, // value
-			// to
-			// display
-			int index, // cell index
-			boolean isSelected, // is the cell selected
-			boolean cellHasFocus) { // the list and the cell have the focus
+	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		File file = (File) value;
 		String s = file.getName();
 		setIcon(textIcon);
 		setText(s);
 		String newLine = "\n";
 		setToolTipText("Name : " + file + newLine + file.length());
-		setIconTextGap(space);//espace entre image et texte
-		setVerticalTextPosition(JLabel.BOTTOM);//Texte en dessous de
-		// l'image
+		setIconTextGap(space);
+		
+		// Texte en dessous de l'image
+		setVerticalTextPosition(JLabel.BOTTOM);
 		setHorizontalTextPosition(JLabel.CENTER);
+		
 		setBackground(isSelected ? backColor : foreColor);
 		setForeground(isSelected ? foreColor : backColor);
+		
 		setEnabled(list.isEnabled());
 		setFont(list.getFont());
-		setOpaque(true); //Ne pas retirer
+		setOpaque(true);
 		return this;
 	}
 }
