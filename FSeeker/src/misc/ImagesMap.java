@@ -3,8 +3,13 @@
  */
 package misc;
 
+//<<<<<<< ImagesMap.java
+
+//=======
 import java.awt.Dimension;
+//>>>>>>> 1.16
 import java.awt.Image;
+
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
@@ -12,11 +17,12 @@ import java.util.HashMap;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+
 /**
  * Classe permettant de gérer le chargement des images de FSeeker.
  * 
  * @author Sted
- * @author aitelhab
+ * @author brahim
  */
 public final class ImagesMap {
 	/**
@@ -175,6 +181,11 @@ public final class ImagesMap {
 	public static Icon getDefault() {
 		return getDefault(d32x32);
 	}
+//<<<<<<< ImagesMap.java
+	
+
+	
+//=======
 
 	/**
 	 * Renvoie l'icône par défaut, à la taille spécifiée.
@@ -187,5 +198,6 @@ public final class ImagesMap {
 		return get(DEFAULT_IMAGE, d);
 	}
 
+//>>>>>>> 1.16
 }
 
