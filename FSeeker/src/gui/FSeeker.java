@@ -78,14 +78,14 @@ public class FSeeker extends JFrame {
 		tb.add(b);
 		JLabel l;
 		l = new JLabel("Précédent");
-		GU.setIcon(l, "dot.gif");
+		GU.setImage(l, "dot.gif");
 		tb.add(l);
 		l = new JLabel("Suivant");
-		GU.setIcon(l, "dot.gif");
+		GU.setImage(l, "dot.gif");
 		tb.add(l);
 		tb.addSeparator();
 		l = new JLabel("Parent");
-		GU.setIcon(l, "dot.gif");
+		GU.setImage(l, "dot.gif");
 		tb.add(l);
 		tb.addSeparator(new Dimension(10, 10));
 		b = new JButton("Rechercher");
@@ -100,7 +100,7 @@ public class FSeeker extends JFrame {
 			}
 		});
 		l = new JLabel("Affichage");
-		GU.setIcon(l, "dot.gif");
+		GU.setImage(l, "dot.gif");
 		tb.add(l);
 
 		tb.addSeparator(new Dimension(10, 10));
@@ -113,7 +113,7 @@ public class FSeeker extends JFrame {
 	private StatusBar getStatusBar() {
 		StatusBar sb = new StatusBar();
 		JLabel l = sb.addLabel("FSeeker " + VERSION);
-		GU.setIcon(l, "dot.jpg");
+		GU.setImage(l, "dot.jpg");
 		sb.addProgressBar(0, 100);
 		return sb;
 	}
