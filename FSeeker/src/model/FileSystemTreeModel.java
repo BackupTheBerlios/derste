@@ -12,55 +12,18 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import misc.file.FileUtilities;
+
 /**
- * Représente un système de fichier, en ne prenant en compte que les
- * répertoires.
+ * Représente un système de fichier sous forme d'arbre, en ne prenant en compte
+ * que les répertoires.
  * 
  * @author brahim
  * @author Sted
  */
-public class FileSystemTreeModel extends Observable implements TreeModel, Observer {
+public class FileSystemTreeModel extends Observable implements TreeModel,
+        Observer {
 
-    /**
-     * Représente un fichier. Utilisé pour que le toString ne renvoie que le nom
-     * de fichier.
-     * 
-     * @author sted
-     */
-    public class MyFile extends File {
-
-        /**
-         * Construit un MyFile à partir d'une String représentant le nom du
-         * fichier.
-         * 
-         * @param f
-         *            nom du fichier
-         */
-        public MyFile(String f) {
-            super(f);
-        }
-
-        /**
-         * Construit un MyFile à partir d'une String, représentant le nom du
-         * fichier, et un File, représentant le père de ce fichier.
-         * 
-         * @param parent
-         *            le parent du child
-         * @param child
-         *            le fichier
-         */
-        public MyFile(File parent, String child) {
-            super(parent, child);
-        }
-
-        /**
-         * Retourne le nom du fichier.
-         */
-        public String toString() {
-            return getName();
-        }
-    }
-    
     /** Racine de l'arbre */
     protected File root = null;
 
@@ -69,22 +32,34 @@ public class FileSystemTreeModel extends Observable implements TreeModel, Observ
 
     /** Permet de ne sélectionner que les répertoires */
     protected FileFilter filter = new FileFilter() {
-        public boolean accept(File pathname) {
-            return (pathname.isDirectory());
+        public boolean accept(File f) {
+            return f.isDirectory();
         }
     };
     
+    /** Le supra-modèle */
     protected FSeekerModel fsm = null;
-    
+
+    /**
+     * Retourne le supra-modèle.
+     * 
+     * @return supra-modèle
+     */
     public FSeekerModel getModel() {
         return fsm;
     }
-    
+
     public void update(Observable o, Object arg) {
         setChanged();
         notifyObservers(arg);
     }
-    
+
+    /**
+     * Construit un modèle d'arbre de fichiers.
+     * 
+     * @param fsm
+     *            le supra-modèle
+     */
     public FileSystemTreeModel(FSeekerModel fsm) {
         this.fsm = fsm;
         this.root = fsm.getURI();
@@ -94,15 +69,15 @@ public class FileSystemTreeModel extends Observable implements TreeModel, Observ
     public Object getRoot() {
         return root;
     }
-
+    
     public Object getChild(Object parent, int index) {
         File file = (File) parent;
-        String[] children = fileToString(file.listFiles(filter));
+        String[] children = FileUtilities.toStrings(file.listFiles(filter));
 
         if (children == null || index < 0 || index >= children.length)
             return null;
 
-        return new MyFile((File) parent, children[index]);
+        return new File((File) parent, children[index]);
     }
 
     public int getChildCount(Object parent) {
@@ -169,22 +144,6 @@ public class FileSystemTreeModel extends Observable implements TreeModel, Observ
         Iterator it = listeners.iterator();
         while (it.hasNext())
             ((TreeModelListener) it.next()).treeNodesChanged(ev);
-    }
-
-    /**
-     * Renvoie un tableau contenant les noms des fichiers d'un tableau de File.
-     * 
-     * @param files
-     *            tableau de Files dont retournés les noms
-     * @return un tableau de String ne contenant que les noms des fichiers
-     */
-    protected static String[] fileToString(File[] files) {
-        int num = files.length;
-        String[] dirs = new String[num];
-        for (int i = 0; i < num; i++)
-            dirs[i] = files[i].getName();
-
-        return dirs;
     }
 
 }
