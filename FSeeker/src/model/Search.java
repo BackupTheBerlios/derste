@@ -13,7 +13,7 @@ import java.util.List;
  * Effectue une recherche à partir d'une racine d'arborescence.
  * 
  * @author derosias
- */
+ *//*
 public class Search {
 
 	private final static int MAX_THREADS = 5;
@@ -75,9 +75,6 @@ public class Search {
 			this.root = root;
 		}
 
-		/**
-		 * Méthode principale effectuant la recherche.
-		 */
 		public void run() {
 			gui.setSearchPath(root.getRoot().toString());
 
@@ -144,4 +141,4 @@ public class Search {
 		return results.toString();
 	}
 
-}
+}*/
