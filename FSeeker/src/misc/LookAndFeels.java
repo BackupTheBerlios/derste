@@ -18,100 +18,151 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import java.io.File;
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
 /**
+ * 
+ * Classe de gestion des Look&Feels Java.
+ * 
  * @author sted
+ * @author brahim
+ *  
  */
 public final class LookAndFeels {
 
-	/**
-	 * Récupère la liste des look 'n feels installés.
-	 * 
-	 * @return la map (nom look 'n feel) => (nom de sa classe)
-	 */
-	private static Map getInstalledLookAndFeels() {
-		LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
-		Map lfmap = new HashMap();
+    private static final String SKINSDIR = "skins";
 
-		for (int i = 0; i < info.length; i++) {
-			String lf = info[i].getName();
-			String classe = info[i].getClassName();
-			lfmap.put(lf, classe);
-		}
+    /**
+     * Récupère la liste des look 'n feels installés.
+     * 
+     * @return la map (nom look 'n feel) => (nom de sa classe)
+     */
+    private static Map getInstalledLookAndFeels() {
+        LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
+        Map lfmap = new HashMap();
 
-		return lfmap;
-	}
+        for (int i = 0; i < info.length; i++) {
+            String lf = info[i].getName();
+            String classe = info[i].getClassName();
+            lfmap.put(lf, classe);
+        }
 
-	/**
-	 * Renvoie le menu des look 'n feels.
-	 * 
-	 * @param c
-	 *            généralement, la jframe de l'application, qu'on mettra à jour
-	 *            quand l'utilisateur changera le look 'n feel.
-	 * @return le menu des l&f
-	 */
-	public static JMenu getLookAndFeelsMenu(final Component c) {
-		JMenu menu = new JMenu("Look 'n Feels");
-		ButtonGroup bg = new ButtonGroup();
-		Map lfmap = getInstalledLookAndFeels();
+        return lfmap;
+    }
 
-		Iterator it = lfmap.keySet().iterator();
+    /**
+     * Renvoie le menu des look 'n feels.
+     * 
+     * @param c
+     *            généralement, la jframe de l'application, qu'on mettra à jour
+     *            quand l'utilisateur changera le look 'n feel.
+     * @return le menu des l&f
+     */
+    public static JMenu getLookAndFeelsMenu(final Component c) {
+        JMenu menu = new JMenu("Look 'n Feels");
+        ButtonGroup bg = new ButtonGroup();
+        Map lfmap = getInstalledLookAndFeels();
 
-		while (it.hasNext()) {
+        Iterator it = lfmap.keySet().iterator();
 
-			String clef = (String) it.next();
-			final String classe = (String) lfmap.get(clef);
-			boolean natif = classe.equals(UIManager
-					.getSystemLookAndFeelClassName());
+        /* On ajoute les Look&Feels par défaut du systéme */
+        while (it.hasNext()) {
 
-			JRadioButtonMenuItem item = new JRadioButtonMenuItem(clef, natif);
+            String clef = (String) it.next();
+            final String classe = (String) lfmap.get(clef);
+            boolean natif = classe.equals(UIManager
+                    .getSystemLookAndFeelClassName());
 
-			item.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent ae) {
-					try {
-						UIManager.setLookAndFeel(classe);
-					} catch (ClassNotFoundException e) {
-						System.err.println("Classe non trouvée : "
-								+ e.getMessage());
-					} catch (InstantiationException e) {
-						System.err.println("Erreur d'instanciation : "
-								+ e.getMessage());
-					} catch (IllegalAccessException e) {
-						System.err
-								.println("Erreur d'accès : " + e.getMessage());
-					} catch (UnsupportedLookAndFeelException e) {
-						System.err.println("L&F non géré : " + e.getMessage());
-					}
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(clef, natif);
 
-					// Tout mettre à jour !
-					SwingUtilities.updateComponentTreeUI(c);
-				}
-			});
+            item.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    try {
+                        UIManager.setLookAndFeel(classe);
+                    } catch (ClassNotFoundException e) {
+                        System.err.println("Classe non trouvée : "
+                                + e.getMessage());
+                    } catch (InstantiationException e) {
+                        System.err.println("Erreur d'instanciation : "
+                                + e.getMessage());
+                    } catch (IllegalAccessException e) {
+                        System.err
+                                .println("Erreur d'accès : " + e.getMessage());
+                    } catch (UnsupportedLookAndFeelException e) {
+                        System.err.println("L&F non géré : " + e.getMessage());
+                    }
 
-			bg.add(item);
-			menu.add(item);
-		}
+                    // Tout mettre à jour !
+                    SwingUtilities.updateComponentTreeUI(c);
+                }
+            });
 
-		return menu;
-	}
-	
-	/**
-	 * Fixe le Look & Feel à celui du système sous-jacent.
-	 */
-	public static void changeLF() {
-		changeLF(UIManager.getSystemLookAndFeelClassName());
-	}
-	
-	/**
-	 * Fixe le Look & Feel à celui spécifié.
-	 */
-	public static void changeLF(String name) {
-		try {
-			UIManager.setLookAndFeel(name);
-		} catch (UnsupportedLookAndFeelException e) {
-		} catch (IllegalAccessException e) {
-		} catch (ClassNotFoundException e) {
-		} catch (InstantiationException e) {
-		}
-	}
+            bg.add(item);
+            menu.add(item);
+        }
+
+        /* On ajoute les Look&Feels skinlf */
+        final String clef = "themepack.zip";
+        /* Les skins L&F ne sont pas natifs */
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(clef, false);
+
+        item.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                changeSkin(clef);
+                //			  Tout mettre à jour !
+                SwingUtilities.updateComponentTreeUI(c);
+            }
+        });
+
+        bg.add(item);
+        menu.add(item);
+
+        return menu;
+    }
+
+    /**
+     * Fixe le Look & Feel à celui du système sous-jacent.
+     */
+    public static void changeLF() {
+        changeLF(UIManager.getSystemLookAndFeelClassName());
+    }
+
+    /**
+     * Fixe le Look & Feel à celui spécifié.
+     */
+    public static void changeLF(String name) {
+        try {
+            UIManager.setLookAndFeel(name);
+        } catch (UnsupportedLookAndFeelException e) {
+        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException e) {
+        }
+    }
+
+    /**
+     * Méthode qui utilise la librairie skinlf pour affecter le L&F particulier
+     * à l'<code>UIManager</code>
+     * 
+     * @param theme
+     */
+    public static void changeSkin(String theme) {
+
+        try {
+
+            // On définit le skin à utiliser
+            Skin theSkinToUse = SkinLookAndFeel.loadThemePack(SKINSDIR
+                    + File.separatorChar + theme);
+            SkinLookAndFeel.setSkin(theSkinToUse);
+
+            // Maitenant, on applique le Skin séléctionné
+            UIManager.setLookAndFeel(new SkinLookAndFeel());
+            //SwingUtilities.updateComponentTreeUI();
+        } catch (Exception xxx) {
+            System.err.println("Ne peut pas charger le théme " + theme);
+        }
+    }
 
 }
