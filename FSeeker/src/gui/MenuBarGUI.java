@@ -43,7 +43,7 @@ public class MenuBarGUI extends JMenuBar {
         menu.add(menuItem);
         add(menu);
 
-        menu = new JMenu("Edition");
+        /*menu = new JMenu("Edition");
         menuItem = new JMenuItem("Annuler", KeyEvent.VK_C);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -51,7 +51,7 @@ public class MenuBarGUI extends JMenuBar {
             }
         });
         menu.add(menuItem);
-        menu.addSeparator();
+        menu.addSeparator();*/
         
         
         add(menu);
