@@ -15,12 +15,13 @@ import model.ListImagesModel;
 
 /**
  * @author brahim
+ * @author Sted
  */
 public class ListImagesMouseListener extends MouseAdapter {
 	protected JList list;
 
 	public ListImagesMouseListener(ListImagesGUI list) {
-		this.list = list.getList();
+		this.list = list;
 	}
 
 	public void mouseClicked(MouseEvent e) {
