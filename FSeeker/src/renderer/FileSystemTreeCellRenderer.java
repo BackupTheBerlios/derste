@@ -19,6 +19,12 @@ import misc.ImagesMap;
  */
 public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
 
+	protected Object root = null;
+	
+	public FileSystemTreeCellRenderer(Object root) {
+		this.root = root;
+	}
+	
     public Component getTreeCellRendererComponent(JTree tree, Object value,
             boolean selected, boolean expanded, boolean leaf, int row,
             boolean hasFocus) {
@@ -28,7 +34,8 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
         if (value == null)
             return this;
                 
-        setText(((File) value).getName());
+        if (root != value)
+        	setText(((File) value).getName());
         
         if (expanded)
             setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_OPENED_IMAGE));

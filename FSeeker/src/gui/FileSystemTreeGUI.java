@@ -31,7 +31,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
 
 		setModel(m);
 		setEditable(true);
-		setCellRenderer(new FileSystemTreeCellRenderer());
+		setCellRenderer(new FileSystemTreeCellRenderer(m.getRoot()));
 
 		// Par défaut, le JTree ne s'enregistre pas
 		ToolTipManager.sharedInstance().registerComponent(this);
@@ -43,6 +43,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
 	}
 
 	public void update(Observable o, Object caller) {
+		// Si c'est lui même qui a provoqué l'événement, pas besoin de lui dire
 		if (caller != this)
 			setDirectory(m.getModel().getURI());
 	}
