@@ -33,7 +33,8 @@ public class ImagesMap {
 	/** Les images 'spéciales' */
 	private static final String	
 		DEFAULT_IMAGE = EXTENSIONS + "default.png",
-		DIRECTORY_IMAGE = EXTENSIONS + "directory.png";
+		DIRECTORY_OPENED_IMAGE = EXTENSIONS + "folder_yellow.png",
+		DIRECTORY_CLOSED_IMAGE = EXTENSIONS + "folder_yellow_open.png";
 
 	/**
 	 * Renvoie un objet Icon à partir du chemin de image. Si le chemin n'est pas
@@ -55,8 +56,9 @@ public class ImagesMap {
 			images.put(image, pic);
 			return pic;
 		}
-
-		return null;
+		
+		// On tente de mettre l'image par défaut
+		return image.equals(DEFAULT_IMAGE) ? null : getDefault();
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class ImagesMap {
 	public static Icon getImage(File file) {
 		// Image spéciale pour tous les répertoires
 		if (file.isDirectory())
-			return get(DIRECTORY_IMAGE);
+			return get(DIRECTORY_CLOSED_IMAGE);
 
 		// On a un fichier, on regarde son extension
 		String s = file.getName();
@@ -95,12 +97,21 @@ public class ImagesMap {
 	}
 	
 	/**
-	 * Retourne l'icône par défaut, représentant un répertoire.
+	 * Retourne l'icône par défaut, représentant un répertoire ouvert.
 	 * 
-	 * @return icône d'un répertoire par défaut
+	 * @return icône d'un répertoire ouvert
 	 */
-	public static Icon getDirectory() {
-		return get(DIRECTORY_IMAGE);
+	public static Icon getDirectoryOpened() {
+		return get(DIRECTORY_OPENED_IMAGE);
+	}
+	
+	/**
+	 * Retourne l'icône par défaut, représentant un répertoire fermé.
+	 * 
+	 * @return icône d'un répertoire fermé
+	 */
+	public static Icon getDirectoryClosed() {
+		return get(DIRECTORY_CLOSED_IMAGE);
 	}
 	
 }
