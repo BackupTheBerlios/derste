@@ -34,7 +34,7 @@ public class FileSystemTreeModel extends Observable implements TreeModel,
     /** Permet de ne sélectionner que les répertoires */
     protected FileFilter filter = new FileFilter() {
         public boolean accept(File f) {
-            return f.isDirectory();
+        	return f.isDirectory() && (f.isHidden() ? fsm.showHidden() : true); 
         }
     };
 
@@ -92,7 +92,8 @@ public class FileSystemTreeModel extends Observable implements TreeModel,
 
     public boolean isLeaf(Object node) {
         // return ((File) node).isFile();
-        return false;
+    	File[] children = ((File) node).listFiles();
+    	return  children == null || children.length == 0;
     }
 
     public int getIndexOfChild(Object parent, Object child) {
