@@ -30,11 +30,7 @@ public class TableModelControler extends MouseAdapter {
         if (e.getClickCount() == 2) {
            setURI(e);           
         }
-        //}else if (e.getClickCount() == 4) {
-        //    System.out.println("4 clicks");
-       // }
-        //if (e.getClickCount() == 2) 
-        //       System.out.println("2 clicks");
+     
     }
     
     public void setURI(InputEvent e){
