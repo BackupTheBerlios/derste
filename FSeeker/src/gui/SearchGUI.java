@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -46,6 +47,16 @@ public class SearchGUI extends JPanel {
 	/** Le path de la recherche (where.getText()) */
 	protected String searchPath = null;
 
+	/** Indique si la recherche doit respecter la casse ou non */
+	protected JCheckBox casse = new JCheckBox("Insensible à la casse");
+	
+	/** Le chemin où la recherche s'effectue */
+	protected JTextField seekingDir = new JTextField();
+	{
+		seekingDir.setEditable(false);
+		seekingDir.setBorder(null);
+	}
+	
 	/** La fenêtre principale */
 	protected FSeeker fs = null;
 
@@ -110,7 +121,9 @@ public class SearchGUI extends JPanel {
 
 			// PAN, on a notre pattern échappé
 			this.pattern = pfinal;
-
+			
+			if (casse.isSelected())
+				this.pattern = this.pattern.toLowerCase();
 		}
 
 		/**
@@ -163,6 +176,8 @@ public class SearchGUI extends JPanel {
 					return;
 				int nbChildren = files.length;
 
+				seekingDir.setText(in.getAbsolutePath());
+				
 				for (int i = 0; i < nbChildren; i++) {
 
 					if (!continueSearch)
@@ -175,18 +190,18 @@ public class SearchGUI extends JPanel {
 						continue;
 
 					// On a un _fichier_ ou on a un _répertoire_
-					// TODO lien symbolique, ne pas y aller :\\
+					// TODO lien symbolique, ne pas y aller :\\ JNI POWA
 					if (!f.isDirectory()) {
 
-						if (f.getName().matches(".*" + pattern + ".*")) {
+						if ((casse.isSelected() ? f.getName() : f.getName().toLowerCase()).matches(pattern)) {
 							Vector v = new Vector(5);
 							// "Nom du fichier" "Chemin" "Type" "Taille" "Date
 							// de Modification"
 							FileDetails fd = new FileDetails(f);
 							v.add(f);
-							v.add(f.getAbsolutePath());
-							v.add(fd.getType());
+							v.add(f.getParent());
 							v.add(fd.getSize());
+							v.add(fd.getType());							
 							v.add(fd.getLastModified());
 							addResult(v);
 						}
@@ -202,6 +217,24 @@ public class SearchGUI extends JPanel {
 			 */
 			public void run() {
 				searchIn(where);
+				
+				stop.setEnabled(false);
+				ok.setEnabled(true);
+				casse.setEnabled(true);
+				seekingDir.setText("");
+				
+				if (dtm.getRowCount() == 0)
+					GU
+							.info("Aucun fichier correspondant au critère : \""
+									+ SearchGUI.this.pattern.getText()
+									+ "\" dans "
+									+ searchPath + " n'a été trouvé.");
+				else
+					GU
+							.info(dtm.getRowCount()
+									+ " fichier(s) correspondant(s) au critère : \""
+									+ SearchGUI.this.pattern.getText() + "\" dans "
+									+ searchPath + " ont été trouvés.");
 			}
 		}
 
@@ -262,6 +295,8 @@ public class SearchGUI extends JPanel {
 		c.ipady = 0;
 		make(pattern, c, p);
 
+		make(casse, c, p);
+		
 		// Espace
 		c.ipady = 20;
 		make(new JLabel(), c, p);
@@ -275,9 +310,11 @@ public class SearchGUI extends JPanel {
 		make(ok, c, p);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		make(stop, c, p);
-
+		make(seekingDir, c, p);
+		
 		add(p, BorderLayout.NORTH);
-
+		
+		
 		// LISTENERS //////////////////////////////////////
 
 		stop.setEnabled(false);
@@ -299,14 +336,17 @@ public class SearchGUI extends JPanel {
 				}
 				ok.setEnabled(false);
 				stop.setEnabled(true);
+				casse.setEnabled(false);
 
 				// La table des résultats
-				FileTableModel dtm = new FileTableModel(null, FileTableModel.SEARCH_MODE);
+				final FileTableModel dtm = new FileTableModel(null,
+						FileTableModel.SEARCH_MODE);
 				FileTableGUI results = new FileTableGUI(dtm);
 
 				// On ajoute un nouveau tab dans FSeeker
-				SearchGUI.this.fs.addTab("Recherche : " + searchPath + " (" + pattern.getText() + ")", null,
-						new JScrollPane(results), "Résultats de la recherche");
+				SearchGUI.this.fs.addTab("Recherche : " + searchPath + " ("
+						+ pattern.getText() + ")", null, new JScrollPane(
+						results), "Résultats de la recherche");
 
 				// On lance la recherche !
 				final Search search = new Search(dtm,
@@ -317,8 +357,6 @@ public class SearchGUI extends JPanel {
 				stop.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						search.stop();
-						stop.setEnabled(false);
-						ok.setEnabled(true);
 					}
 				});
 			}

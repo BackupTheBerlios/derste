@@ -54,7 +54,10 @@ public class FileTableControler extends MouseAdapter implements KeyListener,
 	 */
 	public void mouseClicked(MouseEvent e) {
 		// Si on a un clic droit > popup
-		if (SwingUtilities.isRightMouseButton(e)) {
+		// PAS pour le SEARCH_MODE
+		System.out.println(m);
+		
+		if (SwingUtilities.isRightMouseButton(e) && m.getMode() != FileTableModel.SEARCH_MODE) {
 			Object o = getSelectedObject(e);
 			if (o != null) {
 				File f = (File) o;

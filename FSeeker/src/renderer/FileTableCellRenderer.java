@@ -14,7 +14,12 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import misc.ImagesMap;
+import misc.file.CompareByLastModified;
+import misc.file.CompareByName;
+import misc.file.CompareBySize;
+import misc.file.CompareByType;
 import misc.file.FileUtilities.FileDetails;
+import model.FileTableModel;
 
 /**
  * Classe de rendu graphique pour la vue de détails.
@@ -23,6 +28,22 @@ import misc.file.FileUtilities.FileDetails;
  * @author Sted
  */
 public class FileTableCellRenderer extends DefaultTableCellRenderer {
+
+	/** Le modèle associé */
+	protected FileTableModel m = null;
+
+	/** La couleur de la colonne triée */
+	protected Color sortColor = new Color(240, 220, 200);
+
+	/**
+	 * Construit un renderer.
+	 * 
+	 * @param m
+	 *            le modèle associée à la vue
+	 */
+	public FileTableCellRenderer(FileTableModel m) {
+		this.m = m;
+	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
@@ -34,9 +55,27 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 			Color c = table.getBackground();
 
 			if ((row % 2) == 0)
-				setBackground(new Color(c.getRGB() - 5460)); // Mouahah // C KOI CA TU FAIS NIMP STEPHANE
+				setBackground(new Color(c.getRGB() - 5460)); // Mouahah // C KOI
+			// CA TU FAIS NIMP
+			// STEPHANE
 			else
 				setBackground(c);
+
+			if (m.getMode() == FileTableModel.SIMPLE_MODE) {
+				if (m.getModel().getComparator() == CompareByName.get()
+						&& column == 0)
+					setBackground(sortColor);
+				else if (m.getModel().getComparator() == CompareBySize.get()
+						&& column == 1)
+					setBackground(sortColor);
+				else if (m.getModel().getComparator() == CompareByType.get()
+						&& column == 2)
+					setBackground(sortColor);
+				else if (m.getModel().getComparator() == CompareByLastModified
+						.get()
+						&& column == 3)
+					setBackground(sortColor);
+			}
 		}
 
 		return this;
@@ -54,7 +93,8 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
 				setToolTipText(fd.getToolTip());
 				setFont(fd.getFont());
 				setHorizontalAlignment(JLabel.LEFT);
-				setText(FileSystemView.getFileSystemView().getSystemDisplayName(file));
+				setText(FileSystemView.getFileSystemView()
+						.getSystemDisplayName(file));
 
 			} else if (value instanceof Date) {
 				setHorizontalAlignment(JLabel.LEFT);
