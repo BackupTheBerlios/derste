@@ -61,7 +61,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
 		if (getRowForLocation(clic.x, clic.y) != -1) {
 			File f = (File) getPathForLocation(clic.x, clic.y)
 					.getLastPathComponent();
-			return FileUtilities.getDetails(f);
+			return FileUtilities.getToolTip(f);
 		}
 		return null;
 	}

@@ -43,12 +43,11 @@ public class ListImagesGUI extends JList /*implements Observer*/ {
     public ListImagesGUI(ListImagesModel m, boolean simple) {
         super(m);
     	this.m = m;
-        //m.addObserver(this);
 
         setVisibleRowCount(0);
         setDragEnabled(true);
-        JPopupMenu popup = new JPopupMenu("Options");
-        popup.add(new JMenuItem("Couper", KeyEvent.VK_V));
+        //JPopupMenu popup = new JPopupMenu("Options");
+        //popup.add(new JMenuItem("Couper", KeyEvent.VK_V));
         //setComponentPopupMenu(popup);
         
         // Le prototypage accélère la vitesse d'affichage (pas de calcul à
@@ -79,7 +78,7 @@ public class ListImagesGUI extends JList /*implements Observer*/ {
         Rectangle r = getCellBounds(index, index);
         if (r.contains(clic)) {
             File f = (File) m.getElementAt(index);
-            return FileUtilities.getDetails(f);
+            return FileUtilities.getToolTip(f);
         }
         return null;
     }
