@@ -2,3 +2,5 @@
 /resources ? /resources/images ? qué esta ?
 
 - UNE SEULE CLASSE PAR FICHIER.
+
+- Virer les templates de Eclipse si tu les modifs pas. (y compris les trucs @see blabla dont on se fout)
