@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -10,7 +11,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Vector;
 
+import javax.swing.Icon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -50,7 +53,7 @@ public class FSeeker extends JFrame {
 	/** Le panel central, principal, destinées à accueillir les différentes vues */
 	private JPanel main = null;
 
-	private JPanel subleft = null;
+	private JComponent subleft = null;
 
 	private JPanel left = null;
 
@@ -59,7 +62,9 @@ public class FSeeker extends JFrame {
 
 	private FileSystemTreeGUI fstgui = null;
 
-	private JPanel searchgui = new JPanel();
+	private SearchGUI searchgui = null;
+
+	private JTabbedPane tabs = null;
 
 	/** Construit la fenêtre par défaut de FSeeker */
 	public FSeeker(FSeekerModel fsm) {
@@ -95,10 +100,15 @@ public class FSeeker extends JFrame {
 		return fsm;
 	}
 
-	public void setSubLeftPanel(JPanel p) {
+	public void addTab(String title, Icon icon, Component component, String tip) {
+		tabs.addTab(title, icon, component, tip);
+		tabs.setSelectedComponent(component);
+	}
+
+	public void setSubLeftPanel(JComponent c) {
 		if (subleft != null)
 			left.remove(subleft);
-		subleft = p;
+		subleft = new JScrollPane(c);
 		left.add(subleft, BorderLayout.CENTER);
 		left.revalidate();
 		left.repaint();
@@ -134,7 +144,8 @@ public class FSeeker extends JFrame {
 		if ("Arborescence".equals(cb.getSelectedItem())) {
 			p.add(fstgui);
 		} else if ("Recherche".equals(cb.getSelectedItem())) {
-			p.add(searchgui);
+			searchgui.setSearchPath(fsm.getURI());
+			p = searchgui;
 		}
 
 		return p;
@@ -144,6 +155,9 @@ public class FSeeker extends JFrame {
 		// L'arbre
 		FileSystemTreeModel fstm = new FileSystemTreeModel(fsm);
 		fstgui = new FileSystemTreeGUI(fstm);
+
+		// Recherche
+		searchgui = new SearchGUI(this);
 	}
 
 	public JPanel getDefaultView() {
@@ -176,7 +190,7 @@ public class FSeeker extends JFrame {
 				FileTableModel.SPECIAL_MODE);
 		FileTableGUI ftguiSpecial = new FileTableGUI(ftmodelSpecial);
 
-		JTabbedPane tabs = new JTabbedPane();
+		tabs = new JTabbedPane();
 
 		JScrollPane viewIcon = new JScrollPane(ligui);
 		JScrollPane viewList = new JScrollPane(lgui);
