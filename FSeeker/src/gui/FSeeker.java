@@ -28,6 +28,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import preview.PreviewManager;
+
 import misc.GU;
 import misc.PopupManager;
 import model.FSeekerModel;
@@ -71,6 +73,8 @@ public class FSeeker extends JFrame {
 	private FileSystemTreeGUI fstgui = null;
 
 	private SearchGUI searchgui = null;
+	
+	private PreviewManager preview = null;
 
 	private JList bookmarksgui = null;
 	
@@ -155,7 +159,12 @@ public class FSeeker extends JFrame {
 			p.add(fstgui);
 		} else if ("Recherche".equals(cb.getSelectedItem())) {
 			searchgui.setSearchPath(fsm.getURI());
-			p = searchgui; // c'est déjà un panel
+			p = searchgui;
+		}else if("Information".equals(cb.getSelectedItem())){
+		    preview = new PreviewManager(fsm);
+		    preview.update(fsm, null);// Appel explicite sinon il faut créer
+		    		//la preview dés le lancement de l'application
+		    p = preview;			
 		} else if ("Favoris".equals(cb.getSelectedItem())) {
 			p.add(bookmarksgui);
 		}
@@ -291,3 +300,6 @@ public class FSeeker extends JFrame {
 	}
 
 }
+
+
+
