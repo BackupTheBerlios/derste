@@ -27,8 +27,9 @@ import javax.swing.border.Border;
 public class GU {
 
 	public static final char SEP = File.separatorChar;//System.getProperty("path.separator");
-
-	private static final String RESOURCES = "resources" + SEP + "images" + SEP;
+	
+	//Probléme de fichier ? Tout mettre dans images à la base
+	private static final String RESOURCES =  "images" + SEP;
 
 	/**
 	 * Centre une JFrame sur l'écran.
