@@ -1,5 +1,6 @@
 /*
  * Créé le 20 oct. 2004
+ *
  */
 package gui;
 
@@ -15,25 +16,63 @@ import model.*;
 import renderer.*;
 
 /**
+ * Classe qui étends JTable en permettant la représentation sous forme d'un
+ * tableau d'un systéme de fichier
+ * 
  * @author aitelhab
  *  
  */
-public class FileTableGUI extends JTable /* implements Observer */{
+public class FileTableGUI extends JTable {
 
-	protected FileTableModel m = null;
+    private final static int ROWMARGIN = 5;
 
-	public FileTableGUI(FileTableModel m) {
-		super(m);
-		this.m = m;
-		//m.addObserver(this);
+    private final static int ROWHEIGHT = 30;
 
-		getTableHeader().setReorderingAllowed(false);
+    private TableModel m;
 
-		setDefaultRenderer(Object.class, new FileTableCellRenderer());
+    public FileTableGUI(FileTableModel m) {
+        super(m);
+        this.m = m;
 
-		sortAllRows();
+        getTableHeader().setReorderingAllowed(false);
 
-		setShowGrid(false);
+        FileTableCellRenderer renderer = new FileTableCellRenderer();
+        this.setDefaultRenderer(Object.class, renderer);
+        this.setDefaultRenderer(Date.class, renderer);
+        this.setDefaultRenderer(File.class, renderer);
+
+        m.sortAllRows();//Tri des données
+
+        // propriétés de la JTable
+        setShowGrid(false);
+        setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        setRowHeight(ROWHEIGHT);
+        setRowMargin(ROWMARGIN);
+
+        //Fixe la taille des colonnes
+        initTableSize();// TODO ne pas coder en dur les valeurs de cette méthode
+        setDragEnabled(true);
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        addMouseListener(new TableModelControler(m));
+
+    }
+
+    /**
+     * A défaut de calculer la taille de l'objet placé dans une cellule on fixe
+     * les valeurs
+     */
+    public void initTableSize() {
+        TableColumn column = null;
+        for (int i = 0; i < this.getColumnCount(); i++) {
+            column = getColumnModel().getColumn(i);
+            //          Attribut à mettre en final static à tester
+            if (i == 3) {
+                column.setPreferredWidth(140); //Taille pour la Date
+            } else if (i == 1) {
+                column.setPreferredWidth(100); //Taille pour la taille
+            } else if (e.getClickCount() == 4) {
+        //    System.out.println("4 clicks");		setShowGrid(false);
 		setShowHorizontalLines(true);
 		setGridColor(Color.LIGHT_GRAY);
 
