@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,15 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 
 import misc.GU;
 import misc.ImagesMap;
-import model.FSeekerModel;
 import model.FileSystemTreeModel;
 import model.ListImagesModel;
 import model.URIModel;
@@ -52,62 +49,38 @@ public class FSeeker {
     /** La version du software */
     public final static String VERSION = "0.1a";
 
-    private File start = File.listRoots()[1];
-    
+    private File start = File.listRoots()[0];
+
     private JFrame f = null;
 
-    private FileSystemTreeGUI fstgui = null; 
     private FileSystemTreeModel fstm = null;
+
+    private ListImagesModel lim = null;
 
     private URIModel uriModel = null;
 
+    private FileSystemTreeGUI fstgui = null;
+
+    private ListImagesGUI ligui = null;
+
+    private URIGUI ugui = null;
+
     /** Le contrôleur de la barre d'outils */
-    private final static ToolBarControler toolBarControler = new ToolBarControler();
+    private final ToolBarControler toolBarControler = new ToolBarControler(this);
 
     /** Le panel central, principal, destinées à accueillir les différentes vues */
-    private JPanel main = new JPanel();
+    private JPanel main = null;
 
-    
     /** Construit la fenêtre par défaut de FSeeker */
-    public FSeeker(FSeekerModel fseekerModel) {
-        // TODO Dégager le model peut être, faudra voir
-                
+    public FSeeker() {
         f = new JFrame("FSeeker v" + VERSION);
         Container cp = f.getContentPane();
 
         // GU.changeLF();
         f.setJMenuBar(getDefaultMenuBar());
 
-        // Foutre la suite complétement à part après car ca dépend des vues
-        // qu'on veut ! (penser qu'on pourra config et avoir une autre au
-        // démarrage
-        main.setLayout(new GridLayout(1, 2));
-        fstm = new FileSystemTreeModel(File.listRoots()[1]);
-        fstgui = new FileSystemTreeGUI(fstm);
-        
-        // TODO
-        // Normalement, on devrait faire genre :
-        // ListImagesGUI ligui = new ListImagesGUI(fstm);
-        // Car c'est sensé être le même, et pas une duplication foireuse
-        final ListImagesModel model = new ListImagesModel(start);
-        ListImagesGUI ligui = new ListImagesGUI(model);
-        ///////////////////
-
-        // Barre de split
-        JSplitPane sp = new JSplitPane();
-        sp.setDividerLocation(200);
-        sp.setOneTouchExpandable(true);
-        sp.setTopComponent(new JScrollPane(fstgui));
-        sp.setBottomComponent(new JScrollPane(ligui));
-        main.add(sp);
-
-        fstgui.addTreeSelectionListener(new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent e) {
-                File f = (File) e.getPath().getLastPathComponent();
-                model.setDirectory(f);
-            }
-        });
-        ////////////////////////////
+        // La vue pas défaut (tree + icônes)
+        setView(getDefaultView());
 
         // Un border pour toolbar (en haut), statusbar (en bas), main (central)
         cp.setLayout(new BorderLayout());
@@ -122,6 +95,33 @@ public class FSeeker {
         GU.center(f);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
+    }
+
+    public JPanel getDefaultView() {
+        JPanel main = new JPanel();
+        main.setLayout(new GridLayout(1, 2));
+
+        fstm = new FileSystemTreeModel(start);
+        fstgui = new FileSystemTreeGUI(fstm);
+
+        lim = new ListImagesModel((File) fstm.getRoot());
+        ligui = new ListImagesGUI(lim);
+
+        JTabbedPane tp = new JTabbedPane();
+        tp.addTab("Icônes", ImagesMap.getDefault(), new JScrollPane(ligui),
+                "Vue avec les icônes");
+        tp.addTab("Liste", ImagesMap.getDefault(), null, "Vue en liste");
+        tp.addTab("Détails", ImagesMap.getDefault(), null, "Vue de détails");
+
+        // Barre de split
+        JSplitPane sp = new JSplitPane();
+        sp.setDividerLocation(200);
+        sp.setOneTouchExpandable(true);
+        sp.setTopComponent(new JScrollPane(fstgui));
+        sp.setBottomComponent(tp);
+        main.add(sp);
+
+        return main;
     }
 
     /**
@@ -150,10 +150,10 @@ public class FSeeker {
      * @param main
      *            le nouveau panel central
      */
-    public void setMain(JPanel main) {
+
+    public void setView(JPanel main) {
         this.main = main;
-        f.invalidate();
-        f.validate();
+        // TODO revalidate et tout le bord ne font rien, que faire..!
     }
 
     /**
@@ -194,39 +194,36 @@ public class FSeeker {
         tb.addSeparator();
 
         b = new JButton("Rechercher");
-        tb.add(b);
-        b.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JPanel p = new JPanel(new BorderLayout());
-
-                JPanel psearch = new JPanel();
-                psearch.add(new JLabel("Recherche"));
-                psearch.add(new JTextField(20));
-
-                p.add(psearch, BorderLayout.WEST);
-                p.add(new JTextArea(20, 20), BorderLayout.EAST);
-                System.out.println("on met " + p);
-                setMain(p);
-            }
-        });
-
-        b = new JButton();
-        b.setActionCommand("AFFICHAGE");
+        b.setActionCommand("SEARCHVIEW");
         b.addActionListener(toolBarControler);
         b.setIcon(ImagesMap.getDefault());
-        b.setToolTipText("Affichage");
+        b.setToolTipText("Rechercher un fichier ou un répertoire");
+        tb.add(b);
+
+        b = new JButton();
+        b.setActionCommand("TREEVIEW");
+        b.addActionListener(toolBarControler);
+        b.setIcon(ImagesMap.getDefault());
+        b.setToolTipText("Affichage avec l'arborescence sous forme d'arbre");
+        tb.add(b);
+
+        b = new JButton();
+        b.setActionCommand("MACOSVIEW");
+        b.addActionListener(toolBarControler);
+        b.setIcon(ImagesMap.getDefault());
+        b.setToolTipText("Affichage par thème à la MacOS");
         tb.add(b);
 
         tb.addSeparator();
 
         tb.add(new JLabel("Adresse : "));
         uriModel = new URIModel(start);
-        URIGUI ugui = new URIGUI(uriModel);
+        ugui = new URIGUI(uriModel);
         tb.add(ugui);
 
         fstm.addObserver(ugui);
         uriModel.addObserver(fstgui);
-        
+
         return tb;
     }
 
@@ -349,18 +346,14 @@ public class FSeeker {
      */
     public static void main(String args[]) {
         FSeeker fs = null;
-       
-        FSeekerModel fsm = new FSeekerModel();
-        
+
         if (args.length == 0) {
-            fs = new FSeeker(fsm);
+            fs = new FSeeker();
         } else {
             fs = new FSeeker(args[0]);
         }
 
-        
         new FSeekerControler(fs);
     }
-
 
 }

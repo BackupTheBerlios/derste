@@ -29,8 +29,8 @@ public class FileSystemTreeGUI extends JTree implements Observer {
         setEditable(true);
         setCellRenderer(new FileSystemTreeCellRenderer());
 
-        FileSystemTreeControler fsc = new FileSystemTreeControler(m);
-        addTreeSelectionListener(fsc);
+        FileSystemTreeControler fstc = new FileSystemTreeControler(m);
+        addTreeSelectionListener(fstc);
 
         /*
          * addTreeSelectionListener(new TreeSelectionListener() { public void
@@ -53,7 +53,7 @@ public class FileSystemTreeGUI extends JTree implements Observer {
         System.out.println("FileSystemTreeGUI.update() / " + o);
         if (o instanceof FileSystemTreeModel) {
             FileSystemTreeModel fstm = (FileSystemTreeModel) o;
-            setDirectory(fstm.getCurrentSelection());
+            setDirectory(fstm.getCurrentDirectory());
         } else if (o instanceof URIModel) {
             URIModel urim = (URIModel) o;
             setDirectory(urim.getURI());

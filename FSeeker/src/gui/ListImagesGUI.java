@@ -19,7 +19,7 @@ public class ListImagesGUI extends JList {
         this.m = m;
         setModel(m);
         
-        //setDragEnabled(true);
+        setDragEnabled(true);
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
         setCellRenderer(new ImagesListCellRenderer());
         

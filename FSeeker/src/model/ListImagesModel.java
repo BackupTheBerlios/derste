@@ -3,10 +3,13 @@
  */
 package model;
 
-import javax.swing.ListModel;
-import javax.swing.event.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 /**
  * @author brahim
@@ -47,7 +50,7 @@ public class ListImagesModel implements ListModel {
         if (l != null)
             listeners.remove(l);
     }
-    
+
     public void setDirectory(File dir) {
         this.dir = dir;
         fire(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0,

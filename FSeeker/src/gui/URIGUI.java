@@ -1,8 +1,5 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -10,6 +7,7 @@ import javax.swing.JTextField;
 
 import model.FileSystemTreeModel;
 import model.URIModel;
+import controler.URIControler;
 
 /**
  * Représente l'URI graphiquement.
@@ -22,17 +20,6 @@ public class URIGUI extends JTextField implements Observer {
     private URIModel m = null;
 
     /**
-     * Le contrôleur associé à l'évènement d'appui sur Entrée.
-     * 
-     * @author derosias
-     */
-    private class OnEnterListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            m.setURI(new File(getText()));
-        }
-    }
-
-    /**
      * Construit un gui d'uri avec un modèle par défaut.
      * 
      * @param m
@@ -41,9 +28,13 @@ public class URIGUI extends JTextField implements Observer {
     public URIGUI(URIModel m) {
         this.m = m;
         m.addObserver(this);
-        addActionListener(new OnEnterListener());
+        addActionListener(new URIControler());
         setColumns(20);
         update(m, null);
+    }
+    
+    public URIModel getModel() {
+        return m;
     }
 
     /**
@@ -51,15 +42,15 @@ public class URIGUI extends JTextField implements Observer {
      */
     public void update(Observable o, Object arg) {
         System.out.println("URIGUI.update() / " + o);
-        
+
         if (o instanceof URIModel) {
             URIModel urim = (URIModel) o;
             setText(urim.getURI().getAbsolutePath());
-        
+
         } else if (o instanceof FileSystemTreeModel) {
             FileSystemTreeModel fstm = (FileSystemTreeModel) o;
-            m.setURI(fstm.getCurrentSelection());
+            m.setURI(fstm.getCurrentDirectory());
         }
-        
+
     }
 }

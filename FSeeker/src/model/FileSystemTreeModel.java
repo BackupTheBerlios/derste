@@ -20,15 +20,15 @@ import javax.swing.tree.TreePath;
  */
 public class FileSystemTreeModel extends Observable implements TreeModel {
 
-    protected File currentSelection = null;
-    public void setCurrentSelection(File current) {
-        System.out.println("FileSystemTreeModel.setCurrentSelection()");
-        currentSelection = current;
+    protected File currentDirectory = null;
+    public void setCurrentDirectory(File current) {
+        System.out.println("FileSystemTreeModel.setCurrentDirectory()");
+        currentDirectory = current;
         setChanged();
         notifyObservers();
     }
-    public File getCurrentSelection() {
-        return currentSelection;
+    public File getCurrentDirectory() {
+        return currentDirectory;
     }
     
     /**

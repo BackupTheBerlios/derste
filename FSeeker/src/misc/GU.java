@@ -131,7 +131,7 @@ public class GU {
 		JFrame frame = new JFrame(title);
 		frame.getContentPane().add(comp);
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 	}
 
