@@ -74,6 +74,8 @@ public class GU {
 	 * @return
 	 */
 	public static Icon getImage(String location) {
+		// TODO ne pas oublier quand ça sera prêt de faire le lien avec la
+		// classe dédiées aux images
 		return new ImageIcon(IMAGES + location);
 	}
 
@@ -118,7 +120,7 @@ public class GU {
 	 *            URL du fichier à charger dans le JEditorPane
 	 * @return Un JEditorPane affichant un fichier html
 	 */
-	// TODO: je pense pas que ça ait à faire quelque chose ici ça	
+	// TODO: je pense pas que ça ait à faire quelque chose ici ça
 	public static JEditorPane createEditor(String url) {
 		JEditorPane HelpPane = new JEditorPane();
 		HelpPane.setEditable(false);
