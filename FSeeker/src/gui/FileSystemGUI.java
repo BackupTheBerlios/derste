@@ -10,12 +10,13 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
+
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSplitPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -26,6 +27,7 @@ import javax.swing.tree.TreeCellRenderer;
 
 import model.FileSystemModel;
 import misc.GU;
+import misc.FileExtensionMap;
 
 /**
  * @author brahim
@@ -63,8 +65,10 @@ public class FileSystemGUI extends JPanel {
 			}
 		});
 		JSplitPane sp = new JSplitPane();
-		sp.setTopComponent(tree);
-		sp.setBottomComponent(text);
+		JScrollPane scrollTop = new JScrollPane(tree);
+		JScrollPane scrollBottom = new JScrollPane(text);		
+		sp.setTopComponent(scrollTop);
+		sp.setBottomComponent(scrollBottom);
 		add(sp);
 
 	}
@@ -92,24 +96,16 @@ class MyTreeModelListener implements TreeModelListener {
 	}
 }
 
-class MyCellRenderer extends JLabel implements TreeCellRenderer {
-	protected ImageIcon directoryOpened = new ImageIcon("diropen.gif"),
-			directoryClosed = new ImageIcon("dir.gif");
+class MyCellRenderer extends JLabel implements TreeCellRenderer {	
 
-	protected HashMap extimg = new HashMap();
-	{
-		extimg.put("txt", "txt.gif");
-		extimg.put("java", "java.gif");
-		extimg.put("class", "class.gif");
-		extimg.put("gif", "gif.gif");
-	}
-
+	
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
 			boolean selected, boolean expanded, boolean leaf, int row,
-			boolean hasFocus) {
+			boolean hasFocus) {		
 		setText(value.toString());
-		//Utiliser setIcon
-
+		//Associe un icone au fichier
+		FileExtensionMap map = new FileExtensionMap((File)value);
+		setIcon(map.getIcon(""));
 		return this;
 	}
 }
