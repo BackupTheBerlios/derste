@@ -1,20 +1,10 @@
-- Uniformiser le truc pour les images 
-
-OK ON MET TOUT DANS images à la base du projet 
-tu apelle GU.createImage.. pour creer un icone t tu lui passe le nom du fichier c tt simple 
-comme ca le chemin est gere en attribut dans la classe GU
-Si on fait ca pourtant pas de probléme 
-CHEZ MOI CA MARCHE LA JE COMMIT ET PRS DONC CHEZ TOI CA DOIT MARCHER LES ICONES @+
-
-- UNE SEULE CLASSE PAR FICHIER. (je réglerai le tout plus tard)
-car encore quelques détail (vérifier selon le model MVC)
-
-- Virer les templates de Eclipse si tu les modifs pas. (y compris les trucs @see blabla dont on se fout)
-
--A NOTER QUE CA MARCHE POUR les principales fonctionnalites pour l'affcihage dan un JLIst
-mais pas optimisé (pas de Layou) .. no prob je m'y attele
-
--TRES IMPORTANT REMET A JOUR TES CLASSE SANS TOUCHER AUX MIENNES CAR J'EN AI ECRASER 
-URGENT 
-
--ENFIN JE DEGOMMERAI SUREMENT LE DOSSIER EVENT MAIS LAISSE POUR LE MOMENT PAS GRAVE
+- UNE SEULE CLASSE PAR FICHIER.
+- Utiliser le modèle MVC
+- Virer les templates de Eclipse. (y compris les trucs @see blabla)
+- Ne pas oublier de gérer TOUTES les images par une classe spécialisée
+  -> Ne pas appliquer ça que pour les extensions.
+  -> Créer une classe où dès la première fois où on charge une image,
+     elle là fous dans une hash (clef = nom, valeur = Icon), et retournera
+     la valeur de la hash directement les autres fois (puisque déjà créée)
+  -> FileExtensionMap => à virer, c'est n'imp
+  -> créer une classe ImagesMap, ne pas oublier de relier à GU.getImage
