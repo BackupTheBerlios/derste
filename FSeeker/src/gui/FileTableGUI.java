@@ -57,6 +57,8 @@ public class FileTableGUI extends JTable {
 
     }
 
+   
+    
     /* Appel packColum sur toutes les colonne */
     public void packColumns(JTable table, int margin) {
         for (int c = 0; c < table.getColumnCount(); c++) {
