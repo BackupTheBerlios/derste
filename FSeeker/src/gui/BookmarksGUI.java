@@ -53,7 +53,7 @@ import model.FSeekerModel;
  */
 public class BookmarksGUI extends JList {
 
-	/** Le omdèle contenant les bookmarks */
+	/** Le modèle contenant les bookmarks */
 	protected DefaultListModel m = new DefaultListModel();
 
 	/** La couleur de fond de la liste (pour colorer le panel du renderer avec) */
@@ -63,7 +63,7 @@ public class BookmarksGUI extends JList {
 	protected String BOOKMARKS_FILE = "bookmarks";
 
 	/** Le délimiteur utilisé dans le fichier des bookmarks */
-	protected String BOOKMARK_DELIMITER = "$@$";
+	protected String BOOKMARK_DELIMITER = "::";
 
 	/** Le supra-modèle */
 	protected FSeekerModel fsm = null;
@@ -94,6 +94,7 @@ public class BookmarksGUI extends JList {
 			Bookmark b = null;
 			file = new PrintWriter(new BufferedWriter(new FileWriter(
 					BOOKMARKS_FILE)));
+			
 			for (int i = 0; i < m.getSize(); i++) {
 				b = (Bookmark) m.get(i);
 				file.println(b.getTitle() + BOOKMARK_DELIMITER + b.getFile());
