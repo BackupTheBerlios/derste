@@ -8,8 +8,121 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
-
+#include <stdlib.h>
 #include "cadid.h"
+
+#define RET_OK "OK"
+#define RET_ERR "ERR"
+#define CMD_CREATE_PROCESS "CreateProcess"
+#define CMD_DESTROY_PROCESS "DestroyProcess"
+#define CMD_QUIT "Quit"
+
+#define MAX_CHAR_PARAM   100
+#define MAX_CHAR_COMMAND 100
+
+void send_ok(const int socket) {
+  char msg[MAX_CHAR_COMMAND];
+
+  strcpy(msg, RET_OK);
+  strcat(msg, "\n");
+
+  if (send(socket, msg, strlen(msg) + 1, 0) < 0) {
+    perror("send");
+    exit(EXIT_FAILURE);
+  }
+}
+
+void send_failure(const int socket) {
+  char msg[MAX_CHAR_COMMAND];
+
+  strcpy(msg, RET_ERR);
+  strcat(msg, "\n");
+
+  if (send(socket, msg, strlen(msg) + 1, 0) < 0) {
+    perror("send");
+    exit(EXIT_FAILURE);
+  }
+}
+
+void send_ok_p(const int socket, const char *param) {
+  char msg[MAX_CHAR_COMMAND];
+
+  strcpy(msg, RET_OK);
+  strcat(msg, " ");
+  strcat(msg, param);
+  strcat(msg, "\n");
+
+  if (send(socket, msg, strlen(msg) + 1, 0) < 0) {
+    perror("send");
+    exit(EXIT_FAILURE);
+  }
+}
+
+void send_failure_p(const int socket, const char *param) {
+  char msg[MAX_CHAR_COMMAND];
+
+  strcpy(msg, RET_ERR);
+  strcat(msg, " ");
+  strcat(msg, param);
+  strcat(msg, "\n");
+
+  if (send(socket, msg, strlen(msg) + 1, 0) < 0) {
+    perror("send");
+    exit(EXIT_FAILURE);
+  }
+}
+
+
+pid_t create_process(char *app) {
+  pid_t proc;
+
+  proc = fork();
+
+  /* Père */
+  if (proc > 0)
+    return proc;
+
+  /* Fils */
+  if (proc == 0) 
+    if (execlp(app, NULL) == -1)
+      exit(EXIT_FAILURE);
+
+  /* Erreur */
+  return 0;
+}
+
+int server_received(int socket, char *msg) {
+  int nb_tokens;
+  char cmd[MAX_CHAR_COMMAND];
+  char param[MAX_CHAR_PARAM];
+  pid_t new_proc;
+
+  nb_tokens = sscanf(msg, "%s %s", cmd, param);
+  
+  if (nb_tokens > 0) {
+
+    if (!strcmp(CMD_QUIT, cmd)) {
+      send_ok(socket);
+      return MSG_USER_QUIT;
+    }
+
+    if (!strcmp(CMD_CREATE_PROCESS, cmd)) {
+      if (nb_tokens != 2) {
+	send_failure_p(socket, CMD_CREATE_PROCESS " <application>");
+      } else {	
+	if ((new_proc = create_process(param))) {
+	  sprintf(param, "%d", new_proc);
+	  send_ok_p(socket, param);
+	} else {
+	  send_failure(socket);
+	}
+      }
+    }
+
+  }
+
+  return 0;
+}
 
 int main() {
   int server_socket, current_socket;
@@ -73,21 +186,7 @@ int main() {
       printf("Reçu : %s\n", buffer);
       fflush(stdout);
 
-      if (!strcmp("hello", buffer)) {
-	if (send(current_socket, "How are you ?\n", 15, 0) < 0) {
-	  perror("send");
-	  return EXIT_FAILURE;
-	}
-      }
-
-      if (!strcmp("fine", buffer)) {
-	if (send(current_socket, "MAICAISUPAIR\n", 14, 0) < 0) {
-	  perror("send");
-	  return EXIT_FAILURE;
-	}
-      }
-
-      if (!strcmp("quit", buffer))
+      if (server_received(current_socket, buffer) == MSG_USER_QUIT)
 	break;
     }
 

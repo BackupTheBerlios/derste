@@ -5,4 +5,7 @@
 #define SERVER_PORT 43534
 #define MAX_CLIENT 10
 
+#define MSG_USER_QUIT 2
+
+
 #endif
