@@ -18,17 +18,31 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
 
     protected FSeekerModel fsm = null;
 
+    protected File parent = null;
+
     public FSeekerModel getModel() {
         return fsm;
     }
 
-    public void update(Observable o, Object arg) {
+    public File getParent() {
+        return parent;
+    }
+
+    public void setParent(File parent) {
+        this.parent = parent;
+    }
+
+    public void update(Observable o, Object caller) {
+        // Le modèle peut s'auto changer, il est à la fois modèle et contrôleur
+        // !
+        setParent(getModel().getURI().getParentFile());
         setChanged();
-        notifyObservers();
+        notifyObservers(caller);
     }
 
     public ListImagesModel(FSeekerModel fsm) {
         this.fsm = fsm;
+        this.parent = fsm.getURI();
         fsm.addObserver(this);
     }
 
@@ -36,12 +50,10 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
      * Renvoie le nombre de fichiers dans le dossier + 1 (parent).
      */
     public int getSize() {
-        if (fsm.getURI().list() == null) {
-            // TODO a résoudre, à cause de l'événement fantome (clic dans le
-            // jtree) qui fait n'imp (renvoie un file zarb O_o)
-            System.out.println("getSize() : " + fsm.getURI().getAbsolutePath());
+        // Le null ne devrait jamais arriver, mais ça l'était avec un bug, donc
+        // laissé..
+        if (fsm.getURI().list() == null)
             return 1;
-        }
         return fsm.getURI().list().length + 1;
     }
 

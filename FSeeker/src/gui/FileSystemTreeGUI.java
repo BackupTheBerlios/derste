@@ -26,17 +26,19 @@ public class FileSystemTreeGUI extends JTree implements Observer {
         this.m = m;
         m.addObserver(this);
 
-        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        getSelectionModel().setSelectionMode(
+                TreeSelectionModel.SINGLE_TREE_SELECTION);
         setModel(m);
         setEditable(true);
         setCellRenderer(new FileSystemTreeCellRenderer());
         addTreeSelectionListener(new FileSystemTreeControler(m));
     }
 
-    public void update(Observable o, Object arg) {
-        setDirectory(m.getModel().getURI());
+    public void update(Observable o, Object caller) {
+        if (caller != this)
+            setDirectory(m.getModel().getURI());
     }
-    
+
     public void setDirectory(File dir) {
         setSelectionPath(FileSystemTree.getTreePath(dir));
     }

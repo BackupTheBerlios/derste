@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 
 import misc.FileUtilities;
 import misc.ImagesMap;
+import model.ListImagesModel;
 
 /**
  * @author sted
@@ -16,38 +17,42 @@ import misc.ImagesMap;
 
 public class ListImagesCellRenderer extends DefaultListCellRenderer {
 
-	protected boolean simple = false;
+    protected boolean simple = false;
 
-	public ListImagesCellRenderer() {
-	}
+    protected ListImagesModel m = null;
 
-	public ListImagesCellRenderer(boolean simple) {
-		this.simple = simple;
-	}
+    public ListImagesCellRenderer(ListImagesModel m) {
+        this.m = m;
+    }
 
-	public Component getListCellRendererComponent(JList list, Object value,
-			int index, boolean isSelected, boolean cellHasFocus) {
-		super.getListCellRendererComponent(list, value, index, isSelected,
-				cellHasFocus);
+    public ListImagesCellRenderer(boolean simple) {
+        this.simple = simple;
+    }
 
-		// Penser à trouver un système pour reconnaître le parent (ie: "..") et
-		// le nommer comme tel. Peut être un attribut dans le model ? (passer
-		// par le contrôleur !!)
+    public Component getListCellRendererComponent(JList list, Object value,
+            int index, boolean isSelected, boolean cellHasFocus) {
+        super.getListCellRendererComponent(list, value, index, isSelected,
+                cellHasFocus);
 
-		File file = (File) value;
-		setText(file.getName() + (file.isDirectory() ? "/" : ""));
+        File file = (File) value;
 
-		setToolTipText(FileUtilities.getDetails(file));
+        // Si on doit afficher le parent, alors on affiche ".."
+        if (file.equals(m.getParent()))
+            setText("..");
+        else
+            setText(file.getName() + (file.isDirectory() ? "/" : ""));
 
-		if (!simple) {
-			setVerticalTextPosition(SwingConstants.BOTTOM);
-			setHorizontalTextPosition(SwingConstants.CENTER);
-			setHorizontalAlignment(SwingConstants.CENTER);
-			setIcon(ImagesMap.get(file));
-		} else
-			setIcon(ImagesMap.get16x16(file));
+        setToolTipText(FileUtilities.getDetails(file));
 
-		return this;
-	}
+        if (!simple) {
+            setVerticalTextPosition(SwingConstants.BOTTOM);
+            setHorizontalTextPosition(SwingConstants.CENTER);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setIcon(ImagesMap.get(file));
+        } else
+            setIcon(ImagesMap.get16x16(file));
+
+        return this;
+    }
 }
 

@@ -82,7 +82,7 @@ public class FileSystemTreeModel extends Observable implements TreeModel, Observ
     
     public void update(Observable o, Object arg) {
         setChanged();
-        notifyObservers();
+        notifyObservers(arg);
     }
     
     public FileSystemTreeModel(FSeekerModel fsm) {
