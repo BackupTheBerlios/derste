@@ -9,25 +9,21 @@ package gui;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.io.File;
-import java.util.HashMap;
 
-
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JSplitPane;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
-import model.FileSystemModel;
-import misc.GU;
 import misc.FileExtensionMap;
+import misc.GU;
+import model.FileSystemModel;
 
 /**
  * @author brahim
@@ -96,16 +92,16 @@ class MyTreeModelListener implements TreeModelListener {
 	}
 }
 
-class MyCellRenderer extends JLabel implements TreeCellRenderer {	
-
-	
+class MyCellRenderer extends DefaultTreeCellRenderer {
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
 			boolean selected, boolean expanded, boolean leaf, int row,
 			boolean hasFocus) {		
-		setText(value.toString());
-		//Associe un icone au fichier
+		super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+		
+		// Associe un icone au fichier
 		FileExtensionMap map = new FileExtensionMap((File)value);
 		setIcon(map.getIcon(""));
+		
 		return this;
 	}
 }
