@@ -5,22 +5,14 @@
  */
 package preview;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Image;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.sun.rsasign.i;
-
-import misc.ImagesMap;
 import misc.file.FileUtilities;
 import model.FSeekerModel;
 
