@@ -68,7 +68,7 @@ public class ListImagesDataControler extends MouseAdapter implements
     }
     
     public void mousePressed(MouseEvent e) {
-        System.out.println(e.getButton());
+        // TODO System.out.println(e.getButton());
         if (e.getButton() == MouseEvent.BUTTON2_DOWN_MASK) {
             JList list = (JList) e.getSource();
             JPopupMenu popup = list.getComponentPopupMenu();
