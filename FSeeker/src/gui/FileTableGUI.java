@@ -42,7 +42,7 @@ public class FileTableGUI extends JTable {
         this.setDefaultRenderer(Date.class, renderer);
         this.setDefaultRenderer(File.class, renderer);
 
-        m.sortAllRows();//Tri des données
+        //m.sortAllRows();//Tri des données
 
         // propriétés de la JTable
         setShowGrid(false);

@@ -84,7 +84,7 @@ public class FileTableModel extends DefaultTableModel implements Observer {
         else
             setDataForSimpleView();
         //fireTableStructureChanged();
-        this.fireTableDataChanged();
+        this.fireTableRowsUpdated(0, getRowCount()-1);
     }
 
     public Class getColumnClass(int col) {
