@@ -5,35 +5,19 @@ package gui;
 
 import java.awt.Frame;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
+
+import misc.ImagesMap;
 
 /**
  * Boîte de dialogue "A propos".
+ * 
  * @author sted
  */
-public class About extends JOptionPane {
-	
+public class About {
 	public About(Frame owner) {
-		super();
-		JDialog d = createDialog(owner, "Pwet");
-		d.setVisible(true);
-	    //super(owner, "A propos");
-				
-		/*final JOptionPane optionPane = new JOptionPane(
-                "FSeeker v" + FSeeker.VERSION + " par Stéphane D. tout seul.");*/
+		Icon fseeker = ImagesMap.getLogo();
+		JOptionPane.showMessageDialog(owner, "FSeeker a été réalisé par Stéphane D. tout seul, car il vaut bien", "A propos", JOptionPane.INFORMATION_MESSAGE, fseeker);
 	}
-	
-	public static void main(String[] args) {
-		JFrame f = new JFrame();
-		f.add(new JLabel("CECI EST UN TEST"));
-		f.pack();
-		f.setVisible(true);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		new About(f).setVisible(true);
-		
-	}
-
 }
