@@ -15,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -50,7 +49,8 @@ public class FSeeker extends JFrame {
 		cp.add(getStatusBar(), BorderLayout.SOUTH);
 
 		//setPreferredSize(new Dimension(640, 480));
-		pack();
+		setSize(new Dimension(640, 480));
+		
 		GU.center(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -106,7 +106,7 @@ public class FSeeker extends JFrame {
 
 		tb.addSeparator(new Dimension(10, 10));
 		tb.add(new JLabel("URI : "));
-		tb.add(new JTextField(20));
+		tb.add(new JTextField(10));
 
 		return tb;
 	}
