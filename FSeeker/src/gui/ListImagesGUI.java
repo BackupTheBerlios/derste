@@ -1,9 +1,11 @@
 package gui;
 
+import java.awt.FlowLayout;
+
 import javax.swing.JList;
 
 import model.ListImagesModel;
-import renderer.ImagesListCellRenderer;
+import renderer.ListImagesCellRenderer;
 import controler.ListImagesDataControler;
 import controler.ListImagesMouseListener;
 
@@ -19,7 +21,8 @@ public class ListImagesGUI extends JList {
         setModel(m);
         setDragEnabled(true);
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        setCellRenderer(new ImagesListCellRenderer());
+        setLayout(new FlowLayout());
+        setCellRenderer(new ListImagesCellRenderer());
 
         new ListImagesDataControler(m);
         addMouseListener(new ListImagesMouseListener());
