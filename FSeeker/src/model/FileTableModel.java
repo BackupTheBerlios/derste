@@ -187,8 +187,10 @@ public class FileTableModel extends DefaultTableModel implements Observer {
 	 *            L'index de la colonne à retirer
 	 */
 	private void removeColumn(int columnIndex) {
-		for (int row = 0; row < getColumnCount(); row++) {
+		for (int row = 0; row < getRowCount(); row++) {
 			Vector rowVector = (Vector) dataVector.elementAt(row);
+			if (columnIndex >= rowVector.size())
+				break; // On peut breaker directement car y'a pu rien en dessous
 			rowVector.removeElementAt(columnIndex);
 		}
 	}

@@ -14,6 +14,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import com.sun.corba.se.spi.orbutil.fsm.FSM;
+
 import misc.TreeUtilities;
 import model.FSeekerModel;
 import model.FileSystemTreeModel;
@@ -64,21 +66,7 @@ public class FileSystemTreeControler implements TreeSelectionListener,
 	 *            l'événement associé
 	 */
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ENTER
-				&& e.getModifiersEx() == KeyEvent.ALT_DOWN_MASK) {
-
-			// TODO un dialogue avec les propriétés
-			// FileUtilities.showProperties(File f)
-
-			JTree tree = (JTree) e.getSource();
-
-			// J4F
-			TreePath tp = TreeUtilities.getTreePath(m.getModel().getURI());
-			if (tree.isExpanded(tp))
-				tree.collapsePath(tp);
-			else
-				tree.expandPath(tp);
-		}
+		GeneralControler.keyPressed(e, m.getModel().getURI(), m.getModel());
 	}
 
 	public void keyReleased(KeyEvent e) {
