@@ -1,0 +1,325 @@
+000 Dossier média de Corel
+1st Fichier d'information donnant des explications avant d'utiliser un programme
+323 Document de téléphonie Internet H323
+386 Gestionnaire de Windows en mode 386
+adr Fichier pour l'annuaire Winphone
+ai Fichiers Adobe Illustrator
+aif Fichier audio de Movie Player et Apple IFF Sound
+aiff Fichier audio de Movie Player et Apple IFF Sound
+aifc AIF Compressé
+ani Format du curseur animé de Windows
+ald Fichier pour police de caractère WYSIWYG
+all Fichier pour Cubasis
+amf Fichier pour Dual Module Player Music
+ani Curseur animé
+ans Fichier contenant le code ANSI avec les indications sur la formation et l'impression des caractères
+art Image monochrome
+arc Archive
+ari Archive
+asc Fichier texte au format ASCII
+asf Fichier au format Active Streaming (Microsoft Advanced Streaming Format)
+asp Fichier de langage serveur Microsoft (pour Microsoft server-processed script)
+att Fichier de pièce jointe à E-mail (données de formulaire), image Bitmap
+au Fichier son pour le système d'exploitation Unix
+avi Fichier Video for Windows
+avs Digital Vidéo/Animation
+awd Document de l'afficheur de télécopies du logiciel Imaging for Windows de Kodak
+bak Fichier de sauvegarde "backup"
+bas Fichier programme en Basic
+bat Fichier batch pour MS-DOS contenant les instructions DOS en texte ASCII qui sont exécutés par lots
+bb Fichier gif renommé (lu par Ie et Netscape comme les images gif)
+bif Fichier binaire (Binary Image File) de séquence animée genre GIF
+bin Fichier binaire
+bit Fichier correspondant à BMP ou PCX renommé
+bmk Fichier de "bookmark" (signet) qui désigne les adresses Internet (URL)
+bmp Fichier graphique
+blk Fichier correspondant au BMP renommé ou Image IFF
+bll Fichier correspondant au DLL pour le langage de programmation Borland
+bob Fichier BOB Image file (256 coul, palette RGB, compression 0%)
+c Fichier du code source du langage de programmation C
+cab Fichier "cabinet"
+cal Fichier agenda de Windows et du tableur Supercalc
+cat Fichier Acrobat
+ccc Conversation Microsoft Chat
+ccd Dessin Industriel (vcad)
+ccr Raccourci vers une salle de conversation
+ccs Feuille de style : fichiers attachés au pages HTML
+cct Fichier Macromedia Director Shockwave cast
+cda Piste CD audio
+cdf Fichier de chaîne Windows
+cdr Format des fichiers graphiques du logiciel Corel Draw
+cfg Fichier de configuration
+cgi Common Gateway Interface
+cgm Fichier graphique Abréviation de "Computer graphies metafile"
+chm Fichier HTML compilé
+chy Fichier des césures de Claris Works
+clp Fichiers du bloc-notes de Windows
+cmd Fichier de commande contenant une série d'instructions pour les programmes
+cmx Fichiers d'échange du presse-papier de Corel
+cnv Convertisseur contenant des instructions pour convertir les formats de fichiers et permettant d'importer et d'exporter des fichiers dans des applications
+com Fichier de commande pour les programmes qui s'exécutent sous DOS Cette extension est actuellement remplacée le plus souvent pas les suffixes EXE
+cpl Format du panneau de configuration de Windows
+cpp Fichier du code source du langage de programmation C++
+cur Format du curseur de Windows
+cpl Extension du panneau de configuration de Windows
+cpt Fichier graphique de Corel Photopaint
+csb Script Corel binaire
+csc Script Corel
+csi Script Corel inclus
+css Feuille de style hypertexte
+csv Fichier dont les valeurs sont séparées par des virgules
+cut Fichier de l'utilitaire Dr Halo
+cwk Fichiers de Claris Works
+cws Fichiers de Claris Works
+dat Données générales pour les applications
+db Fichiers de la base de données Paradox
+dbf Fichier dbase 11, 111 et IV
+dcx Document image du logiciel graphique Imaging for Windows de Kodak
+dib Fichier d'OS/2 ou Windows DIB
+dif Fichier vidéo Movie Player
+diz Contient des informations sur les fichiers ou les groupes de fichiers
+dll Bibliothèque dynamique
+do? Fichiers du logiciel de traitement de texte Multimate
+doc Document Word
+dot Format de modèle pour les documents utilisés dans Winword
+dox Document Multimate 40
+drv Pilote (ou gestionnaire) d'un périphérique du PC
+drw Fichiers du logiciel Draw de Micrografx et Freelance (Adobe)
+dsn Source de données ODBC
+dxf Fichiers graphiques du logiciel Autocad d'Autodesk
+eli Liste d'articles de l'encyclopédie Encarta
+eml Messages d'Outlook Express Mail
+emx Métafichier Windows étendu
+eps Fichiers au format Postscript (abréviation d'"encapsuled PostScript")
+evy Document Envoy 7
+exe Fichier exécutable
+fli Format de données pour les fichiers vidéo et d'animation
+flt Filtre graphique FileMaker Pro
+fm Fichiers du programme File Maker
+fnt Abréviation de "font" (police de caractères)
+fon Abréviation de "font" Informations sur les polices de caractères Truetype
+fp3 Fichiers du gestionnaire de fichiers FileMaker Pro 30
+frk Extension appliquée automatiquement lors de l'initialisation en format PC de disquettes sur un Macintosh ou de la conversion de fichiers PC ou format Mac avec une disquette formatée en DOS
+gem Fichiers du logiciel Ventura Publisher (GEM)
+gif Format graphique de Compuserve qui est utilisé très largement dans le cadre d'Internet
+grp Représente les groupes du gestionnaire de programmes de Windows qui contient les informations associées à ceux-ci
+gz Archive
+hgl Fichiers du langage graphique de Hewlett-Packard "Hewlett-Packard graphic language")
+hlp Fichier d'aide
+hqx Archive
+htm Page Web
+html Page Web
+htt Modèle de document hypertexte
+icl Bibliothèque composée exclusivement d'icônes pour Windows
+ico Format (graphique) des icônes sous Windows
+idf Définition des instruments Midi dans Windows
+iff Fichier au format Amiga
+igs Format graphique IGES (plans de CAO)
+img Fichier graphique spécifique au format GEM Paint et Ventura Publisher
+imp Filtre de données FileMaker Pro
+inf Fichier comportant des informations pour l'exécution d'un programme, l'installation de celui-ci ou d'un pilote
+ini Fichiers de configuration
+isp Communication Internet
+jbf Format de la visionneuse Paint Shop Pro
+job Objet de tâche du planificateur de tâches d'Outlook
+jpeg Format graphique
+jpg Format graphique
+js Fichier script JScript
+lbm Format des fichiers de Deluxe Paint
+lha Archive
+lib Format des bibliothèques de fonctions
+log Fichier de logging
+lst Liste destinée à être imprimée
+lwp Fichier WordPro de Lotus
+lz Archive
+lzh Archive
+mac Format des fichiers graphiques du logiciel MacPaint
+mcc Raccourci pour The Microsoft Network
+mda Fichiers complémentaires à Microsoft Access
+mdb Base de données Access 
+mdw Fichiers de groupe de travail dans Access
+mdx Index du logiciel de gestion de bases de données dbase IV
+mem Fichier mémoire dbase
+mid Fichier Midi contenant les instructions et commandes des périphériques (sonores) compatibles Midi
+mif Format des documents du logiciel de publication assistée par ordinateur FrameMaker (Adobe)
+mix Format graphique de Microsoft Photo Draw 2000
+mli Liste de média de l'encyclopédie Encarta
+mlp Fichier de capture d'impression MacLincPlus
+mod Fichier contenant des informations Midi
+mov Format des fichiers contenant des animations vidéo en Quick Time
+mpg Fichier vidéo (animation) normalisé par la Motion Picture Expert Group
+msg Abréviation de "message" Format de message utilisé entre autres dans Microsoft Exchange
+msp Format des fichiers graphiques du logiciel Microsoft Paint
+mth Thésaurus de Claris
+net Module de réseau de FileMaker Pro
+ndx Fichier index de la base de données dBase
+ng Fichier d'information pour Norton
+nlm Abréviation de Netware Loadable Module (module spécial qui peut être chargé par Netware)
+nlu Fichier LiveUpdate E-Mail Trigger
+nws Format de message d'Outlook Express News
+obd Format du classeur Microsoft Office
+obj Format de fichier objet contenant le code compilé d'un programme
+obt Format des modèles de classeur Microsoft Office
+obz Format des modèles de classeur Microsoft Office
+ocx Contrôle OLE contenant un élément de commande OLE ou Active X
+old Ancienne version d'un fichier qui a été réactualisé
+org Format des fichiers sonores
+pal Fichier contenant une palette chromatique
+pas Fichier source du langage de programmation Pascal
+pbk Format de l'annuaire MSN
+pbm Format des fichiers graphiques Portable Bitmap
+pcc Format des fichiers Paintbrush PC
+pcd Format des fichiers graphiques du logiciel Photo CD de Kodak
+pcl Fichier du langage de description de pages pour les imprimantes LaserJet de Hewlett-Packard
+pcm Fichier du gestionnaire des cartouches des imprimantes LaserJet
+pct Format des fichiers Pict du logiciel Macintosh Paint
+pcx Format graphique
+pdf Format des documents réalisés au moyen du logiciel Acrobat d'Adobe
+pfa Jeu de polices de caractères Postscript
+pfb Jeu de polices de caractères Postscript
+pfm Jeu de polices de caractères Postscript
+pgl Langage graphique défini par Hewlett-Packard
+pgm Fichier graphique Portable Greymap
+pic Format graphique
+pif Fichier contenant des informations touchant à l'exécution de programmes DOS sous Windows
+plr Fichier contenant des informations pour les jeux vidéo
+plt Format du langage HPGL (Hewlett-Packard Graphies Language)
+pm3 Fichiers de la version 3 du logiciel de PAO PageMaker
+pm4 Fichiers de la version 4 du logiciel PageMaker
+png Fichier graphique (Portable Network Graphics)
+pot Modèle de présentation de Powerpoint
+pp4 Format des fichiers graphiques de la version 40 du logiciel Picture Publisher de Micrografx
+pp5 Format des fichiers graphiques de la version 50 du logiciel Picture Publisher de Micrografx
+ppf Format des fichiers graphiques du logiciel Photo Magie 40 de Micrografx
+ppm Format des fichiers graphiques Portable Pixelmap
+pps Diaporama Powerpoint
+ppt Format des présentations réalisées au moyen du logiciel de PAO Powerpoint de Microsoft
+prg Fichiers du programme dbase
+prn Fichier d'impression
+ps Extension utilisée généralement pour désigner les fichiers d'impression Postscript
+pt Fichier de traitement graphique Kodak Precision Transform
+ptv Fichiers des modèles (gabarits) de PageMaker (v= n° de version)
+prd Gestionnaire (driver) d'imprimante
+prg Fichiers du code source dbase
+prn Gestionnaire d'imprimante
+prs Gestionnaire d'imprimante pour le logiciel Wordperfect
+prt Fichier de texte
+ps Fichier du langage de description de page Postscript
+psd Format des fichiers graphiques du logiciel Adobe Photoshop
+pub Fichiers de logiciel de PAO Microsoft Publisher ainsi que de la version 2 de PageMaker
+qic Format des fichiers du jeu de sauvegarde réalisé au moyen de l'utilitaire "Backup" de Windows
+qif Format des images du logiciel Quick Time
+qlc Polices de caractères ATM (Adobe Type Manager)
+qt Format des séquences vidéo de Quick Time
+qtp Fichier des préférences de Quick Time
+qts Format des fichiers de logiciel Quick Time
+qti Format des images de Quick Time
+qtx Format des fichiers du module d'extension du logiciel Quick Time
+que Objet de file d'attente du planificateur de tâches d'Outlook
+qxd Fichiers du programme de publication assistée par ordinateur Quark Xpress
+r8p Polices de caractères Laserjet
+r8l Polices de caractères Laserjet
+ra Fichier Real Media
+ram Fichier Real Media
+ras Format d'images tramées utilisées sur les systèmes Sun
+raw Format d'images tramées (Raw Raster Images)
+rec Macro de l'enregistreur de Windows
+reg Format des macros de l'enregistreur de Windows
+rle Fichier graphique
+rm Fichier Real Media
+rtf Rich Text Format
+rts Document Real Media
+run Fichier d'exécution de script (Script Runnet)
+sam Fichiers du logiciel de traitement de texte Amipro
+sav Fichier de sauvegarde
+sc Code source de Paradox
+scf Commande de Windows Explorer
+sci Format des fichiers Scitex CT
+scp Script d'accès au réseau à distance de Windows
+scr Abréviation de "Screen Saver" Format des fichiers économiseurs d'écran sous Windows
+sd2 Fichier Sound Designer 2 de Movie Player
+sea Extension de fichier archive Macintosh auto-extractible compressé par Stuffit
+set Fichier d'installation
+sfp Polices de caractères LaserJet
+sfl Polices de caractères LaserJet
+sfs Polices de caractères PCL 5
+sig Extension d'un fichier de signature
+sit Extension de fichier pour un fichier Macintosh compressé avec StuffIt
+shs Format d'objet animé
+sig Format d'objet animé
+sk Variante de format Sylk
+slk Variante de format Sylk
+sng Format de fichier son
+spl Schockwave Flash Object
+str Abréviation de "string" Fichier contenant une chaîne de caractères
+sty Format des feuilles de style dans Word
+swf Shockwave Flash Object
+syl Format des feuilles de calcul Sylk
+sys Fichier contenant des informations pour le système d'exploitation MS-Dos
+tab Texte avec fabulations pouvant ainsi être converti dans une base de données
+tar Archive UNIX non compressées
+tex Format des fichiers créés avec l'éditeur d'équation d'Amipro
+tdf Polices de caractères
+tfm Polices de caractères
+tga Format graphique
+tgz Archive
+tif Format graphique Tiff
+tmp Fichier temporaire
+trm Paramètre de terminal dans Windows
+tsv Format de document dont les valeurs sont séparées par des tabulateurs
+ttc Polices TrueType compressées
+ttf informations sur les polices de caractères Truetype
+txt Format texte
+uls Service de coordonnées d'Internet
+uue Abréviation de "Unix to Unix encoded" Fichiers codés selon la même méthode
+url Raccourci d'adresses Internet
+vbs Fichier de script de VBScript
+vbx Visual Basic Extension
+vir Fichier infecté par un virus et détecté en tant que tel par un logiciel anti-virus
+voc Fichier son de SoundBlaster
+vps Document SpealPad de ViaVoice (reconnaissance vocale)
+vue Fichier dBase
+vxd Fichier pilote de périphérique virtuel
+w* Format des fichiers de Symphony et du tableur Lotus 1-2-3
+wab Fichier du carnet d'adresse de la messagerie Mime
+wav Fichiers sonores
+wdb Format des fichiers de la base de données de Works
+wk1 Format des feuilles de calcul de la version 2A de Lotus 1-2-3
+wk3 Format des feuilles de calcul de la version 3 de Lotus 1-2-3
+wkq Format des feuilles de calcul du tableur Quattro Pro
+wks Format des feuilles de calcul Works de Microsoft et de la version 1A de Lotus 1-2-3
+wlg Journal Dr Watson
+wmf Format des métafichiers Windows (Microsoft Windows Metafile)
+wp Format des documents Office Writer et Wordperfect
+wpc Format des fichiers du logiciel WordPerfect
+wpf Format des fichiers du logiciel Enable ainsi que de Wordperfect
+wpg Format graphique (vectoriel) de Wordperfect Graphies (versions 10 et 2-0)
+wpm Macros de Wordperfect
+wps Document de traitement de texte de Works de Microsoft
+wql Logiciel Quattro Pro
+wr1 Tableur Symphony
+wri Format des fichiers réalisés au moyen de l'éditeur de texte Write de Microsoft
+wrk Format des feuilles de calcul du tableur Symphony
+wrl Objet VRML
+wrz Objet VRML
+ws Format des documents Wordstar
+x3d Fichier pour Maison 3D
+xar COREL XARA Drawing
+xbm Image Internet (X11bitmap), x-xbitmap (MIME)
+xcf Image GIMP (équivalent de photoshop en freeware Linux)
+xfm Fichier pour CoolEdit
+xfx Fichiers de Jetfax
+xif Document image d'Imaging for Windows de Kodak
+xl Fichier Excel
+xlb Barre d'outils Excel
+xlc Format des graphiques dans le tableur Excel
+xlk Format des fichiers backup d'Excel
+xlm Format des macros d'Excel
+xls Format des fichiers du tableur Excel
+xlt Format des modèles du tableur Excel
+xlw Espace de travail du tableur Excel
+xy Format commun du logiciel de traitement de texte Xywrite
+zip Archive
+zoo Archive
+$$$ Fichier temporaire
+??~ Fichier temporaire

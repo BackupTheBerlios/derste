@@ -4,16 +4,21 @@
 package misc.file;
 
 import java.awt.Font;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -51,13 +56,62 @@ public class FileUtilities {
         public Font dirFont = new Font("Dialog", Font.BOLD, 12);
 
         public Font fileFont = new Font("Dialog", Font.PLAIN, 12);
+        
+        private static Map extensions = new HashMap();
 
+        private final static String EXTENSIONS_FILE = "extensions.txt";
+        
+        private static String readExtension(String extension) {
+        	if (extensions.containsKey(extension))
+        		return (String) extensions.get(extension);
+        	
+        	if (!new File(EXTENSIONS_FILE).exists())
+    			return null;
+        	
+        	BufferedReader file = null;
+    		try {
+    			String ligne;
+    			file = new BufferedReader(new FileReader(EXTENSIONS_FILE));
+
+    			while ((ligne = file.readLine()) != null) {
+    	        	StringTokenizer st = new StringTokenizer(ligne);
+    	        	String ext = st.nextToken();
+    	        	if (ext.equals(extension)) {
+    	        		String desc = st.nextToken("\n");
+    	        		extensions.put(extension, desc);
+    	        		return desc;
+    	        	}
+    			}
+
+    		} catch (FileNotFoundException exc) {
+    		} catch (IOException e) {
+    		} finally {
+    			try {
+    				file.close();
+    			} catch (IOException e) {
+    			}
+    		}
+        	
+    		return null;
+        }
+        
         public String getType() {
             if (type == null)
-                // TODO si fichier, évaluer le type (jpg, avi, exe etc)
-                type = (f.isDirectory() ? "Dossier" : "Fichier");
-            //type =
-            // FileSystemView.getFileSystemView().getSystemTypeDescription(f);
+            	if (f.isDirectory())
+            		type = "Dossier";
+            	else {
+            		String s = f.getName();
+            		int rindex = s.lastIndexOf('.');
+
+            		// Y'a pas de '.' ou bien on a un fichier genre : "truc."
+            		if (rindex == -1 || rindex + 1 >= s.length())
+            			return "Fichier";
+
+            		String extension = s.substring(rindex + 1);
+            		type = readExtension(extension);
+            		if (type == null)
+            			type = "Fichier";
+            	}
             return type;
         }
 
@@ -135,7 +189,8 @@ public class FileUtilities {
                     .append("<center><img src=\"../../images/dot.gif\"></center><br>");*/
 
             // Le type et le nom (pour les aveugles)
-            sb.append("<b>" + getType() + "</b> : " + getName() + "<br>");
+            sb.append("<b>Nom</b> : " + getName() + "<br>");
+            sb.append("<b>Type</b> : " + getType() + "<br>");
 
             if (f.isDirectory()) {
                 if (!"".equals(getSize()))
@@ -143,8 +198,7 @@ public class FileUtilities {
             } else
                 sb.append("<b>Taille</b> : " + getSize() + "<br>");
 
-            sb.append("<b>Dernière modification</b> : " + "<br>"+ getLastModified()
-                    + "<br>");
+            sb.append("<b>Dernière modification</b> : " + getLastModified());
 
             return sb.append("</html>").toString();
         }
