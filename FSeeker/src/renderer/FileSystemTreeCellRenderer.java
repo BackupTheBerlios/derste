@@ -11,6 +11,7 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import misc.ImagesMap;
+import misc.file.FileUtilities.FileDetails;
 
 /**
  * Renderer personnalisé du système de fichier représenté en arbre, pour
@@ -31,7 +32,8 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
 		if (value == null)
 			return this;
 
-		setText(sys.getSystemDisplayName((File) value));
+		FileDetails fd = new FileDetails((File) value);
+		setText(fd.getName());
 
 		if (expanded)
 			setIcon(ImagesMap.get16x16(ImagesMap.DIRECTORY_OPENED_IMAGE));
