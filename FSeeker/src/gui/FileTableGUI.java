@@ -38,6 +38,7 @@ public class FileTableGUI extends JTable {
 
         FileTableCellRenderer renderer = new FileTableCellRenderer();
         this.setDefaultRenderer(Object.class, renderer);
+        this.setDefaultRenderer(Long.class, renderer);
         this.setDefaultRenderer(Date.class, renderer);
         this.setDefaultRenderer(File.class, renderer);
 

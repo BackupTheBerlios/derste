@@ -79,7 +79,7 @@ public class FileTableCellRenderer extends DefaultTableCellRenderer {
                setForeground(Color.black);
                setIcon(null);
                super.setValue(newValue);
-            } else if (value instanceof Date) {
+            } else if (value instanceof Long) {
                 setIcon(null);
                 setForeground(Color.black);
                 setHorizontalAlignment(JLabel.CENTER);

@@ -83,7 +83,8 @@ public class FileTableModel extends DefaultTableModel implements Observer {
             setDataForSpecialView();
         else
             setDataForSimpleView();
-
+        //fireTableStructureChanged();
+        this.fireTableDataChanged();
     }
 
     public Class getColumnClass(int col) {
@@ -118,24 +119,25 @@ public class FileTableModel extends DefaultTableModel implements Observer {
                 case 0:
                     rowData.addElement(files[rows]);
                     break;
-                
+                 case 1:
+                     rowData.addElement(new Long(files[rows].length()));
 
-            case 2:
-                rowData.addElement(files[rows].isDirectory() ? "Dossier"
-                        : "Fichier");
-                break;
+                case 2:
+                    rowData.addElement(files[rows].isDirectory() ? "Dossier"
+                            : "Fichier");
+                    break;
 
-            case 3:
-                rowData.addElement(new Date(files[rows].lastModified()));
-                break;
+                case 3:
+                    rowData.addElement(new Date(files[rows].lastModified()));
+                    break;
+                }
             }
+
+            data.add(rowData);
         }
 
-        data.add(rowData);
+        setDataVector(data, colNames);
     }
-
-    setDataVector(data, colNames);
-}
 
     public void setDataForSpecialView() {
         File[] files = fsm.getURI().listFiles();
