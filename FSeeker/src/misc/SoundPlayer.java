@@ -3,7 +3,8 @@
  * Classe (source d'origine http://www.javazoom.net/jlgui/developerguide.html
  * 
  * TODO REMMETRE EN ORDRE, EN EFFET, C'EST LE BORDEL ET COMMENTER EN FRENCH 
- *
+ * TODO MAIS QUELLE BORDEL, QUELLE MERDE, AHHHHHHHHHHHHHH
+ * ON DIRAIT LE NIHILISME TOTAL DE L'INTELLIGENCE
  */
 package misc;
 
