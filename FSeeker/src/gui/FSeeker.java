@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.prefs.Preferences;
 
 import javax.swing.Icon;
 import javax.swing.JComboBox;
@@ -86,6 +87,8 @@ public class FSeeker extends JFrame {
 	/** Les tabulations dans la vue de droite */
 	private JTabbedPane tabs = null;
 
+	protected static Preferences pref = Preferences.userRoot();
+	
 	/** Construit la fenêtre par défaut de FSeeker */
 	public FSeeker(FSeekerModel fsm) {
 		super("FSeeker v" + VERSION);
@@ -93,8 +96,10 @@ public class FSeeker extends JFrame {
 
 		Container cp = getContentPane();
 
+		// Préférences
+		ToolTipManager.sharedInstance().setEnabled(pref.getBoolean("tooltips", true));
 		ToolTipManager.sharedInstance().setInitialDelay(1500);
-		ToolTipManager.sharedInstance().setReshowDelay(1000);
+		ToolTipManager.sharedInstance().setReshowDelay(1500);
 
 		setJMenuBar(new MenuBarGUI(this));
 
