@@ -4,8 +4,10 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Observable;
 
 import misc.GU;
@@ -28,7 +30,7 @@ public class FSeekerModel extends Observable {
 	protected Comparator comparator = CompareByType.get();
 
 	/** Les identifiants pour savoir quoi a été modifié */
-	public static final int NONE = 0, COMPARATOR = 1, URI = 2, SHOWHIDDEN = 3;
+	public static final int NONE = 0, COMPARATOR = 1, URI = 2, SHOWHIDDEN = 4;
 
 	/** Le truc modifié */
 	protected int changed = NONE;
@@ -64,15 +66,14 @@ public class FSeekerModel extends Observable {
 	 *            la source du changement
 	 */
 	public void setURI(File uri, Object src) {
-		// TODO virer le src (voir qui l'utilise, car peut être devenu inutile)
 		if (!uri.equals(this.uri)) {
 			if (!uri.exists()) {
-				GU.message("Ce fichier ou répertoire n'existe pas.");
+				GU.info("Ce fichier ou répertoire n'existe pas.");
 				return;
 			}
 			this.uri = uri;
 
-			setChanged(URI);
+			setChanged(URI, src);
 		}
 	}
 
@@ -114,7 +115,7 @@ public class FSeekerModel extends Observable {
 	public void showHidden(boolean showHidden) {
 		if (this.showHidden != showHidden) {
 			this.showHidden = showHidden;
-			setChanged(SHOWHIDDEN);
+			setChanged(SHOWHIDDEN, null);
 		}
 	}
 
@@ -137,7 +138,7 @@ public class FSeekerModel extends Observable {
 	public void setComparator(Comparator comparator) {
 		if (comparator != this.comparator) {
 			this.comparator = comparator;
-			setChanged(COMPARATOR);
+			setChanged(COMPARATOR, null);
 		}
 	}
 
@@ -147,19 +148,21 @@ public class FSeekerModel extends Observable {
 	 * @param whatChanged
 	 *            une constante représentant un composant global défini dans
 	 *            FSeekerModel
+	 * @param src
+	 *            la source du changement
 	 */
-	protected void setChanged(int whatChanged) {
+	protected void setChanged(int whatChanged, Object src) {
 		filesList = null;
 		changed = whatChanged;
 		setChanged();
-		notifyObservers();
+		notifyObservers(src);
 	}
 
 	/**
 	 * @return <code>true</code> si ce que représente isChanged a été modifié
 	 */
 	public boolean isChanged(int isChanged) {
-		return changed == isChanged;
+		return (changed & isChanged) > 0;
 	}
 
 	/**
@@ -171,14 +174,15 @@ public class FSeekerModel extends Observable {
 		// Late instanciating
 		if (filesList == null) {
 			File[] files = uri.listFiles();
-			
+
 			if (files != null) {
-				filesList = new File[files.length];
-			
+				List filesArray = new ArrayList(files.length);
+
 				for (int i = 0, j = 0; i < files.length; i++)
 					if (!files[i].isHidden() || showHidden)
-						filesList[j++] = files[i];
+						filesArray.add(files[i]);
 
+				filesList = (File []) filesArray.toArray(new File[] {});
 				Arrays.sort(filesList, comparator);
 			}
 		}
