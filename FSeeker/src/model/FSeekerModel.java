@@ -4,9 +4,11 @@
 package model;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.Observable;
 
 import misc.GU;
+import misc.file.CompareByType;
 
 /**
  * Le supra-modèle qui contient l'URI courante.
@@ -20,6 +22,8 @@ public class FSeekerModel extends Observable {
 
 	/** Montrer les fichiers cachés ? */
 	protected boolean showHidden = true;
+	
+	protected Comparator comparator = CompareByType.get();
 
 	/**
 	 * Retourne l'URI courante.
@@ -101,6 +105,16 @@ public class FSeekerModel extends Observable {
 			setChanged();
 			notifyObservers();
 		}
+	}
+	
+	public Comparator getComparator() {
+		return comparator;
+	}
+	
+	public void setComparator(Comparator comparator) {
+		this.comparator = comparator;
+		setChanged();
+		notifyObservers();
 	}
 
 }
