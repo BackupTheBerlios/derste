@@ -111,7 +111,7 @@ public class FSeeker {
 		f = new JFrame("FSeeker v" + VERSION);
 		Container cp = f.getContentPane();
 
-		toolBarControler = new ToolBarControler(this);
+		toolBarControler = new ToolBarControler(this, fsm);
 
 		ToolTipManager.sharedInstance().setInitialDelay(1500);
 		ToolTipManager.sharedInstance().setReshowDelay(1000);
