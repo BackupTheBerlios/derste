@@ -11,5 +11,6 @@ car encore quelques détail (vérifier selon le model MVC)
 
 - Virer les templates de Eclipse si tu les modifs pas. (y compris les trucs @see blabla dont on se fout)
 
-A NOTER QUE CA MARCHE POUR les principales fonctionnalites pour l'affcihage dan un JLIst
+-A NOTER QUE CA MARCHE POUR les principales fonctionnalites pour l'affcihage dan un JLIst
 mais pas optimisé (pas de Layou) .. no prob je m'y attele
+

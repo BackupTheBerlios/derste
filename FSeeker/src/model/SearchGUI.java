@@ -114,7 +114,7 @@ public class SearchGUI extends JFrame {
 
 		StatusBar sbt = new StatusBar();
 		JLabel l = sbt.addLabel("Favoris");
-		GU.setImage(l, "dot.gif");
+		//GU.setImage(l, "dot.gif");
 		c.add(sbt, BorderLayout.NORTH);
 
 		JPanel p = new JPanel();

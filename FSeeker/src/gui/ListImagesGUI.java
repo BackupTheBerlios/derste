@@ -1,16 +1,21 @@
 package gui;
 
 /** liste des imports * */
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.io.File;
 
-import event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
 
-import java.awt.*;
-import misc.*;
-
+import event.ListMouseListener;
+import misc.GU;
 import model.ListImagesModel;
-
-import java.io.*;
 
 //import javax.swing.event.*;
 
