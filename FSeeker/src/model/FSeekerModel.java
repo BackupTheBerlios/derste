@@ -159,6 +159,14 @@ public class FSeekerModel extends Observable {
 	}
 
 	/**
+	 * Indique que le modèle a changé sans rien modifié. Utiliser pour une mise
+	 * à jour dans un même dossier par exemple.
+	 */
+	public void update() {
+		setChanged(URI, null);
+	}
+
+	/**
 	 * @return <code>true</code> si ce que représente isChanged a été modifié
 	 */
 	public boolean isChanged(int isChanged) {
@@ -182,7 +190,7 @@ public class FSeekerModel extends Observable {
 					if (!files[i].isHidden() || showHidden)
 						filesArray.add(files[i]);
 
-				filesList = (File []) filesArray.toArray(new File[] {});
+				filesList = (File[]) filesArray.toArray(new File[] {});
 				Arrays.sort(filesList, comparator);
 			}
 		}
