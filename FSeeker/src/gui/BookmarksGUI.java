@@ -14,6 +14,10 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -30,12 +34,16 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 
+import misc.GU;
+import misc.PopupManager;
 import model.FSeekerModel;
 
 /**
@@ -76,17 +84,20 @@ public class BookmarksGUI extends JList {
 	}
 
 	/**
-	 * Ecrit un bookmark dans le fichier dédié.
-	 * 
-	 * @param b
-	 *            le bookmark à écrire
+	 * Écrit les bookmarks dans le fichier dédié.
 	 */
-	public void writeBookmark(Bookmark b) {
+	public void writeBookmarks() {
 		PrintWriter file = null;
 		try {
+			// A chaque fois une boucle pour ne pas se prender la tête avec les
+			// deletes
+			Bookmark b = null;
 			file = new PrintWriter(new BufferedWriter(new FileWriter(
-					BOOKMARKS_FILE, true)));
-			file.println(b.getTitle() + BOOKMARK_DELIMITER + b.getFile());
+					BOOKMARKS_FILE)));
+			for (int i = 0; i < m.getSize(); i++) {
+				b = (Bookmark) m.get(i);
+				file.println(b.getTitle() + BOOKMARK_DELIMITER + b.getFile());
+			}
 		} catch (IOException e) {
 		} finally {
 			file.close();
@@ -144,7 +155,21 @@ public class BookmarksGUI extends JList {
 
 		loadBookmarks();
 
-		/* On gère le clic */
+		// Gère <entrée> et <del>
+		addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					m.removeElement(getSelectedValue());
+					writeBookmarks();
+				} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Bookmark b = (Bookmark) getSelectedValue();
+					if (b != null)
+						BookmarksGUI.this.fsm.setURI(b.getFile());
+				}
+			}
+		});
+
+		// On gère le clic
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)
@@ -154,6 +179,28 @@ public class BookmarksGUI extends JList {
 					if (b == null)
 						return;
 					BookmarksGUI.this.fsm.setURI(b.getFile());
+				} else if (SwingUtilities.isRightMouseButton(e)) {
+					JPopupMenu popup = new JPopupMenu();
+					JMenuItem menuItem = new JMenuItem("Ouvrir");
+					menuItem.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							Bookmark b = (Bookmark) getSelectedValue();
+							if (b != null)
+								BookmarksGUI.this.fsm.setURI(b.getFile());
+						}
+					});
+					popup.add(menuItem);
+					menuItem = new JMenuItem("Supprimer");
+					menuItem.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							if (getSelectedValue() != null) {
+								m.removeElement(getSelectedValue());
+								writeBookmarks();
+							}
+						}
+					});
+					popup.add(menuItem);
+					PopupManager.showPopup(e, popup);
 				}
 			}
 		});
@@ -181,7 +228,13 @@ public class BookmarksGUI extends JList {
 
 						file = st.nextToken();
 						File f = new File(file);
-						writeBookmark(addBookmark(f.getName(), f));
+						String title;
+						while ((title = GU.input("Titre du bookmark :"))
+								.equals(""))
+							;
+
+						addBookmark(title, f);
+						writeBookmarks();
 						dtde.dropComplete(true);
 
 					} catch (UnsupportedFlavorException e) {
@@ -255,11 +308,11 @@ public class BookmarksGUI extends JList {
 		/** Le titre */
 		private static JLabel name = new JLabel();
 		static {
-			name.setHorizontalAlignment(SwingConstants.CENTER);
+			name.setHorizontalAlignment(SwingConstants.LEFT);
 			name.setFont(new Font("Dialog", Font.BOLD, 18));
 
 			dir.setForeground(Color.LIGHT_GRAY);
-			dir.setHorizontalAlignment(SwingConstants.RIGHT);
+			dir.setHorizontalAlignment(SwingConstants.LEFT);
 			dir.setFont(new Font("Dialog", Font.ITALIC, 12));
 
 			p.setBackground(listColor);

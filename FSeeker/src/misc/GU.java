@@ -55,6 +55,18 @@ public class GU {
 	}
 
 	/**
+	 * Demande la saisie d'un texte.
+	 * 
+	 * @param s
+	 *            détail sur la chose à saisie
+	 * @return la chose saisie
+	 */
+	public static String input(String s) {
+		return JOptionPane.showInputDialog(null, s, "Demande de saisie",
+				JOptionPane.QUESTION_MESSAGE);
+	}
+
+	/**
 	 * Demande la confirmation d'une chôôse.
 	 * 
 	 * @param s
@@ -74,31 +86,29 @@ public class GU {
 	 * @param c
 	 *            Le composant sur lequel on va fixer la bordure
 	 */
-	/*public static void putBorder(Border b, String title, JComponent c,
-			int alignementX, int alignementY, Font f) {
-		c.setBorder(BorderFactory.createTitledBorder(b, title, alignementX,
-				alignementY, f));
-	}*/
+	/*
+	 * public static void putBorder(Border b, String title, JComponent c, int
+	 * alignementX, int alignementY, Font f) {
+	 * c.setBorder(BorderFactory.createTitledBorder(b, title, alignementX,
+	 * alignementY, f)); }
+	 */
 
-	/*public static void createGUI(String title, JComponent comp) {
-		JFrame frame = new JFrame(title);
-		frame.getContentPane().add(comp);
-		frame.setVisible(true);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-	}*/
+	/*
+	 * public static void createGUI(String title, JComponent comp) { JFrame
+	 * frame = new JFrame(title); frame.getContentPane().add(comp);
+	 * frame.setVisible(true);
+	 * //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); frame.pack(); }
+	 */
 
-	/*public static Image captureComponent(JComponent comp) throws AWTException {
-
-		Robot robot = new Robot();
-		Point p = new Point(0, 0);
-		SwingUtilities.convertPointToScreen(p, comp);
-		Rectangle area = comp.getBounds();
-		area.x = p.x;
-		area.y = p.y;
-		BufferedImage image = new Robot().createScreenCapture(area);
-
-		return image;
-	}*/
+	/*
+	 * public static Image captureComponent(JComponent comp) throws AWTException {
+	 * 
+	 * Robot robot = new Robot(); Point p = new Point(0, 0);
+	 * SwingUtilities.convertPointToScreen(p, comp); Rectangle area =
+	 * comp.getBounds(); area.x = p.x; area.y = p.y; BufferedImage image = new
+	 * Robot().createScreenCapture(area);
+	 * 
+	 * return image; }
+	 */
 
 }
