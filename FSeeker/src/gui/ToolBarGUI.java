@@ -97,7 +97,7 @@ public class ToolBarGUI extends JToolBar {
 		b = new JButton();
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fs.setView(fs.getDefaultView());
+				fs.setMain(fs.getDefaultView());
 			}
 		});
 		b.setBorder(null);
