@@ -77,7 +77,7 @@ public class ImagesMap {
 		if (new File(chemin).exists()) {
 		    Image im = Toolkit.getDefaultToolkit().getImage(IMAGES + image);
 		    Icon pic = new ImageIcon(im.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-			images.put(PREFIX16x16 + image, pic);
+		    images.put(PREFIX16x16 + image, pic);
 			return pic;
 		}
 		

@@ -26,20 +26,22 @@ public class ListImagesGUI extends JList implements Observer {
     public ListImagesGUI(ListImagesModel m, boolean simple) {
         this.m = m;
         m.addObserver(this);
-
+		
         setModel(m);
+        setVisibleRowCount(0);
         setDragEnabled(true);
-        setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        setLayout(new FlowLayout());
+		setDoubleBuffered(true);
+		setLayoutOrientation(JList.HORIZONTAL_WRAP);        
         setCellRenderer(new ListImagesCellRenderer(m, simple));
         addMouseListener(new ListImagesDataControler(m));
     }
 
     public void update(Observable o, Object caller) {
-        if (caller != this) {
-            revalidate();
-            repaint();
-        }
+    	//if (caller != this) {
+				revalidate();
+				repaint();	
+        //}
     }
+    
 }
 

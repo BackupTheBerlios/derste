@@ -6,6 +6,8 @@ package model;
 import java.io.File;
 import java.util.Observable;
 
+import misc.GU;
+
 /**
  * Le supra-modèle qui contient l'URI courante.
  * 
@@ -30,7 +32,11 @@ public class FSeekerModel extends Observable {
         // donc le jtree setselectionpath, mais cette méthode déclenche l'événement
         // valuechanged qui _refait_ un setURI sur la selection justement (donc la même)
 
-        System.out.println("FSeekerModel.setURI(" + uri.getAbsolutePath() + ")");
+        // System.out.println("FSeekerModel.setURI(" + uri.getAbsolutePath() + ")");
+        if (!uri.exists()) {
+        	GU.message("Ce fichier ou répertoire n'existe pas.");
+        	return;
+        }
         this.uri = uri;
         setChanged();
         notifyObservers(src);

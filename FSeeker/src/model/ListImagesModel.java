@@ -4,8 +4,12 @@
 package model;
 
 import java.io.File;
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
@@ -20,6 +24,41 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
 
     protected File parent = null;
 
+    private Comparator currentComparator = new CMP_BY_NAME();
+    
+    protected Set liste = new TreeSet(currentComparator);
+
+    private class CMP_BY_NAME implements Comparator {
+        public int compare(Object o1, Object o2) {
+            if (o1 == null)
+                return 1;
+            if (o2 == null)
+                return -1;
+
+            File f1 = (File) o1;
+            File f2 = (File) o2;
+
+            if (f1 == parent)
+                return -1;
+            if (f2 == parent)
+                return 1;
+
+            if (f1.isDirectory() && f2.isFile())
+                return -1;
+            if (f1.isFile() && f2.isDirectory())
+                return 1;
+
+            return Collator.getInstance().compare(f1.getName(), f2.getName());
+        }
+    }
+
+    public ListImagesModel(FSeekerModel fsm) {
+        this.fsm = fsm;
+        this.parent = fsm.getURI();
+        fsm.addObserver(this);
+        refreshListFiles();
+    }
+
     public FSeekerModel getModel() {
         return fsm;
     }
@@ -29,6 +68,8 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
     }
 
     public void setParent(File parent) {
+        if (parent == null)
+            parent = getModel().getURI();
         this.parent = parent;
     }
 
@@ -36,35 +77,29 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
         // Le modèle peut s'auto changer, il est à la fois modèle et contrôleur
         // !
         setParent(getModel().getURI().getParentFile());
+        refreshListFiles();
         setChanged();
         notifyObservers(caller);
     }
 
-    public ListImagesModel(FSeekerModel fsm) {
-        this.fsm = fsm;
-        this.parent = fsm.getURI();
-        fsm.addObserver(this);
+    protected void refreshListFiles() {
+        liste.clear();
+        liste.add(parent);
+        File[] files = fsm.getURI().listFiles();
+        if (files != null)
+            for (int i = 0; i < files.length; i++)
+                liste.add(files[i]);
     }
 
     /**
-     * Renvoie le nombre de fichiers dans le dossier + 1 (parent).
+     * Renvoie le nombre de fichiers dans le dossier.
      */
     public int getSize() {
-        // Le null ne devrait jamais arriver, mais ça l'était avec un bug, donc
-        // laissé..
-        if (fsm.getURI().list() == null)
-            return 1;
-        return fsm.getURI().list().length + 1;
+        return liste.size();
     }
 
     public Object getElementAt(int index) {
-        if (index == 0) {
-            if (fsm.getURI().getParentFile() == null)
-                return fsm.getURI();
-            return fsm.getURI().getParentFile();
-        }
-        File[] files = fsm.getURI().listFiles();
-        return files[index - 1];
+        return liste.toArray()[index];
     }
 
     public void addListDataListener(ListDataListener l) {
@@ -72,103 +107,5 @@ public class ListImagesModel extends Observable implements ListModel, Observer {
 
     public void removeListDataListener(ListDataListener l) {
     }
+   
 }
-
-
-///////////
-
-class 
-SortingListModel 
-extends 
-AbstractListModel
-{
-// Define a SortedSet
-TreeSet model;
-
-private static Comparator USEFUL_COMPARATOR 
-    = new Comparator()
-        {
-            public int compare( Object o1, Object o2 )
-            {
-                String str1 = o1.toString();
-                String str2 = o2.toString();
-                Collator collator = Collator.getInstance();
-                int result = collator.compare( str1, str2 );
-                return result;
-            }
-        };
-
-public SortingListModel()
-{
-    model = new TreeSet( USEFUL_COMPARATOR );
-}
-
-// ListModel methods
-public int getSize()
-{
-    // Return the model size
-    return model.size();
-}
-
-public Object getElementAt( int index )
-{
-    // Return the appropriate element
-    return model.toArray()[index];
-}
-
-// Other methods
-public void addElement( Object element )
-{
-    
-    if( model.add( element ))
-    {
-        fireContentsChanged( this, 0, getSize() );
-    }
-}
-
-public void addAll( Object elements[] )
-{
-    Collection c = Arrays.asList(elements);
-    model.addAll(c);
-    fireContentsChanged( this, 0, getSize() );
-}
-
-public void clear()
-{
-    model.clear();
-    fireContentsChanged( this, 0, getSize() );
-}
-
-public boolean contains( Object element )
-{
-    return model.contains( element );
-}
-
-public Object firstElement()
-{
-    // Return the appropriate element
-    return model.first();
-}
-
-public Iterator iterator()
-{
-    return model.iterator();
-}
-
-public Object lastElement()
-{
-    // Return the appropriate element
-    return model.last();
-}
-
-public boolean removeElement( Object element )
-{
-    boolean removed = model.remove( element );
-    if( removed )
-    {
-        fireContentsChanged( this, 0, getSize() );
-    }
-    return removed;
-}
-}
-//End of SortingListModel

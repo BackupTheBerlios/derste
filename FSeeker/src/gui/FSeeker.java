@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -197,12 +198,12 @@ public class FSeeker {
             desktop.setVisible(true);
 
             JTabbedPane tabs = new JTabbedPane();
-            JScrollPane viewIcon = new JScrollPane(ligui,
+            JScrollPane viewIcon = new JScrollPane(ligui/*,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            JScrollPane viewList = new JScrollPane(lgui,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER*/);
+            JScrollPane viewList = new JScrollPane(lgui/*,
                     JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED*/);
             JScrollPane viewTable = new JScrollPane(ftgui,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -305,63 +306,68 @@ public class FSeeker {
      */
     private JToolBar getDefaultToolBar() {
         JToolBar tb = new JToolBar(JToolBar.HORIZONTAL);
-        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
-        layout.setVgap(0);
+        LayoutManager layout = new BorderLayout();
+        
         tb.setLayout(layout);
         tb.setFloatable(false);
 
+		JPanel p = null;
         JButton b = null;
-
+        
+        p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         b = new JButton();
         b.setActionCommand("PREVIOUS");
         b.addActionListener(toolBarControler);
+        b.setBorder(null);
         b.setIcon(ImagesMap.get("previous.gif"));
         b.setToolTipText("Précédent");
-        tb.add(b);
+        p.add(b);
 
         b = new JButton();
         b.setActionCommand("NEXT");
         b.addActionListener(toolBarControler);
+		b.setBorder(null);
         b.setIcon(ImagesMap.get("next.gif"));
         b.setToolTipText("Suivant");
-        tb.add(b);
+        p.add(b);
 
         b = new JButton();
         b.setActionCommand("PARENT");
         b.addActionListener(toolBarControler);
+		b.setBorder(null);
         b.setIcon(ImagesMap.get("parent.gif"));
         b.setToolTipText("Répertoire parent");
-        tb.add(b);
+        p.add(b);
 
-        tb.addSeparator();
 
         b = new JButton("Rechercher");
         b.setActionCommand("SEARCHVIEW");
         b.addActionListener(toolBarControler);
+		b.setBorder(null);
         b.setIcon(ImagesMap.getDefault());
         b.setToolTipText("Rechercher un fichier ou un répertoire");
-        tb.add(b);
+        p.add(b);
 
         b = new JButton();
         b.setActionCommand("TREEVIEW");
         b.addActionListener(toolBarControler);
+		b.setBorder(null);
         b.setIcon(ImagesMap.getDefault());
         b.setToolTipText("Affichage avec l'arborescence sous forme d'arbre");
-        tb.add(b);
+        p.add(b);
 
         b = new JButton();
         b.setActionCommand("MACOSVIEW");
         b.addActionListener(toolBarControler);
+		b.setBorder(null);
         b.setIcon(ImagesMap.getDefault());
         b.setToolTipText("Affichage par thème à la MacOS");
-        tb.add(b);
+        p.add(b);
+		tb.add(p, BorderLayout.NORTH);
 
-        tb.addSeparator();
-
-        tb.add(new JLabel("Adresse : "));
         uriModel = new URIModel(fsm);
         ugui = new URIGUI(uriModel);
-        tb.add(ugui);
+		tb.add(ugui, BorderLayout.SOUTH);
 
         fstm.addObserver(ugui);
         uriModel.addObserver(fstgui);
