@@ -10,8 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
+import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
 
 import model.FileTableModel;
 
@@ -24,72 +26,75 @@ import model.FileTableModel;
  */
 public class FileTableControler extends MouseAdapter implements KeyListener {
 
-	/** Le modèle associé */
-	protected FileTableModel m = null;
+    /** Le modèle associé */
+    protected FileTableModel m = null;
 
-	/**
-	 * Construit un contrôleur à partir d'un modèle.
-	 * 
-	 * @param m
-	 *            un modèle de table
-	 */
-	public FileTableControler(FileTableModel m) {
-		this.m = m;
-	}
+    /**
+     * Construit un contrôleur à partir d'un modèle.
+     * 
+     * @param m
+     *            un modèle de table
+     */
+    public FileTableControler(FileTableModel m) {
+        this.m = m;
+    }
 
-	/**
-	 * Quand on clique, ca ouvre le dossier si on est positionné sur un dossier.
-	 * 
-	 * @param e
-	 *            l'événement associé
-	 */
-	public void mouseClicked(MouseEvent e) {
-		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == m.getModel().getClickCount()) {
-			Object o = getSelectedObject(e);
-			if (((File) o).isDirectory())
-				m.getModel().setURI((File) o);
-		}
-	}
+    /**
+     * Quand on clique, ca ouvre le dossier si on est positionné sur un dossier.
+     * 
+     * @param e
+     *            l'événement associé
+     */
+    public void mouseClicked(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)
+                && e.getClickCount() == m.getModel().getClickCount()) {
+            Object o = getSelectedObject(e);
+            if (((File) o).isDirectory())
+                m.getModel().setURI((File) o);
+        }
+    }
 
-	/**
-	 * Retourne l'élément sélectionné, et si le modèle est en mode spécial, il
-	 * met à jour la dernière colonne sélectionnée.
-	 * 
-	 * @param e
-	 *            l'événement associé
-	 * @return l'objet sélectionné ou null si aucun
-	 */
-	private Object getSelectedObject(InputEvent e) {
-		JTable source = (JTable) e.getSource();
-		int lg = source.getSelectedRow();
-		int col = source.getSelectedColumn();
-		if (lg == -1 || col == -1)
-			return null;
+    /**
+     * Retourne l'élément sélectionné (le fichier pére), et si le modèle est en
+     * mode spécial, il met à jour la dernière colonne sélectionnée.
+     * 
+     * @param e
+     *            l'événement associé
+     * @return l'objet sélectionné ou null si aucun
+     */
+    private Object getSelectedObject(InputEvent e) {
+        JTable source = (JTable) e.getSource();
+        int lg = source.getSelectedRow();
+        int col = source.getSelectedColumn();
+        if (lg == -1 || col == -1)
+            return null;
 
-		// Si on est en mode spécial on fixe la valeur de la colonne
-		// sélectionnée
-		if (m.getMode() == FileTableModel.SPECIAL_MODE)
-			m.setSelectedColumn(((JTable) e.getSource()).getSelectedColumn());
+        // Si on est en mode spécial on fixe la valeur de la colonne
+        // sélectionnée
+        if (m.getMode() == FileTableModel.SPECIAL_MODE)
+            m.setSelectedColumn(((JTable) e.getSource()).getSelectedColumn());
 
-		return source.getValueAt(lg, col);
-	}
+       
+        return source.getValueAt(lg, col);
+    }
+    
+	
+    /**
+     * Si une touche a été appuyé.
+     * 
+     * @param e
+     *            l'événement associé
+     */
+    public void keyPressed(KeyEvent e) {
+        Object o = getSelectedObject(e);
+        if (o instanceof File)
+            GeneralControler.keyPressed(e, (File) o, m.getModel());
+    }
 
-	/**
-	 * Si une touche a été appuyé.
-	 * 
-	 * @param e
-	 *            l'événement associé
-	 */
-	public void keyPressed(KeyEvent e) {
-		Object o = getSelectedObject(e);
-		if (o instanceof File)
-			GeneralControler.keyPressed(e, (File) o, m.getModel());
-	}
+    public void keyReleased(KeyEvent e) {
+    }
 
-	public void keyReleased(KeyEvent e) {
-	}
-
-	public void keyTyped(KeyEvent e) {
-	}
+    public void keyTyped(KeyEvent e) {
+    }
 
 }
