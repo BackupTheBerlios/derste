@@ -64,16 +64,15 @@ public class FSeekerModel extends Observable {
 	 *            la source du changement
 	 */
 	public void setURI(File uri, Object src) {
+		// TODO virer le src (voir qui l'utilise, car peut être devenu inutile)
 		if (!uri.equals(this.uri)) {
 			if (!uri.exists()) {
 				GU.message("Ce fichier ou répertoire n'existe pas.");
 				return;
 			}
 			this.uri = uri;
-			filesList = null;
 
 			setChanged(URI);
-			notifyObservers(src);
 		}
 	}
 
@@ -86,14 +85,14 @@ public class FSeekerModel extends Observable {
 	public void setURI(File uri) {
 		setURI(uri, null);
 	}
-	
+
 	/**
 	 * Remonte dans l'arborescence de un niveau.
 	 */
 	public void gotoParent() {
-	    File parent = uri.getParentFile();
-	    if (parent != null)
-	        setURI(parent);
+		File parent = uri.getParentFile();
+		if (parent != null)
+			setURI(parent);
 	}
 
 	/**
@@ -115,9 +114,7 @@ public class FSeekerModel extends Observable {
 	public void showHidden(boolean showHidden) {
 		if (this.showHidden != showHidden) {
 			this.showHidden = showHidden;
-			filesList = null;
 			setChanged(SHOWHIDDEN);
-			notifyObservers();
 		}
 	}
 
@@ -140,9 +137,7 @@ public class FSeekerModel extends Observable {
 	public void setComparator(Comparator comparator) {
 		if (comparator != this.comparator) {
 			this.comparator = comparator;
-			filesList = null;
 			setChanged(COMPARATOR);
-			notifyObservers();
 		}
 	}
 
@@ -154,9 +149,10 @@ public class FSeekerModel extends Observable {
 	 *            FSeekerModel
 	 */
 	protected void setChanged(int whatChanged) {
-		getFilesList();
+		filesList = null;
 		changed = whatChanged;
 		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -172,16 +168,19 @@ public class FSeekerModel extends Observable {
 	 * @return liste de fichiers du répertoire courant
 	 */
 	public File[] getFilesList() {
+		// Late instanciating
 		if (filesList == null) {
 			File[] files = uri.listFiles();
-			filesList = new File[files.length];
 			
-			if (files != null)
+			if (files != null) {
+				filesList = new File[files.length];
+			
 				for (int i = 0, j = 0; i < files.length; i++)
 					if (!files[i].isHidden() || showHidden)
-						filesList[j++] =  files[i];
+						filesList[j++] = files[i];
 
-			Arrays.sort(filesList, comparator);
+				Arrays.sort(filesList, comparator);
+			}
 		}
 
 		return filesList;
