@@ -41,10 +41,10 @@ public class ListImagesGUI extends JList /*implements Observer*/ {
      *            indique s'il faut former une liste à petit ou gros icônes
      */
     public ListImagesGUI(ListImagesModel m, boolean simple) {
-        this.m = m;
+        super(m);
+    	this.m = m;
         //m.addObserver(this);
 
-        setModel(m);
         setVisibleRowCount(0);
         setDragEnabled(true);
         JPopupMenu popup = new JPopupMenu("Options");
