@@ -16,9 +16,6 @@ import javax.swing.ImageIcon;
  * @author aitelhab
  */
 public class ImagesMap {
-	/** L'image par défaut */
-	private static final String DEFAULT_IMAGE = "default.png";
-
 	/**
 	 * Le tableau associatif contenant les images. <br>
 	 * [String clef] => [Icon ressource]
@@ -29,7 +26,14 @@ public class ImagesMap {
 	private static final char SEP = File.separatorChar;
 
 	/** Là où sont stockées toutes les images */
-	private static final String IMAGES = "images", EXTENSIONS = "extensions";
+	private static final String 
+		IMAGES = "images" + SEP, 
+		EXTENSIONS = "extensions" + SEP;
+	
+	/** Les images 'spéciales' */
+	private static final String	
+		DEFAULT_IMAGE = EXTENSIONS + "default.png",
+		DIRECTORY_IMAGE = EXTENSIONS + "directory.png";
 
 	/**
 	 * Renvoie un objet Icon à partir du chemin de image. Si le chemin n'est pas
@@ -45,7 +49,7 @@ public class ImagesMap {
 			return (Icon) images.get(image);
 
 		// Sinon on la charge dans la hasp et on renvoie
-		String chemin = IMAGES + SEP + image;
+		String chemin = IMAGES + image;
 		if (new File(chemin).exists()) {
 			Icon pic = new ImageIcon(chemin);
 			images.put(image, pic);
@@ -67,7 +71,7 @@ public class ImagesMap {
 	public static Icon getImage(File file) {
 		// Image spéciale pour tous les répertoires
 		if (file.isDirectory())
-			return get("directory.png");
+			return get(DIRECTORY_IMAGE);
 
 		// On a un fichier, on regarde son extension
 		String s = file.getName();
@@ -77,13 +81,28 @@ public class ImagesMap {
 		if (rindex == -1 || rindex + 1 >= s.length())
 			return getDefault();
 
-		String ext = s.substring(rindex + 1);
-		return get(EXTENSIONS + SEP + ext + ".png");
+		String extension = s.substring(rindex + 1);
+		return get(EXTENSIONS + extension + ".png");
 	}
 
+	/**
+	 * Renvoie l'icône par défaut.
+	 * 
+	 * @return icône par défaut
+	 */
 	public static Icon getDefault() {
 		return get(DEFAULT_IMAGE);
 	}
+	
+	/**
+	 * Retourne l'icône par défaut, représentant un répertoire.
+	 * 
+	 * @return icône d'un répertoire par défaut
+	 */
+	public static Icon getDirectory() {
+		return get(DIRECTORY_IMAGE);
+	}
+	
 }
 
 ////////
