@@ -38,9 +38,10 @@ public class CompareByName implements Comparator {
         File f2 = (File) o2;
 
         // Les répertoires, toujours en premier
-        if (f1.isDirectory() && f2.isFile())
+        // ATTENTION, ne pas utiliser isFile() car un device n'est NI un rép, ni un file !
+        if (f1.isDirectory() && !f2.isDirectory())
             return -1;
-        if (f1.isFile() && f2.isDirectory())
+        if (!f1.isDirectory() && f2.isDirectory())
             return 1;
 
         return Collator.getInstance().compare(f1.getName(), f2.getName());

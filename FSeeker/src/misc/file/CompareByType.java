@@ -39,11 +39,12 @@ public class CompareByType implements Comparator {
         File f2 = (File) o2;
 
         // Les répertoires, toujours en premier
-        if (f1.isDirectory() && f2.isFile())
+        // ATTENTION, ne pas utiliser isFile() car un device n'est NI un rép, ni un file !
+        if (f1.isDirectory() && !f2.isDirectory())
             return -1;
-        if (f1.isFile() && f2.isDirectory())
+        if (!f1.isDirectory() && f2.isDirectory())
             return 1;
-
+        
         String sf1 = f1.getName();
         String sf2 = f2.getName();
         int r1 = sf1.lastIndexOf('.');
