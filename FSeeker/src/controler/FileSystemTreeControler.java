@@ -23,7 +23,7 @@ public class FileSystemTreeControler implements TreeSelectionListener {
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
-		System.out.println("FileSystemTreeControler.valueChanged() / " + e);
+		//System.out.println("FileSystemTreeControler.valueChanged() / " + e);
 	    File f = (File) e.getPath().getLastPathComponent();
 		//m.setCurrentDirectory(f);
 	}
