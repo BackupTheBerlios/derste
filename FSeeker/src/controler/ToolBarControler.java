@@ -15,16 +15,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import misc.GU;
+import model.FSeekerModel;
 
 /**
  * @author Sted
  */
 public class ToolBarControler implements ActionListener {
     protected FSeeker f = null;
+    protected FSeekerModel fsm = null;
 
-    public ToolBarControler(FSeeker f) {
+    public ToolBarControler(FSeeker f, FSeekerModel fsm) {
         this.f = f;
-
+        this.fsm = fsm;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -33,6 +35,10 @@ public class ToolBarControler implements ActionListener {
         
             GU.message("Précédent !");
         
+        } else if (e.getActionCommand().equals("PARENT")) {
+            
+            fsm.gotoParent();
+            
         } else if (e.getActionCommand().equals("SEARCHVIEW")) {
             
             JPanel p = new JPanel(new BorderLayout());

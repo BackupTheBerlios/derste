@@ -24,7 +24,10 @@ public class FileSystemTreeCellRenderer extends DefaultTreeCellRenderer {
             boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, selected, expanded,
                 leaf, row, hasFocus);
-
+        
+        if (value == null)
+            return this;
+                
         setText(((File) value).getName());
         
         if (expanded)

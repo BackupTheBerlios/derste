@@ -4,10 +4,8 @@
 package model;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Observable;
 
 import misc.GU;
@@ -66,18 +64,6 @@ public class FSeekerModel extends Observable {
 	 *            la source du changement
 	 */
 	public void setURI(File uri, Object src) {
-		// TODO ou déjà done ca peut être..!
-		// le setSelectionPath dans le JTree provoque 2 déclenchages ici à
-		// chaque sélection autre que sur le JTree (la JList, etc)
-		// C'est normal car à chaque changement de sél, le supramodel change
-		// donc le jtree setselectionpath, mais cette méthode déclenche
-		// l'événement
-		// valuechanged qui _refait_ un setURI sur la selection justement (donc
-		// la même)
-
-		// System.out.println("FSeekerModel.setURI(" + uri.getAbsolutePath() +
-		// ")");
-
 		if (!uri.equals(this.uri)) {
 			if (!uri.exists()) {
 				GU.message("Ce fichier ou répertoire n'existe pas.");
@@ -99,6 +85,15 @@ public class FSeekerModel extends Observable {
 	 */
 	public void setURI(File uri) {
 		setURI(uri, null);
+	}
+	
+	/**
+	 * Remonte dans l'arborescence de un niveau.
+	 */
+	public void gotoParent() {
+	    File parent = uri.getParentFile();
+	    if (parent != null)
+	        setURI(parent);
 	}
 
 	/**

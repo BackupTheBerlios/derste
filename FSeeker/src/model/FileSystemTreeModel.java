@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,7 +29,7 @@ public class FileSystemTreeModel extends Observable implements TreeModel,
     protected File root = null;
 
     /** Liste des listeners associés à l'évènement TreeModelEvent */
-    protected ArrayList listeners = new ArrayList();
+    protected List listeners = new ArrayList();
 
     /** Permet de ne sélectionner que les répertoires */
     protected FileFilter filter = new FileFilter() {
@@ -36,7 +37,7 @@ public class FileSystemTreeModel extends Observable implements TreeModel,
             return f.isDirectory();
         }
     };
-    
+
     /** Le supra-modèle */
     protected FSeekerModel fsm = null;
 
@@ -69,7 +70,7 @@ public class FileSystemTreeModel extends Observable implements TreeModel,
     public Object getRoot() {
         return root;
     }
-    
+
     public Object getChild(Object parent, int index) {
         File file = (File) parent;
         String[] children = FileUtilities.toStrings(file.listFiles(filter));

@@ -37,7 +37,7 @@ public class FileUtilities {
 
         // Le type et le nom (pour les aveugles)
         sb.append("<b>" + (f.isDirectory() ? "Doss" : "Fich") + "ier</b> : "
-                + f.getName() + "<br>");
+                + f.getName() + (f.isDirectory() ? File.separator : "") + "<br>");
 
         // On affiche la taille pour un fichier, le nombre d'élement contenu
         // pour un dossier
