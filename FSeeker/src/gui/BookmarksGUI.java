@@ -16,14 +16,14 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
@@ -39,61 +39,101 @@ import javax.swing.border.EtchedBorder;
 import model.FSeekerModel;
 
 /**
- * @author sted
+ * Construit une liste de bookmarks.
+ * 
+ * @author Sted
  */
 public class BookmarksGUI extends JList {
+
+	/** Le omdèle contenant les bookmarks */
 	protected DefaultListModel m = new DefaultListModel();
 
+	/** La couleur de fond de la liste (pour colorer le panel du renderer avec) */
 	protected static Color listColor = null;
 
+	/** Le nom du fichier où sauvegarder les bookmarks */
+	protected String BOOKMARKS_FILE = "bookmarks";
+
+	/** Le délimiteur utilisé dans le fichier des bookmarks */
+	protected String BOOKMARK_DELIMITER = "$@$";
+
+	/** Le supra-modèle */
 	protected FSeekerModel fsm = null;
 
-	public void addBookmark(String t, File f) {
-		m.addElement(new Bookmark(t, f));
+	/**
+	 * Ajoute un bookmark à la liste.
+	 * 
+	 * @param t
+	 *            le titre du bookmark
+	 * @param f
+	 *            son emplacement
+	 * @return le bookmark ajouté
+	 */
+	public Bookmark addBookmark(String t, File f) {
+		Bookmark b = new Bookmark(t, f);
+		m.addElement(b);
+		return b;
 	}
 
-	
-	private class Hu implements Serializable {
-		public Object[] bookmarks = null;
-		public Hu(Object[] bookmarks) {
-			this.bookmarks = bookmarks;
-		}
-		
-	}
-	
-	public void write() {
+	/**
+	 * Ecrit un bookmark dans le fichier dédié.
+	 * 
+	 * @param b
+	 *            le bookmark à écrire
+	 */
+	public void writeBookmark(Bookmark b) {
+		PrintWriter file = null;
 		try {
-			FileOutputStream fos = new FileOutputStream("bookmarks");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			Hu hu = new Hu(m.toArray());
-			oos.writeObject(hu);
-			oos.flush();
-			oos.close();
-		} catch (FileNotFoundException e) {
+			file = new PrintWriter(new BufferedWriter(new FileWriter(
+					BOOKMARKS_FILE, true)));
+			file.println(b.getTitle() + BOOKMARK_DELIMITER + b.getFile());
 		} catch (IOException e) {
+		} finally {
+			file.close();
 		}
 	}
 
-	public Object[] read() {
+	/**
+	 * Charge les bookmarks du fichier.
+	 */
+	public void loadBookmarks() {
+		if (!new File(BOOKMARKS_FILE).exists())
+			return;
+
+		BufferedReader file = null;
 		try {
-			FileInputStream fis = new FileInputStream("bookmarks");
-			System.out.println("lol");
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			System.out.println("lol2");
-			Object[] bookmarks = ((Hu) ois.readObject()).bookmarks;
-			System.out.println("lol3");
-			ois.close();
-			return bookmarks;
-		} catch (FileNotFoundException e) {
-			System.out.println("aucun favoris");
+			String ligne;
+			file = new BufferedReader(new FileReader(BOOKMARKS_FILE));
+
+			while ((ligne = file.readLine()) != null) {
+				StringTokenizer st = new StringTokenizer(ligne,
+						BOOKMARK_DELIMITER);
+				if (st.hasMoreTokens()) {
+					String title = st.nextToken();
+					if (st.hasMoreTokens())
+						addBookmark(title, new File(st.nextToken()));
+				}
+			}
+
+		} catch (FileNotFoundException exc) {
 		} catch (IOException e) {
-			System.out.println("erreur d'io");
-		} catch (ClassNotFoundException e) {
-			System.out.println("classe introuvable");
+			System.err.println("Erreur durant la lecture du fichier : "
+					+ BOOKMARKS_FILE);
+		} finally {
+			try {
+				file.close();
+			} catch (IOException e) {
+			}
 		}
-		return null;
 	}
 
+	/**
+	 * Construit la liste des bookmarks en liaison avec le supra-modèle pour
+	 * pouvoir cliquer sur un bookmark dans la liste, et s'y rendre directement.
+	 * 
+	 * @param fsm
+	 *            le supra-modèle
+	 */
 	public BookmarksGUI(FSeekerModel fsm) {
 		super();
 		this.fsm = fsm;
@@ -101,14 +141,10 @@ public class BookmarksGUI extends JList {
 		listColor = getBackground();
 		setCellRenderer(new BookmarksRenderer());
 		setModel(m);
-		
-		Object bookmarks[] = read();
-		if (bookmarks != null) {
-			System.out.println("récup");
-			for (int i = 0; i < bookmarks.length; i++)
-				m.addElement(bookmarks[i]);
-		}
-		
+
+		loadBookmarks();
+
+		/* On gère le clic */
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)
@@ -122,6 +158,7 @@ public class BookmarksGUI extends JList {
 			}
 		});
 
+		/* Récupère un drop et l'ajoute aux bookmarks */
 		DropTarget dt = new DropTarget(this, new DropTargetAdapter() {
 			public void drop(DropTargetDropEvent dtde) {
 				Transferable tr = dtde.getTransferable();
@@ -130,6 +167,12 @@ public class BookmarksGUI extends JList {
 					try {
 						String file = (String) tr
 								.getTransferData(DataFlavor.stringFlavor);
+
+						/*
+						 * Dans une table, c'est : fichier\ttype\ttaille etc.
+						 * Dans la liste, y'a pas de \t mais y'a quand même un
+						 * token !
+						 */
 						StringTokenizer st = new StringTokenizer(file, "\t");
 						if (!st.hasMoreTokens()) {
 							dtde.rejectDrop();
@@ -138,9 +181,8 @@ public class BookmarksGUI extends JList {
 
 						file = st.nextToken();
 						File f = new File(file);
-						addBookmark(f.getName(), f);
+						writeBookmark(addBookmark(f.getName(), f));
 						dtde.dropComplete(true);
-						write();
 
 					} catch (UnsupportedFlavorException e) {
 						dtde.rejectDrop();
@@ -153,38 +195,64 @@ public class BookmarksGUI extends JList {
 			}
 		});
 
-		dt.setActive(true);
+		dt.setActive(true); // Obligatoire
 		setDropTarget(dt);
 	}
 
+	/**
+	 * Un bookmark est un fichier destination, et un titre, pour mieux le
+	 * repérer.
+	 */
 	private class Bookmark {
+		/** Le fichier cible */
 		protected File f = null;
 
+		/** Son titre */
 		protected String t = null;
 
+		/**
+		 * Créer un bookmark.
+		 * 
+		 * @param t
+		 *            un titre
+		 * @param f
+		 *            un fichier
+		 */
 		public Bookmark(String t, File f) {
 			this.t = t;
 			this.f = f;
 		}
 
+		/**
+		 * Retourne le fichier cible.
+		 * 
+		 * @return le fichier cible
+		 */
 		public File getFile() {
 			return f;
 		}
 
+		/**
+		 * Retourne le titre.
+		 * 
+		 * @return le titre
+		 */
 		public String getTitle() {
 			return t;
 		}
-
-		public String toString() {
-			return t + " [" + f.getAbsolutePath() + "]";
-		}
 	}
 
+	/**
+	 * Le renderer pour représenter la liste des bookmarks.
+	 */
 	private static class BookmarksRenderer implements ListCellRenderer {
+		/** Le panel où sera affiché le titre + chemin */
 		private static JPanel p = new JPanel(new GridLayout(2, 1));
 
+		/** Le label avec le fichier cible */
 		private static JLabel dir = new JLabel();
 
+		/** Le titre */
 		private static JLabel name = new JLabel();
 		static {
 			name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -202,6 +270,7 @@ public class BookmarksGUI extends JList {
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 
+			// Si on a bien un bookmark
 			if (value != null && value instanceof Bookmark) {
 				if (isSelected) {
 					p.setBorder(BorderFactory
@@ -220,6 +289,7 @@ public class BookmarksGUI extends JList {
 				return p;
 			}
 
+			// Ne devrait jamais arriver
 			return new JLabel(value.toString());
 		}
 	}
