@@ -62,7 +62,8 @@ class ImageCellRenderer extends JLabel implements ListCellRenderer {
 
 	//TODO gérer les extensions de fichier (images associées) àl'aide d'une
 	// HashMap
-	ImageIcon textIcon = GU.createImg("txt.png");
+	Icon textIcon = GU.getImage("txt.png");
+			//TODO GU.createImg("txt.png");
 
 	int space = 1;
 
@@ -76,21 +77,15 @@ class ImageCellRenderer extends JLabel implements ListCellRenderer {
 	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList,
 	 *      java.lang.Object, int, boolean, boolean)
 	 */
-	public Component getListCellRendererComponent(JList list, Object value, // value
-			// to
-			// display
-			int index, // cell index
-			boolean isSelected, // is the cell selected
-			boolean cellHasFocus) { // the list and the cell have the focus
+	public Component getListCellRendererComponent(JList list, Object value,	int index, boolean isSelected, boolean cellHasFocus) {
 		File file = (File) value;
 		String s = file.getName();
 		setIcon(textIcon);
 		setText(s);
 		String newLine = "\n";
 		setToolTipText("Name : " + file + newLine + file.length());
-		setIconTextGap(space);//espace entre image et texte
-		setVerticalTextPosition(JLabel.BOTTOM);//Texte en dessous de
-		// l'image
+		setIconTextGap(space); //espace entre image et texte
+		setVerticalTextPosition(JLabel.BOTTOM); //Texte en dessous de l'image
 		setHorizontalTextPosition(JLabel.CENTER);
 		setBackground(isSelected ? backColor : foreColor);
 		setForeground(isSelected ? foreColor : backColor);
