@@ -21,8 +21,8 @@ public class ListImagesGUI extends JList {
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
         setCellRenderer(new ImagesListCellRenderer());
 
-        new ListImagesDataControler(m, this);
-        addMouseListener(new ListImagesMouseListener(this));
+        new ListImagesDataControler(m);
+        addMouseListener(new ListImagesMouseListener());
     }
 }
 

@@ -3,8 +3,6 @@
  */
 package controler;
 
-import gui.ListImagesGUI;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -18,13 +16,9 @@ import model.ListImagesModel;
  * @author Sted
  */
 public class ListImagesMouseListener extends MouseAdapter {
-	protected JList list;
-
-	public ListImagesMouseListener(ListImagesGUI list) {
-		this.list = list;
-	}
-
 	public void mouseClicked(MouseEvent e) {
+		JList list = (JList) e.getSource();
+		
 		if (e.getClickCount() == 2) {
 			File item = (File) list.getSelectedValue();
 			if (item.isDirectory() && item.canRead()) {
