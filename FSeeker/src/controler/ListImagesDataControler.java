@@ -118,7 +118,8 @@ public class ListImagesDataControler extends MouseAdapter implements
 	 *            l'événement associé
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if (gui.getSelectedValue() == null || !gui.getSelectedValue().equals(e.getSelection()))
+		ListImagesModel m = (ListImagesModel) e.getSource();
+		if (m.getSize() > 0 && gui.getSelectedValue() != null && !gui.getSelectedValue().equals(e.getSelection()))
 			gui.setSelectedValue(e.getSelection(), true);
 	}
 

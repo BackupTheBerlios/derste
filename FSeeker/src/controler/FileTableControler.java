@@ -119,7 +119,11 @@ public class FileTableControler extends MouseAdapter implements KeyListener,
 			// sélectionnée
 			FileTableModel m = (FileTableModel) e.getSource();
 			if (m.getMode() == FileTableModel.SIMPLE_MODE) {
-				if (!gui.getValueAt(gui.getSelectedRow(), gui.getSelectedColumn()).equals(e.getSelection())) {
+				if (gui.getSelectedRow() >= 0
+						&& gui.getSelectedColumn() >= 0
+						&& !gui.getValueAt(gui.getSelectedRow(),
+								gui.getSelectedColumn()).equals(
+								e.getSelection())) {
 					int i = m.getIndexOf(e.getSelection(), 0);
 					System.out.println("i > " + i);
 					gui.getSelectionModel().setSelectionInterval(i, i);
