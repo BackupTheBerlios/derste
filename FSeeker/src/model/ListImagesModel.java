@@ -76,10 +76,8 @@ public class ListImagesModel extends AbstractListModel implements Observer {
 		int lastSize = getSize();
 		filesList = getModel().getFilesList();
 		
-		// Si l'URI (et donc la sélection aussi) change
-		if (fsm.isChanged(FSeekerModel.URI)) {
-			fireContentsChanged(this, 0, getSize() - 1);
-		}
+		// Si l'URI, le comparator, la sélection, ou le hidden change
+		fireContentsChanged(this, 0, getSize() - 1);
 		
 		// On met car seule la sélection peut changer aussi
 		if (fsm.isChanged(FSeekerModel.SELECTION)) {
