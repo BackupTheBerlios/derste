@@ -6,6 +6,7 @@ package misc;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,17 +38,27 @@ public class GU {
 	}
 
 	/**
-	 * Attribue une image à un JLabel. (setIcon..) TODO: Faire un type global
-	 * pour les JButtons, JLabel etc.
+	 * Attribue une image à un JLabel. (setIcon..)
 	 * 
 	 * @param label
 	 *            le JLabel auquel affecté une image
 	 * @param image
 	 *            l'image en question à associer
 	 */
-	public static void setIcon(JLabel label, String image) {
-		ImageIcon ii = new ImageIcon("images" + pathSep + image);
-		label.setIcon(ii);
+	public static void setImage(JLabel label, String image) {
+		// TODO: Faire un type global pour les JButtons, JLabel etc.
+		label.setIcon(getImage(image));
+	}
+
+	/**
+	 * Retourne une image en tant que ressource.
+	 * 
+	 * @param image
+	 *            nom de l'image
+	 * @return l'objet image
+	 */
+	public static Icon getImage(String image) {
+		return new ImageIcon(pathSep + "images" + pathSep + image);
 	}
 
 	/**
